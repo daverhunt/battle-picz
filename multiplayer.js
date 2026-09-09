@@ -176,16 +176,17 @@
       };
     }
 
-    async listMatches() {
+    async listMatches(userId) {
+      const playerFilter = userId ? `user_id=eq.${encodeURIComponent(userId)}&` : '';
       return this.request(
-        'match_players?select=user_id,player_no,total_score,accepted_at,joined_at,matches(id,mode,status,invite_code,seed,game_config,created_by,winner_id,created_at,started_at,completed_at)&order=joined_at.desc'
+        `match_players?${playerFilter}select=user_id,player_no,total_score,accepted_at,joined_at,matches(id,mode,status,invite_code,seed,game_config,created_by,winner_id,created_at,started_at,completed_at)&order=joined_at.desc`
       );
     }
 
     async getMatchesDashboard() {
       const session = await this.ensureSession();
-      const memberships = await this.listMatches();
       const userId = session.user?.id;
+      const memberships = await this.listMatches(userId);
       const dashboard = await Promise.all((memberships || []).map(async membership => {
         const match = membership.matches;
         if (!match) return null;

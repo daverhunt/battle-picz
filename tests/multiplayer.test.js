@@ -168,3 +168,18 @@ test('creates a rematch and returns its share URL', async () => {
   assert.equal(rematch.share_url, 'https://game.example/?challenge=REM234');
   assert.equal(storage.getItem(MATCH_KEY), 'rematch-1');
 });
+
+test('dashboard query only requests the current player memberships', async () => {
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify({
+      access_token: 'token', expires_at: 9_999_999_999, user: { id: 'player-123' }
+    })
+  });
+  const calls = [];
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async url => { calls.push(url); return response([]); }
+  });
+  assert.deepEqual(await backend.getMatchesDashboard(), []);
+  assert.match(calls[0], /match_players\?user_id=eq\.player-123&select=/);
+});
