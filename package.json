@@ -1,0 +1,8 @@
+{
+  "name": "battle-picz",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:backend": "node scripts/smoke-supabase.mjs"
+  }
+}
