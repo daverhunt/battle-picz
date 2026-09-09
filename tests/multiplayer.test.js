@@ -183,3 +183,31 @@ test('dashboard query only requests the current player memberships', async () =>
   assert.deepEqual(await backend.getMatchesDashboard(), []);
   assert.match(calls[0], /match_players\?user_id=eq\.player-123&select=/);
 });
+
+test('only allows a waiting player to nudge once per cooldown', () => {
+  const match = { id: 'match-6', status: 'active', game_config: {}, created_at: '2026-09-09T10:00:00Z' };
+  const players = [
+    { user_id: 'me', player_no: 1, accepted_at: 'now', total_score: 500 },
+    { user_id: 'them', player_no: 2, accepted_at: 'now', total_score: 0 }
+  ];
+  const turns = [{ user_id: 'me', round_no: 1, score: 500 }];
+  assert.equal(BattlePiczBackend.describeMatch(match, players, turns, 'me').canNudge, true);
+  const recentNudge = [{
+    match_id: 'match-6', from_user_id: 'me', to_user_id: 'them', created_at: new Date().toISOString()
+  }];
+  assert.equal(BattlePiczBackend.describeMatch(match, players, turns, 'me', recentNudge).canNudge, false);
+});
+
+test('sends a nudge through the protected RPC', async () => {
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify({ access_token: 'token', expires_at: 9_999_999_999 })
+  });
+  let call;
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async (url, options) => { call = { url, options }; return response('2026-09-09T12:00:00Z'); }
+  });
+  await backend.sendNudge('match-6');
+  assert.match(call.url, /rpc\/send_match_nudge$/);
+  assert.deepEqual(JSON.parse(call.options.body), { p_match_id: 'match-6' });
+});

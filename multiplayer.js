@@ -186,7 +186,10 @@
     async getMatchesDashboard() {
       const session = await this.ensureSession();
       const userId = session.user?.id;
-      const memberships = await this.listMatches(userId);
+      const [memberships, nudges] = await Promise.all([
+        this.listMatches(userId),
+        this.listNudges()
+      ]);
       const dashboard = await Promise.all((memberships || []).map(async membership => {
         const match = membership.matches;
         if (!match) return null;
@@ -194,7 +197,10 @@
           this.getMatchPlayers(match.id),
           this.getMatchTurns(match.id)
         ]);
-        return BattlePiczBackend.describeMatch(match, players, turns, userId);
+        return BattlePiczBackend.describeMatch(
+          match, players, turns, userId,
+          (nudges || []).filter(nudge => nudge.match_id === match.id)
+        );
       }));
       return dashboard.filter(Boolean).sort((a, b) => b.updatedAt - a.updatedAt);
     }
@@ -209,6 +215,16 @@
 
     acceptMatch(matchId) {
       return this.rpc('accept_match', { p_match_id: matchId });
+    }
+
+    listNudges() {
+      return this.request(
+        'match_nudges?select=match_id,from_user_id,to_user_id,created_at&order=created_at.desc'
+      );
+    }
+
+    sendNudge(matchId) {
+      return this.rpc('send_match_nudge', { p_match_id: matchId });
     }
 
     submitTurn(matchId, roundNo, score, answers, ghostTimeline, isFinal = false) {
@@ -241,7 +257,7 @@
       return /^[A-Z0-9]{6}$/.test(code) ? code : '';
     }
 
-    static describeMatch(match, players, turns, userId) {
+    static describeMatch(match, players, turns, userId, nudges = []) {
       const me = players.find(player => player.user_id === userId) || null;
       if (!me) return null;
       const opponent = players.find(player => player.user_id !== userId) || null;
@@ -273,10 +289,17 @@
         match.started_at, match.created_at].filter(Boolean).map(value => new Date(value).getTime());
       const myScore = Number(me.total_score) || 0;
       const theirScore = Number(opponent?.total_score) || 0;
+      const lastSentNudge = nudges.find(nudge => nudge.from_user_id === userId) || null;
+      const lastReceivedNudge = nudges.find(nudge => nudge.to_user_id === userId) || null;
+      const nudgeCooldownMs = 6 * 60 * 60 * 1000;
       return {
         id: match.id, match, me, opponent, turns, ownTurn, opponentTurn,
         currentRound, roundConfig, canChoose, bucket, action, myScore, theirScore,
         result: myScore === theirScore ? 'draw' : myScore > theirScore ? 'won' : 'lost',
+        lastSentNudge,
+        lastReceivedNudge,
+        canNudge: bucket === 'waiting' && Boolean(opponent) &&
+          (!lastSentNudge || Date.now() - new Date(lastSentNudge.created_at).getTime() >= nudgeCooldownMs),
         updatedAt: dates.length ? Math.max(...dates) : 0
       };
     }

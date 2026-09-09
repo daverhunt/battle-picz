@@ -36,6 +36,7 @@
     <footer class="matches-footer">
       <button class="matches-new">+ CHALLENGE A FRIEND</button>
       <button class="matches-code">ENTER CODE</button>
+      <button class="matches-alerts">🔔 ALERTS</button>
     </footer>`;
   game.append(trigger, panel);
 
@@ -46,6 +47,7 @@
   const inviteBanner = panel.querySelector('.invite-banner');
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
+  const alertsButton = panel.querySelector('.matches-alerts');
   let activeTab = 'your-turn';
   let matches = [];
   let matchContext = null;
@@ -91,6 +93,7 @@
 
   function cardStatus(item) {
     if (item.bucket === 'completed') return item.result.toUpperCase();
+    if (item.lastReceivedNudge && item.bucket === 'your-turn') return 'THEY NUDGED YOU · YOUR TURN';
     if (item.action === 'accept') return 'NEW CHALLENGE';
     if (item.action === 'choose') return 'CHOOSE THE ROUND';
     if (item.action === 'play') return 'READY TO PLAY';
@@ -115,6 +118,8 @@
       ? `<button class="match-card-link" data-action="share" data-id="${item.id}">COPY INVITE</button>` : '';
     const rematchAction = item.bucket === 'completed'
       ? `<button class="match-card-link" data-action="rematch" data-id="${item.id}">REMATCH</button>` : '';
+    const nudgeAction = item.bucket === 'waiting' && item.opponent
+      ? `<button class="match-card-link nudge-link" data-action="nudge" data-id="${item.id}" ${item.canNudge ? '' : 'disabled'}>${item.canNudge ? '🔔 NUDGE' : 'NUDGED ✓'}</button>` : '';
     return `<article class="match-card${resultClass}">
       <div class="match-card-image"${image ? ` style="background-image:url('${image}')"` : ''}><span>${escapeHtml(category).slice(0, 1)}</span></div>
       <div class="match-card-main">
@@ -122,7 +127,7 @@
         <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
         <div class="match-card-status">${cardStatus(item)}</div>
         <div class="match-card-score"><span>You <b>${item.myScore.toLocaleString()}</b></span><i></i><span>Them <b>${item.theirScore.toLocaleString()}</b></span></div>
-        <div class="match-card-links">${inviteAction}${rematchAction}</div>
+        <div class="match-card-links">${inviteAction}${rematchAction}${nudgeAction}</div>
       </div>
       <button class="match-card-primary" data-action="${item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
     </article>`;
@@ -151,6 +156,33 @@
     list.innerHTML = visible.map(renderCard).join('');
   }
 
+  function updateAlertsButton() {
+    if (!('Notification' in window)) {
+      alertsButton.textContent = 'ALERTS N/A';
+      alertsButton.disabled = true;
+      return;
+    }
+    alertsButton.textContent = Notification.permission === 'granted' ? '🔔 ALERTS ON' : '🔔 ALERTS';
+  }
+
+  function notifyAboutNudges() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    const received = matches.filter(item => item.lastReceivedNudge)
+      .sort((a, b) => new Date(b.lastReceivedNudge.created_at) - new Date(a.lastReceivedNudge.created_at))[0];
+    if (!received) return;
+    const notificationKey = `${received.id}:${received.lastReceivedNudge.created_at}`;
+    if (localStorage.getItem('battle-picz.last-nudge-notification') === notificationKey) return;
+    try {
+      new Notification('Your turn in Battle Picz', {
+        body: `${opponentName(received)} gave you a nudge. Ready to play?`,
+        tag: `battle-picz-${received.id}`
+      });
+      localStorage.setItem('battle-picz.last-nudge-notification', notificationKey);
+    } catch {
+      // Some mobile browsers expose Notification but require service-worker delivery.
+    }
+  }
+
   function setBusy(value, message) {
     busy = value;
     panel.classList.toggle('is-busy', value);
@@ -174,6 +206,7 @@
     try {
       matches = await backend.getMatchesDashboard();
       render();
+      notifyAboutNudges();
     } catch (error) {
       showError(error);
     } finally {
@@ -208,6 +241,13 @@
   panel.querySelector('.matches-back').onclick = close;
   refreshButton.onclick = () => loadMatches('Refreshing battles…');
   tabs.forEach(tab => tab.onclick = () => { activeTab = tab.dataset.tab; render(); });
+  alertsButton.onclick = async () => {
+    if (!('Notification' in window)) return;
+    await Notification.requestPermission();
+    updateAlertsButton();
+    notifyAboutNudges();
+  };
+  updateAlertsButton();
 
   panel.querySelector('.matches-new').onclick = async () => {
     if (busy) return;
@@ -254,6 +294,15 @@
         await backend.acceptMatch(item.id);
         return location.assign(matchUrl(item));
       }
+      if (action === 'nudge') {
+        await backend.sendNudge(item.id);
+        matches = await backend.getMatchesDashboard();
+        activeTab = 'waiting';
+        render();
+        state.hidden = false;
+        state.className = 'matches-state success';
+        state.textContent = 'Nudge sent. You can nudge them again in 6 hours.';
+      }
       if (action === 'rematch') {
         const rematch = await backend.createRematch(item.id);
         await copyText(rematch.share_url, 'Rematch created');
@@ -289,7 +338,10 @@
 
   async function initialiseMatch() {
     const matchId = new URLSearchParams(location.search).get('matchId');
-    if (!matchId) return;
+    if (!matchId) {
+      open();
+      return;
+    }
     try {
       matchContext = await backend.getMatchContext(matchId, 1);
       window.BATTLE_PICZ_MATCH = matchContext;
