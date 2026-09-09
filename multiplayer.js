@@ -64,6 +64,22 @@
       return this.saveSession(await this.authRequest('signup', {}));
     }
 
+    async recoverSession() {
+      const saved = this.readSession();
+      if (saved?.refresh_token) {
+        try {
+          return this.saveSession(await this.authRequest(
+            'token?grant_type=refresh_token',
+            { refresh_token: saved.refresh_token }
+          ));
+        } catch {
+          // The refresh token is no longer usable, so start a new guest session.
+        }
+      }
+      this.storage?.removeItem(SESSION_KEY);
+      return this.saveSession(await this.authRequest('signup', {}));
+    }
+
     async readResponse(response) {
       const text = await response.text();
       let data = null;
@@ -77,7 +93,7 @@
       return data;
     }
 
-    async request(path, options = {}) {
+    async request(path, options = {}, canRecover = true) {
       const session = await this.ensureSession();
       const response = await this.fetch(`${this.url}/rest/v1/${path}`, {
         ...options,
@@ -88,6 +104,10 @@
           ...(options.headers || {})
         }
       });
+      if (response.status === 401 && canRecover) {
+        await this.recoverSession();
+        return this.request(path, options, false);
+      }
       return this.readResponse(response);
     }
 
