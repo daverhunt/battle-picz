@@ -47,6 +47,59 @@ test('creates an anonymous session when none exists', async () => {
   assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).access_token, 'guest-token');
 });
 
+test('refreshes and retries when Supabase rejects a stale guest token', async () => {
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify({
+      access_token: 'stale-token', refresh_token: 'refresh-me', expires_at: 9_999_999_999
+    })
+  });
+  const calls = [];
+  const refreshed = {
+    access_token: 'fresh-token', refresh_token: 'fresh-refresh', expires_at: 9_999_999_999
+  };
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      if (calls.length === 1) return response({ message: 'JWT issued at future' }, 401);
+      if (calls.length === 2) return response(refreshed);
+      return response([{ id: 'match-after-refresh' }]);
+    }
+  });
+
+  assert.deepEqual(await backend.getMatch('match-after-refresh'), { id: 'match-after-refresh' });
+  assert.match(calls[1].url, /\/auth\/v1\/token\?grant_type=refresh_token$/);
+  assert.equal(JSON.parse(calls[1].options.body).refresh_token, 'refresh-me');
+  assert.equal(calls[2].options.headers.Authorization, 'Bearer fresh-token');
+  assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).access_token, 'fresh-token');
+});
+
+test('starts a new guest session when a stale session cannot be refreshed', async () => {
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify({
+      access_token: 'stale-token', refresh_token: 'dead-refresh', expires_at: 9_999_999_999
+    })
+  });
+  const calls = [];
+  const newGuest = {
+    access_token: 'new-guest-token', refresh_token: 'new-refresh', expires_at: 9_999_999_999
+  };
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      if (calls.length === 1) return response({ message: 'Invalid JWT' }, 401);
+      if (calls.length === 2) return response({ message: 'Invalid refresh token' }, 400);
+      if (calls.length === 3) return response(newGuest);
+      return response([]);
+    }
+  });
+
+  assert.deepEqual(await backend.listMatches(), []);
+  assert.match(calls[2].url, /\/auth\/v1\/signup$/);
+  assert.equal(calls[3].options.headers.Authorization, 'Bearer new-guest-token');
+});
+
 test('creates a challenge and returns a shareable URL', async () => {
   const storage = memoryStorage({
     [SESSION_KEY]: JSON.stringify({ access_token: 'token', expires_at: 9_999_999_999 })
