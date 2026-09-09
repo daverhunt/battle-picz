@@ -23,6 +23,7 @@
       <button id="createChallenge">CREATE CHALLENGE</button>
       <button id="joinChallenge" hidden>JOIN CHALLENGE</button>
       <button id="copyChallenge" hidden>COPY LINK</button>
+      <button id="refreshMatch" hidden>REFRESH MATCH</button>
       <button class="match-close" id="closeMatches">BACK TO GAME</button>
     </div>`;
   game.append(trigger, panel);
@@ -32,11 +33,13 @@
   const createButton = panel.querySelector('#createChallenge');
   const joinButton = panel.querySelector('#joinChallenge');
   const copyButton = panel.querySelector('#copyChallenge');
+  const refreshButton = panel.querySelector('#refreshMatch');
   const closeButton = panel.querySelector('#closeMatches');
   let shareUrl = '';
+  let matchContext = null;
 
   function setBusy(busy) {
-    [createButton, joinButton, copyButton, closeButton].forEach(button => button.disabled = busy);
+    [createButton, joinButton, copyButton, refreshButton, closeButton].forEach(button => button.disabled = busy);
   }
 
   function showError(error) {
@@ -81,7 +84,7 @@
       const url = new URL(location.href);
       url.searchParams.set('match', match.seed);
       url.searchParams.set('matchId', match.id);
-      history.replaceState(null, '', url);
+      location.assign(url.toString());
     } catch (error) {
       showError(error);
     } finally {
@@ -123,7 +126,77 @@
     if (shareUrl && pendingCode) {
       codeLabel.hidden = false;
       codeLabel.textContent = pendingCode;
+      createButton.hidden = true;
       copyButton.hidden = false;
     }
   }
+
+  async function initialiseMatch() {
+    const matchId = new URLSearchParams(location.search).get('matchId');
+    if (!matchId) return;
+    setBusy(true);
+    try {
+      matchContext = await backend.getMatchContext(matchId, 1);
+      window.BATTLE_PICZ_MATCH = matchContext;
+      const opponentName = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
+      const opponentLabel = document.querySelector('.pname.opp');
+      if (opponentLabel) opponentLabel.textContent = opponentName;
+      if (matchContext.ownTurn) {
+        if (matchContext.opponentTurn) {
+          refreshButton.hidden = true;
+          panel.classList.remove('show');
+          trigger.hidden = false;
+          window.showBattlePiczMatchResult?.(matchContext);
+        } else {
+          open();
+          createButton.hidden = true;
+          joinButton.hidden = true;
+          copyButton.hidden = !shareUrl;
+          refreshButton.hidden = false;
+          codeLabel.hidden = true;
+          status.className = '';
+          status.textContent = 'Your round is saved. Waiting for your opponent — tap refresh when they have played.';
+        }
+      } else if (matchContext.roundConfig || matchContext.canChoose) {
+        refreshButton.hidden = true;
+        panel.classList.remove('show');
+        trigger.hidden = false;
+        window.startBattlePicz?.(matchContext);
+      } else {
+        open();
+        createButton.hidden = true;
+        joinButton.hidden = true;
+        copyButton.hidden = true;
+        refreshButton.hidden = false;
+        codeLabel.hidden = true;
+        status.className = '';
+        status.textContent = 'Waiting for your opponent to choose the round. Pull down or tap refresh after they have chosen.';
+      }
+    } catch (error) {
+      open();
+      showError(error);
+      refreshButton.hidden = false;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  refreshButton.onclick = initialiseMatch;
+
+  window.battlePiczSaveRound = async payload => {
+    if (!matchContext) throw new Error('Match is not ready');
+    await backend.submitTurn(
+      matchContext.match.id,
+      payload.roundNo,
+      payload.score,
+      payload.answers,
+      payload.ghostTimeline,
+      true
+    );
+    matchContext = await backend.getMatchContext(matchContext.match.id, payload.roundNo);
+    window.BATTLE_PICZ_MATCH = matchContext;
+    return matchContext;
+  };
+
+  if (!inviteCode) initialiseMatch();
 })();

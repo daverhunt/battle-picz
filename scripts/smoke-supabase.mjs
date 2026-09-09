@@ -43,6 +43,19 @@ const joinedMatchId = await request('/rest/v1/rpc/join_challenge', {
 });
 if (joinedMatchId !== challenge.match_id) throw new Error('Opponent joined the wrong match');
 
+const roundConfig = await request('/rest/v1/rpc/set_round_config', {
+  token: creator,
+  body: {
+    p_match_id: challenge.match_id,
+    p_round_no: 1,
+    p_category: 'ANIMALS',
+    p_difficulty: 'easy'
+  }
+});
+if (roundConfig?.category !== 'ANIMALS' || roundConfig?.difficulty !== 'easy') {
+  throw new Error('Shared round configuration was not saved');
+}
+
 for (const [token, score] of [[creator, 3200], [opponent, 2800]]) {
   await request('/rest/v1/rpc/submit_turn', {
     token,

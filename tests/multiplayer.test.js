@@ -93,3 +93,23 @@ test('surfaces Supabase errors', async () => {
   });
   await assert.rejects(() => backend.joinChallenge('ABC234'), /unavailable or expired/);
 });
+
+test('builds a current-player context with the opponent turn', async () => {
+  const session = { access_token: 'token', expires_at: 9_999_999_999, user: { id: 'me' } };
+  const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
+  const replies = [
+    [{ id: 'match-3', game_config: { rounds: { 1: { category: 'FOOD', difficulty: 'hard' } } } }],
+    [{ user_id: 'me', player_no: 2 }, { user_id: 'them', player_no: 1 }],
+    [{ user_id: 'them', round_no: 1, score: 4200, answers: [] }]
+  ];
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async () => response(replies.shift())
+  });
+  const context = await backend.getMatchContext('match-3', 1);
+  assert.equal(context.me.player_no, 2);
+  assert.equal(context.ownTurn, null);
+  assert.equal(context.opponentTurn.score, 4200);
+  assert.deepEqual(context.roundConfig, { category: 'FOOD', difficulty: 'hard' });
+  assert.equal(context.canChoose, false);
+});

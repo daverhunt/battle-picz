@@ -127,6 +127,55 @@
       return rows[0];
     }
 
+    async getMatchPlayers(matchId) {
+      return this.request(
+        `match_players?match_id=eq.${encodeURIComponent(matchId)}&select=user_id,player_no,total_score,accepted_at,profiles(display_name)&order=player_no`
+      );
+    }
+
+    async getMatchTurns(matchId) {
+      return this.request(
+        `match_turns?match_id=eq.${encodeURIComponent(matchId)}&select=user_id,round_no,score,answers,ghost_timeline,is_final,completed_at&order=round_no`
+      );
+    }
+
+    setRoundConfig(matchId, roundNo, category, difficulty) {
+      return this.rpc('set_round_config', {
+        p_match_id: matchId,
+        p_round_no: roundNo,
+        p_category: category,
+        p_difficulty: difficulty
+      });
+    }
+
+    async getMatchContext(matchId, roundNo = 1) {
+      const session = await this.ensureSession();
+      const [match, players, turns] = await Promise.all([
+        this.getMatch(matchId),
+        this.getMatchPlayers(matchId),
+        this.getMatchTurns(matchId)
+      ]);
+      const userId = session.user?.id;
+      const me = players.find(player => player.user_id === userId);
+      if (!me) throw new Error('You are not part of this match');
+      const opponent = players.find(player => player.user_id !== userId) || null;
+      const ownTurn = turns.find(turn =>
+        turn.user_id === userId && Number(turn.round_no) === Number(roundNo)
+      ) || null;
+      const opponentTurn = turns.find(turn =>
+        turn.user_id !== userId && Number(turn.round_no) === Number(roundNo)
+      ) || null;
+      return {
+        match,
+        me,
+        opponent,
+        ownTurn,
+        opponentTurn,
+        roundConfig: match.game_config?.rounds?.[String(roundNo)] || null,
+        canChoose: me.player_no === (roundNo % 2 === 1 ? 1 : 2)
+      };
+    }
+
     async listMatches() {
       return this.request(
         'match_players?select=player_no,total_score,accepted_at,matches(id,mode,status,invite_code,seed,game_config,created_at,started_at,completed_at),profiles(display_name)&order=joined_at.desc'
