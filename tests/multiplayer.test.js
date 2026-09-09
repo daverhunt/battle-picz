@@ -113,3 +113,58 @@ test('builds a current-player context with the opponent turn', async () => {
   assert.deepEqual(context.roundConfig, { category: 'FOOD', difficulty: 'hard' });
   assert.equal(context.canChoose, false);
 });
+
+test('sorts dashboard matches into my turn, their turn, and completed', () => {
+  const baseMatch = {
+    id: 'match-4', status: 'active', created_at: '2026-09-09T10:00:00Z',
+    game_config: { rounds: { 1: { category: 'ANIMALS', difficulty: 'easy' } } }
+  };
+  const players = [
+    { user_id: 'me', player_no: 1, total_score: 0, accepted_at: 'now' },
+    { user_id: 'them', player_no: 2, total_score: 1200, accepted_at: 'now' }
+  ];
+
+  const ready = BattlePiczBackend.describeMatch(baseMatch, players, [], 'me');
+  assert.equal(ready.bucket, 'your-turn');
+  assert.equal(ready.action, 'play');
+
+  const waiting = BattlePiczBackend.describeMatch(baseMatch, players, [
+    { user_id: 'me', round_no: 1, score: 900, completed_at: '2026-09-09T10:05:00Z' }
+  ], 'me');
+  assert.equal(waiting.bucket, 'waiting');
+  assert.equal(waiting.action, 'waiting');
+
+  const complete = BattlePiczBackend.describeMatch(
+    { ...baseMatch, status: 'complete' }, players, [], 'me'
+  );
+  assert.equal(complete.bucket, 'completed');
+  assert.equal(complete.result, 'lost');
+});
+
+test('marks an unaccepted direct rematch as actionable', () => {
+  const item = BattlePiczBackend.describeMatch(
+    { id: 'match-5', status: 'waiting', game_config: {}, created_at: '2026-09-09T10:00:00Z' },
+    [
+      { user_id: 'them', player_no: 1, accepted_at: 'now', total_score: 0 },
+      { user_id: 'me', player_no: 2, accepted_at: null, total_score: 0 }
+    ],
+    [],
+    'me'
+  );
+  assert.equal(item.bucket, 'your-turn');
+  assert.equal(item.action, 'accept');
+});
+
+test('creates a rematch and returns its share URL', async () => {
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify({ access_token: 'token', expires_at: 9_999_999_999 })
+  });
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    location: { origin: 'https://game.example', pathname: '/', search: '' },
+    fetchImpl: async () => response([{ match_id: 'rematch-1', invite_code: 'REM234' }])
+  });
+  const rematch = await backend.createRematch('original-1');
+  assert.equal(rematch.share_url, 'https://game.example/?challenge=REM234');
+  assert.equal(storage.getItem(MATCH_KEY), 'rematch-1');
+});

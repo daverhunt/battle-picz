@@ -8,83 +8,218 @@
   const game = document.getElementById('game');
   const trigger = document.createElement('button');
   trigger.className = 'match-button';
-  trigger.textContent = 'Friends';
+  trigger.innerHTML = '<span class="match-button-dot"></span> Matches';
   trigger.setAttribute('aria-haspopup', 'dialog');
 
   const panel = document.createElement('section');
   panel.className = 'match-panel';
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-modal', 'true');
+  panel.setAttribute('aria-label', 'Your matches');
   panel.innerHTML = `
-    <h2>PLAY A FRIEND</h2>
-    <p id="matchStatus">Create a private challenge link to send in WhatsApp or Messages.</p>
-    <div id="matchCode" class="match-code" hidden></div>
-    <div class="match-actions">
-      <button id="createChallenge">CREATE CHALLENGE</button>
-      <button id="joinChallenge" hidden>JOIN CHALLENGE</button>
-      <button id="copyChallenge" hidden>COPY LINK</button>
-      <button id="refreshMatch" hidden>REFRESH MATCH</button>
-      <button class="match-close" id="closeMatches">BACK TO GAME</button>
-    </div>`;
+    <header class="matches-header">
+      <button class="matches-back" aria-label="Back to game">‹</button>
+      <div><h2>Your Battles</h2><p>Pick up where you left off</p></div>
+      <button class="matches-refresh" aria-label="Refresh matches">↻</button>
+    </header>
+    <div class="invite-banner" hidden>
+      <strong>You’ve been challenged!</strong><span class="invite-banner-code"></span>
+      <button class="invite-join">JOIN & PLAY</button>
+    </div>
+    <nav class="matches-tabs" aria-label="Match filters">
+      <button data-tab="your-turn" class="active">My Turn <b>0</b></button>
+      <button data-tab="waiting">Their Turn <b>0</b></button>
+      <button data-tab="completed">Completed <b>0</b></button>
+    </nav>
+    <div class="matches-state" role="status">Loading battles…</div>
+    <div class="matches-list"></div>
+    <footer class="matches-footer">
+      <button class="matches-new">+ CHALLENGE A FRIEND</button>
+      <button class="matches-code">ENTER CODE</button>
+    </footer>`;
   game.append(trigger, panel);
 
-  const status = panel.querySelector('#matchStatus');
-  const codeLabel = panel.querySelector('#matchCode');
-  const createButton = panel.querySelector('#createChallenge');
-  const joinButton = panel.querySelector('#joinChallenge');
-  const copyButton = panel.querySelector('#copyChallenge');
-  const refreshButton = panel.querySelector('#refreshMatch');
-  const closeButton = panel.querySelector('#closeMatches');
-  let shareUrl = '';
+  const list = panel.querySelector('.matches-list');
+  const state = panel.querySelector('.matches-state');
+  const tabs = [...panel.querySelectorAll('.matches-tabs button')];
+  const refreshButton = panel.querySelector('.matches-refresh');
+  const inviteBanner = panel.querySelector('.invite-banner');
+  const inviteCodeLabel = panel.querySelector('.invite-banner-code');
+  const joinButton = panel.querySelector('.invite-join');
+  let activeTab = 'your-turn';
+  let matches = [];
   let matchContext = null;
+  let busy = false;
 
-  function setBusy(busy) {
-    [createButton, joinButton, copyButton, refreshButton, closeButton].forEach(button => button.disabled = busy);
+  const categoryImages = {
+    ANIMALS: 'assets/images/animals/penguin.webp',
+    FOOD: 'assets/images/food/avocado.webp',
+    SPORT: 'assets/images/sport/football.webp'
+  };
+
+  function escapeHtml(value) {
+    const element = document.createElement('span');
+    element.textContent = String(value ?? '');
+    return element.innerHTML;
+  }
+
+  function relativeTime(timestamp) {
+    if (!timestamp) return 'Just now';
+    const seconds = Math.max(0, Math.floor((Date.now() - timestamp) / 1000));
+    if (seconds < 60) return 'Just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    const days = Math.floor(seconds / 86400);
+    return days === 1 ? 'Yesterday' : `${days}d ago`;
+  }
+
+  function matchUrl(item) {
+    const url = new URL(location.href);
+    url.searchParams.delete('challenge');
+    url.searchParams.set('match', item.match.seed);
+    url.searchParams.set('matchId', item.id);
+    return url.toString();
+  }
+
+  function shareUrl(item) {
+    return backend.buildShareUrl(item.match.invite_code);
+  }
+
+  function opponentName(item) {
+    return item.opponent?.profiles?.display_name || (item.match.status === 'waiting' ? 'Waiting for player' : 'Opponent');
+  }
+
+  function cardStatus(item) {
+    if (item.bucket === 'completed') return item.result.toUpperCase();
+    if (item.action === 'accept') return 'NEW CHALLENGE';
+    if (item.action === 'choose') return 'CHOOSE THE ROUND';
+    if (item.action === 'play') return 'READY TO PLAY';
+    if (!item.opponent) return 'INVITE SENT';
+    return 'WAITING FOR THEIR TURN';
+  }
+
+  function primaryLabel(item) {
+    if (item.action === 'accept') return 'ACCEPT';
+    if (item.action === 'choose') return 'CHOOSE';
+    if (item.action === 'play') return 'PLAY';
+    if (item.action === 'result') return 'RESULT';
+    return 'WAITING';
+  }
+
+  function renderCard(item) {
+    const category = item.roundConfig?.category || 'Challenge';
+    const difficulty = item.roundConfig?.difficulty || '';
+    const image = categoryImages[String(category).toUpperCase()] || '';
+    const resultClass = item.bucket === 'completed' ? ` result-${item.result}` : '';
+    const inviteAction = !item.opponent && item.match.invite_code
+      ? `<button class="match-card-link" data-action="share" data-id="${item.id}">COPY INVITE</button>` : '';
+    const rematchAction = item.bucket === 'completed'
+      ? `<button class="match-card-link" data-action="rematch" data-id="${item.id}">REMATCH</button>` : '';
+    return `<article class="match-card${resultClass}">
+      <div class="match-card-image"${image ? ` style="background-image:url('${image}')"` : ''}><span>${escapeHtml(category).slice(0, 1)}</span></div>
+      <div class="match-card-main">
+        <div class="match-card-top"><strong>${escapeHtml(opponentName(item))}</strong><time>${relativeTime(item.updatedAt)}</time></div>
+        <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
+        <div class="match-card-status">${cardStatus(item)}</div>
+        <div class="match-card-score"><span>You <b>${item.myScore.toLocaleString()}</b></span><i></i><span>Them <b>${item.theirScore.toLocaleString()}</b></span></div>
+        <div class="match-card-links">${inviteAction}${rematchAction}</div>
+      </div>
+      <button class="match-card-primary" data-action="${item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
+    </article>`;
+  }
+
+  function emptyMessage(tab) {
+    if (tab === 'your-turn') return ['You’re all caught up', 'Start a new battle or check games waiting on friends.'];
+    if (tab === 'waiting') return ['Nobody’s keeping you waiting', 'Battles you’ve played or invited friends to will appear here.'];
+    return ['No completed battles yet', 'Finish a battle and your results will be saved here.'];
+  }
+
+  function render() {
+    const keys = ['your-turn', 'waiting', 'completed'];
+    const counts = Object.fromEntries(keys.map(key => [key, matches.filter(item => item.bucket === key).length]));
+    tabs.forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.tab === activeTab);
+      tab.querySelector('b').textContent = counts[tab.dataset.tab];
+    });
+    const visible = matches.filter(item => item.bucket === activeTab);
+    state.hidden = true;
+    if (!visible.length) {
+      const [title, copy] = emptyMessage(activeTab);
+      list.innerHTML = `<div class="matches-empty"><span>⚔</span><strong>${title}</strong><p>${copy}</p></div>`;
+      return;
+    }
+    list.innerHTML = visible.map(renderCard).join('');
+  }
+
+  function setBusy(value, message) {
+    busy = value;
+    panel.classList.toggle('is-busy', value);
+    refreshButton.disabled = value;
+    if (message) {
+      state.hidden = false;
+      state.className = 'matches-state';
+      state.textContent = message;
+    }
   }
 
   function showError(error) {
-    status.className = 'match-error';
-    status.textContent = error?.message || 'Something went wrong. Please try again.';
+    state.hidden = false;
+    state.className = 'matches-state error';
+    state.textContent = error?.message || 'Something went wrong. Please try again.';
   }
 
-  function open() {
+  async function loadMatches(message = 'Loading battles…') {
+    if (busy) return;
+    setBusy(true, message);
+    try {
+      matches = await backend.getMatchesDashboard();
+      render();
+    } catch (error) {
+      showError(error);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function open(tab) {
+    if (tab) activeTab = tab;
     panel.classList.add('show');
     trigger.hidden = true;
+    loadMatches();
   }
 
-  function enterMatch(match) {
-    const url = new URL(location.href);
-    url.searchParams.delete('challenge');
-    url.searchParams.set('match', match.seed);
-    url.searchParams.set('matchId', match.id);
-    location.assign(url.toString());
-  }
-
-  trigger.onclick = open;
-  closeButton.onclick = () => {
+  function close() {
     panel.classList.remove('show');
     trigger.hidden = false;
-  };
+  }
 
-  createButton.onclick = async () => {
-    setBusy(true);
-    status.className = '';
-    status.textContent = 'Creating your challenge…';
+  async function copyText(text, success = 'Invite link copied') {
+    try {
+      await navigator.clipboard.writeText(text);
+      state.hidden = false;
+      state.className = 'matches-state success';
+      state.textContent = success;
+    } catch {
+      window.prompt('Copy this challenge link:', text);
+    }
+  }
+
+  trigger.onclick = () => open();
+  panel.querySelector('.matches-back').onclick = close;
+  refreshButton.onclick = () => loadMatches('Refreshing battles…');
+  tabs.forEach(tab => tab.onclick = () => { activeTab = tab.dataset.tab; render(); });
+
+  panel.querySelector('.matches-new').onclick = async () => {
+    if (busy) return;
+    setBusy(true, 'Creating your challenge…');
     try {
       const challenge = await backend.createChallenge({ version: 1 });
-      const match = await backend.getMatch(challenge.match_id);
-      shareUrl = challenge.share_url;
-      codeLabel.hidden = false;
-      codeLabel.textContent = challenge.invite_code;
-      status.textContent = 'Your challenge is ready. Copy the link and send it to your friend.';
-      createButton.hidden = true;
-      copyButton.hidden = false;
-      sessionStorage.setItem('battle-picz.pending-share-url', shareUrl);
+      sessionStorage.setItem('battle-picz.pending-share-url', challenge.share_url);
       sessionStorage.setItem('battle-picz.pending-share-code', challenge.invite_code);
-      const url = new URL(location.href);
-      url.searchParams.set('match', match.seed);
-      url.searchParams.set('matchId', match.id);
-      location.assign(url.toString());
+      await copyText(challenge.share_url, `Challenge ${challenge.invite_code} copied — send it to a friend`);
+      matches = await backend.getMatchesDashboard();
+      activeTab = 'your-turn';
+      render();
     } catch (error) {
       showError(error);
     } finally {
@@ -92,107 +227,101 @@
     }
   };
 
-  copyButton.onclick = async () => {
+  panel.querySelector('.matches-code').onclick = async () => {
+    const code = window.prompt('Enter the six-character challenge code:');
+    if (code == null) return;
+    setBusy(true, 'Joining challenge…');
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      status.textContent = 'Challenge link copied.';
-    } catch {
-      window.prompt('Copy this challenge link:', shareUrl);
+      const match = await backend.joinChallenge(code);
+      location.assign(matchUrl({ id: match.id, match }));
+    } catch (error) {
+      showError(error);
+      setBusy(false);
+    }
+  };
+
+  list.onclick = async event => {
+    const button = event.target.closest('button[data-action]');
+    if (!button || busy) return;
+    const item = matches.find(candidate => candidate.id === button.dataset.id);
+    if (!item) return;
+    const action = button.dataset.action;
+    if (action === 'share') return copyText(shareUrl(item));
+    if (action === 'play' || action === 'choose' || action === 'result') return location.assign(matchUrl(item));
+    setBusy(true, action === 'rematch' ? 'Creating rematch…' : 'Accepting challenge…');
+    try {
+      if (action === 'accept') {
+        await backend.acceptMatch(item.id);
+        return location.assign(matchUrl(item));
+      }
+      if (action === 'rematch') {
+        const rematch = await backend.createRematch(item.id);
+        await copyText(rematch.share_url, 'Rematch created');
+        matches = await backend.getMatchesDashboard();
+        activeTab = 'waiting';
+        render();
+      }
+    } catch (error) {
+      showError(error);
+    } finally {
+      setBusy(false);
     }
   };
 
   const inviteCode = backend.inviteCodeFromLocation();
   if (inviteCode) {
-    open();
-    createButton.hidden = true;
-    joinButton.hidden = false;
-    codeLabel.hidden = false;
-    codeLabel.textContent = inviteCode;
-    status.textContent = 'You have been challenged. Join to play the same match.';
+    panel.classList.add('show');
+    trigger.hidden = true;
+    inviteBanner.hidden = false;
+    inviteCodeLabel.textContent = inviteCode;
     joinButton.onclick = async () => {
-      setBusy(true);
-      status.className = '';
-      status.textContent = 'Joining challenge…';
+      setBusy(true, 'Joining challenge…');
       try {
-        enterMatch(await backend.joinChallenge(inviteCode));
+        const match = await backend.joinChallenge(inviteCode);
+        location.assign(matchUrl({ id: match.id, match }));
       } catch (error) {
         showError(error);
         setBusy(false);
       }
     };
-  } else {
-    shareUrl = sessionStorage.getItem('battle-picz.pending-share-url') || '';
-    const pendingCode = sessionStorage.getItem('battle-picz.pending-share-code') || '';
-    if (shareUrl && pendingCode) {
-      codeLabel.hidden = false;
-      codeLabel.textContent = pendingCode;
-      createButton.hidden = true;
-      copyButton.hidden = false;
-    }
+    loadMatches();
   }
 
   async function initialiseMatch() {
     const matchId = new URLSearchParams(location.search).get('matchId');
     if (!matchId) return;
-    setBusy(true);
     try {
       matchContext = await backend.getMatchContext(matchId, 1);
       window.BATTLE_PICZ_MATCH = matchContext;
-      const opponentName = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
+      const opponentNameValue = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
       const opponentLabel = document.querySelector('.pname.opp');
-      if (opponentLabel) opponentLabel.textContent = opponentName;
+      if (opponentLabel) opponentLabel.textContent = opponentNameValue;
       if (matchContext.ownTurn) {
         if (matchContext.opponentTurn) {
-          refreshButton.hidden = true;
-          panel.classList.remove('show');
-          trigger.hidden = false;
           window.showBattlePiczMatchResult?.(matchContext);
         } else {
-          open();
-          createButton.hidden = true;
-          joinButton.hidden = true;
-          copyButton.hidden = !shareUrl;
-          refreshButton.hidden = false;
-          codeLabel.hidden = true;
-          status.className = '';
-          status.textContent = 'Your round is saved. Waiting for your opponent — tap refresh when they have played.';
+          open('waiting');
+          state.hidden = false;
+          state.className = 'matches-state success';
+          state.textContent = 'Round saved. Your friend’s turn now.';
         }
       } else if (matchContext.roundConfig || matchContext.canChoose) {
-        refreshButton.hidden = true;
-        panel.classList.remove('show');
-        trigger.hidden = false;
+        close();
         window.startBattlePicz?.(matchContext);
       } else {
-        open();
-        createButton.hidden = true;
-        joinButton.hidden = true;
-        copyButton.hidden = true;
-        refreshButton.hidden = false;
-        codeLabel.hidden = true;
-        status.className = '';
-        status.textContent = 'Waiting for your opponent to choose the round. Pull down or tap refresh after they have chosen.';
+        open('waiting');
       }
     } catch (error) {
-      open();
+      panel.classList.add('show');
+      trigger.hidden = true;
       showError(error);
-      refreshButton.hidden = false;
-    } finally {
-      setBusy(false);
     }
   }
 
-  refreshButton.onclick = initialiseMatch;
-
   window.battlePiczSaveRound = async payload => {
     if (!matchContext) throw new Error('Match is not ready');
-    await backend.submitTurn(
-      matchContext.match.id,
-      payload.roundNo,
-      payload.score,
-      payload.answers,
-      payload.ghostTimeline,
-      true
-    );
+    await backend.submitTurn(matchContext.match.id, payload.roundNo, payload.score,
+      payload.answers, payload.ghostTimeline, true);
     matchContext = await backend.getMatchContext(matchContext.match.id, payload.roundNo);
     window.BATTLE_PICZ_MATCH = matchContext;
     return matchContext;

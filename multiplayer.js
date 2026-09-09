@@ -121,7 +121,7 @@
 
     async getMatch(matchId) {
       const rows = await this.request(
-        `matches?id=eq.${encodeURIComponent(matchId)}&select=id,mode,status,invite_code,seed,game_config,created_by,created_at,started_at,completed_at`
+        `matches?id=eq.${encodeURIComponent(matchId)}&select=id,mode,status,invite_code,seed,game_config,created_by,winner_id,created_at,started_at,completed_at`
       );
       if (!rows?.[0]) throw new Error('Match not found');
       return rows[0];
@@ -178,8 +178,36 @@
 
     async listMatches() {
       return this.request(
-        'match_players?select=player_no,total_score,accepted_at,matches(id,mode,status,invite_code,seed,game_config,created_at,started_at,completed_at),profiles(display_name)&order=joined_at.desc'
+        'match_players?select=user_id,player_no,total_score,accepted_at,joined_at,matches(id,mode,status,invite_code,seed,game_config,created_by,winner_id,created_at,started_at,completed_at)&order=joined_at.desc'
       );
+    }
+
+    async getMatchesDashboard() {
+      const session = await this.ensureSession();
+      const memberships = await this.listMatches();
+      const userId = session.user?.id;
+      const dashboard = await Promise.all((memberships || []).map(async membership => {
+        const match = membership.matches;
+        if (!match) return null;
+        const [players, turns] = await Promise.all([
+          this.getMatchPlayers(match.id),
+          this.getMatchTurns(match.id)
+        ]);
+        return BattlePiczBackend.describeMatch(match, players, turns, userId);
+      }));
+      return dashboard.filter(Boolean).sort((a, b) => b.updatedAt - a.updatedAt);
+    }
+
+    async createRematch(matchId) {
+      const rows = await this.rpc('create_rematch', { p_match_id: matchId });
+      const rematch = Array.isArray(rows) ? rows[0] : rows;
+      if (!rematch?.match_id) throw new Error('Supabase did not return a rematch');
+      this.storage?.setItem(MATCH_KEY, rematch.match_id);
+      return { ...rematch, share_url: rematch.invite_code ? this.buildShareUrl(rematch.invite_code) : '' };
+    }
+
+    acceptMatch(matchId) {
+      return this.rpc('accept_match', { p_match_id: matchId });
     }
 
     submitTurn(matchId, roundNo, score, answers, ghostTimeline, isFinal = false) {
@@ -210,6 +238,46 @@
     static normaliseInviteCode(value) {
       const code = String(value || '').trim().toUpperCase();
       return /^[A-Z0-9]{6}$/.test(code) ? code : '';
+    }
+
+    static describeMatch(match, players, turns, userId) {
+      const me = players.find(player => player.user_id === userId) || null;
+      if (!me) return null;
+      const opponent = players.find(player => player.user_id !== userId) || null;
+      const roundNumbers = Object.keys(match.game_config?.rounds || {}).map(Number).filter(Number.isFinite);
+      const currentRound = Math.max(1, ...roundNumbers, ...(turns || []).map(turn => Number(turn.round_no) || 1));
+      const roundConfig = match.game_config?.rounds?.[String(currentRound)] || null;
+      const ownTurn = turns.find(turn => turn.user_id === userId && Number(turn.round_no) === currentRound) || null;
+      const opponentTurn = turns.find(turn => turn.user_id !== userId && Number(turn.round_no) === currentRound) || null;
+      const canChoose = me.player_no === (currentRound % 2 === 1 ? 1 : 2);
+      let bucket = 'waiting';
+      let action = 'waiting';
+
+      if (match.status === 'complete') {
+        bucket = 'completed';
+        action = 'result';
+      } else if (!me.accepted_at) {
+        bucket = 'your-turn';
+        action = 'accept';
+      } else if (ownTurn) {
+        bucket = 'waiting';
+      } else if (match.status === 'waiting' && opponent) {
+        bucket = 'waiting';
+      } else if (roundConfig || canChoose) {
+        bucket = 'your-turn';
+        action = roundConfig ? 'play' : 'choose';
+      }
+
+      const dates = [match.completed_at, ownTurn?.completed_at, opponentTurn?.completed_at,
+        match.started_at, match.created_at].filter(Boolean).map(value => new Date(value).getTime());
+      const myScore = Number(me.total_score) || 0;
+      const theirScore = Number(opponent?.total_score) || 0;
+      return {
+        id: match.id, match, me, opponent, turns, ownTurn, opponentTurn,
+        currentRound, roundConfig, canChoose, bucket, action, myScore, theirScore,
+        result: myScore === theirScore ? 'draw' : myScore > theirScore ? 'won' : 'lost',
+        updatedAt: dates.length ? Math.max(...dates) : 0
+      };
     }
   }
 
