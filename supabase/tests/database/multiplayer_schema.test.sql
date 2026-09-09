@@ -1,6 +1,6 @@
 begin;
 
-select plan(15);
+select plan(16);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'matches', 'matches table exists');
@@ -19,6 +19,14 @@ select ok(row_security_active('public.devices'::regclass), 'devices has RLS');
 select has_function('public', 'create_challenge', array['jsonb', 'uuid'], 'challenge RPC exists');
 select has_function('public', 'join_challenge', array['text'], 'join RPC exists');
 select has_function('public', 'find_random_match', array[]::text[], 'matchmaking RPC exists');
+select function_privs_are(
+  'private',
+  'is_match_participant',
+  array['uuid'],
+  'authenticated',
+  array['EXECUTE'],
+  'authenticated players can run the RLS participant helper'
+);
 
 select * from finish();
 rollback;

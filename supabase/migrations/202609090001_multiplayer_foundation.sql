@@ -2,6 +2,7 @@ begin;
 
 create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
+grant usage on schema private to authenticated;
 
 create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -517,5 +518,6 @@ revoke all on function private.touch_updated_at() from public, anon, authenticat
 revoke all on function private.handle_new_user() from public, anon, authenticated;
 revoke all on function private.is_match_participant(uuid) from public, anon, authenticated;
 revoke all on function private.new_invite_code() from public, anon, authenticated;
+grant execute on function private.is_match_participant(uuid) to authenticated;
 
 commit;
