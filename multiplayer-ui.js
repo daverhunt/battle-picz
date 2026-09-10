@@ -22,6 +22,11 @@
       <div><h2>Your Battles</h2><p>Pick up where you left off</p></div>
       <button class="matches-refresh" aria-label="Refresh matches">↻</button>
     </header>
+    <section class="weekly-strip" aria-label="This week's tournament record">
+      <div><span>THIS WEEK</span><strong class="weekly-record">0 WINS · 0 LOSSES</strong></div>
+      <div><span>ENDS IN</span><strong class="weekly-countdown">—</strong></div>
+      <button class="matches-test-week">TEST: END WEEK</button>
+    </section>
     <div class="invite-banner" hidden>
       <strong>You’ve been challenged!</strong><span class="invite-banner-code"></span>
       <button class="invite-join">JOIN & PLAY</button>
@@ -37,7 +42,27 @@
       <button class="matches-new">+ CHALLENGE A FRIEND</button>
       <button class="matches-code">ENTER CODE</button>
       <button class="matches-alerts">🔔 ALERTS</button>
-    </footer>`;
+    </footer>
+    <div class="weekly-summary" hidden>
+      <section class="weekly-summary-card" role="dialog" aria-modal="true" aria-labelledby="weekly-summary-title">
+        <span class="weekly-cup">🏆</span>
+        <p class="weekly-kicker">WEEK COMPLETE</p>
+        <h2 id="weekly-summary-title">Weekly tournament results</h2>
+        <div class="weekly-result-grid">
+          <div><strong data-weekly="wins">0</strong><span>Games won</span></div>
+          <div><strong data-weekly="losses">0</strong><span>Games lost</span></div>
+          <div><strong data-weekly="draws">0</strong><span>Draws</span></div>
+        </div>
+        <dl class="weekly-details">
+          <div><dt>Matches played</dt><dd data-weekly="matches">0</dd></div>
+          <div><dt>Opponents played</dt><dd data-weekly="opponents">0</dd></div>
+          <div><dt>Rounds played</dt><dd data-weekly="rounds">0</dd></div>
+        </dl>
+        <div class="weekly-coins">🪙 <strong data-weekly="coins">+0 COINS</strong><small>10 participation + 5 per win</small></div>
+        <button class="weekly-continue">START NEW WEEK!</button>
+        <small class="weekly-preview-note" hidden>Test preview only — no coins awarded and the real week is unchanged.</small>
+      </section>
+    </div>`;
   game.append(trigger, panel);
 
   const list = panel.querySelector('.matches-list');
@@ -48,8 +73,15 @@
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
   const alertsButton = panel.querySelector('.matches-alerts');
+  const weeklyRecord = panel.querySelector('.weekly-record');
+  const weeklyCountdown = panel.querySelector('.weekly-countdown');
+  const weeklySummary = panel.querySelector('.weekly-summary');
+  const weeklyPreviewNote = panel.querySelector('.weekly-preview-note');
   let activeTab = 'your-turn';
   let matches = [];
+  let currentWeek = null;
+  let previousWeek = null;
+  let shownSummaryKey = '';
   let matchContext = null;
   let busy = false;
 
@@ -156,6 +188,41 @@
     list.innerHTML = visible.map(renderCard).join('');
   }
 
+  function updateCountdown() {
+    if (!currentWeek) return;
+    const remaining = Math.max(0, currentWeek.end - Date.now());
+    const days = Math.floor(remaining / 86400000);
+    const hours = Math.floor((remaining % 86400000) / 3600000);
+    const minutes = Math.floor((remaining % 3600000) / 60000);
+    weeklyCountdown.textContent = `${days}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M · UTC`;
+  }
+
+  function renderWeeklyRecord() {
+    if (!currentWeek) return;
+    const drawText = currentWeek.draws ? ` · ${currentWeek.draws} ${currentWeek.draws === 1 ? 'DRAW' : 'DRAWS'}` : '';
+    weeklyRecord.textContent = `${currentWeek.wins} ${currentWeek.wins === 1 ? 'WIN' : 'WINS'} · ${currentWeek.losses} ${currentWeek.losses === 1 ? 'LOSS' : 'LOSSES'}${drawText}`;
+    updateCountdown();
+  }
+
+  function showWeeklySummary(summary, isPreview = false) {
+    shownSummaryKey = isPreview ? '' : summary.key;
+    panel.querySelector('[data-weekly="wins"]').textContent = summary.wins;
+    panel.querySelector('[data-weekly="losses"]').textContent = summary.losses;
+    panel.querySelector('[data-weekly="draws"]').textContent = summary.draws;
+    panel.querySelector('[data-weekly="matches"]').textContent = summary.matchesPlayed;
+    panel.querySelector('[data-weekly="opponents"]').textContent = summary.opponentsPlayed;
+    panel.querySelector('[data-weekly="rounds"]').textContent = summary.roundsPlayed;
+    panel.querySelector('[data-weekly="coins"]').textContent = `+${summary.coins} COINS`;
+    weeklyPreviewNote.hidden = !isPreview;
+    weeklySummary.hidden = false;
+  }
+
+  function maybeShowPreviousWeek() {
+    if (!previousWeek?.matchesPlayed) return;
+    const acknowledged = localStorage.getItem(`battle-picz.week-summary.${previousWeek.key}`);
+    if (!acknowledged) showWeeklySummary(previousWeek);
+  }
+
   function updateAlertsButton() {
     if (!('Notification' in window)) {
       alertsButton.textContent = 'ALERTS N/A';
@@ -204,9 +271,14 @@
     if (busy) return;
     setBusy(true, message);
     try {
-      matches = await backend.getMatchesDashboard();
+      const dashboard = await backend.getWeeklyDashboard();
+      matches = dashboard.matches;
+      currentWeek = dashboard.current;
+      previousWeek = dashboard.previous;
       render();
+      renderWeeklyRecord();
       notifyAboutNudges();
+      maybeShowPreviousWeek();
     } catch (error) {
       showError(error);
     } finally {
@@ -248,6 +320,19 @@
     notifyAboutNudges();
   };
   updateAlertsButton();
+  setInterval(updateCountdown, 30_000);
+
+  panel.querySelector('.matches-test-week').onclick = () => {
+    if (!currentWeek) return;
+    showWeeklySummary(currentWeek, true);
+  };
+  panel.querySelector('.weekly-continue').onclick = () => {
+    if (shownSummaryKey) {
+      localStorage.setItem(`battle-picz.week-summary.${shownSummaryKey}`, 'shown');
+    }
+    weeklySummary.hidden = true;
+    shownSummaryKey = '';
+  };
 
   panel.querySelector('.matches-new').onclick = async () => {
     if (busy) return;
@@ -304,11 +389,17 @@
         state.textContent = 'Nudge sent. You can nudge them again in 6 hours.';
       }
       if (action === 'rematch') {
-        const rematch = await backend.createRematch(item.id);
-        await copyText(rematch.share_url, 'Rematch created');
-        matches = await backend.getMatchesDashboard();
+        await backend.createRematch(item.id);
+        const dashboard = await backend.getWeeklyDashboard();
+        matches = dashboard.matches;
+        currentWeek = dashboard.current;
+        previousWeek = dashboard.previous;
         activeTab = 'waiting';
         render();
+        renderWeeklyRecord();
+        state.hidden = false;
+        state.className = 'matches-state success';
+        state.textContent = 'Rematch sent — it will appear for your opponent to accept.';
       }
     } catch (error) {
       showError(error);
