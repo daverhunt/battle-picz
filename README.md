@@ -11,7 +11,8 @@ Run the live two-player Supabase smoke test with `npm run test:backend`.
 
 ## Deployment
 
-Vercel deploys the production site from the `main` branch. Pushes to `main` should create a new production deployment automatically.
+The GitHub repository is connected to the Vercel project `battle-picz-game`.
+Every push to `main` creates a production deployment at https://battle-picz-game.vercel.app/.
 
 ## Backend
 
