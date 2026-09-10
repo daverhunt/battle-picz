@@ -225,6 +225,15 @@
       return dashboard.filter(Boolean).sort((a, b) => b.updatedAt - a.updatedAt);
     }
 
+    async getWeeklyDashboard(referenceTime = this.now()) {
+      const matches = await this.getMatchesDashboard();
+      return {
+        matches,
+        current: BattlePiczBackend.weeklySummary(matches, referenceTime),
+        previous: BattlePiczBackend.weeklySummary(matches, referenceTime, -1)
+      };
+    }
+
     async createRematch(matchId) {
       const rows = await this.rpc('create_rematch', { p_match_id: matchId });
       const rematch = Array.isArray(rows) ? rows[0] : rows;
@@ -275,6 +284,51 @@
     static normaliseInviteCode(value) {
       const code = String(value || '').trim().toUpperCase();
       return /^[A-Z0-9]{6}$/.test(code) ? code : '';
+    }
+
+    static utcWeekWindow(value = Date.now(), weekOffset = 0) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) throw new Error('Invalid week date');
+      const daysSinceMonday = (date.getUTCDay() + 6) % 7;
+      const start = Date.UTC(
+        date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() - daysSinceMonday + weekOffset * 7
+      );
+      const end = start + 7 * 24 * 60 * 60 * 1000;
+      return {
+        start,
+        end,
+        key: new Date(start).toISOString().slice(0, 10)
+      };
+    }
+
+    static weeklySummary(items = [], referenceTime = Date.now(), weekOffset = 0) {
+      const window = BattlePiczBackend.utcWeekWindow(referenceTime, weekOffset);
+      const completed = items.filter(item => {
+        const createdAt = new Date(item?.match?.created_at || 0).getTime();
+        return item?.match?.status === 'complete' && createdAt >= window.start && createdAt < window.end;
+      });
+      const result = { wins: 0, losses: 0, draws: 0 };
+      const opponents = new Set();
+      let roundsPlayed = 0;
+      completed.forEach(item => {
+        if (item.result === 'won') result.wins += 1;
+        else if (item.result === 'lost') result.losses += 1;
+        else result.draws += 1;
+        if (item.opponent?.user_id) opponents.add(item.opponent.user_id);
+        const ownRoundNumbers = new Set((item.turns || [])
+          .filter(turn => turn.user_id === item.me?.user_id)
+          .map(turn => Number(turn.round_no))
+          .filter(Number.isFinite));
+        roundsPlayed += ownRoundNumbers.size;
+      });
+      return {
+        ...window,
+        ...result,
+        matchesPlayed: completed.length,
+        opponentsPlayed: opponents.size,
+        roundsPlayed,
+        coins: completed.length ? 10 + result.wins * 5 : 0
+      };
     }
 
     static describeMatch(match, players, turns, userId, nudges = []) {
