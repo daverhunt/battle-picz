@@ -264,3 +264,41 @@ test('sends a nudge through the protected RPC', async () => {
   assert.match(call.url, /rpc\/send_match_nudge$/);
   assert.deepEqual(JSON.parse(call.options.body), { p_match_id: 'match-6' });
 });
+
+test('uses one global UTC tournament week from Monday to Monday', () => {
+  const sunday = BattlePiczBackend.utcWeekWindow('2026-09-13T23:59:59.999Z');
+  const monday = BattlePiczBackend.utcWeekWindow('2026-09-14T00:00:00.000Z');
+  assert.equal(sunday.key, '2026-09-07');
+  assert.equal(new Date(sunday.end).toISOString(), '2026-09-14T00:00:00.000Z');
+  assert.equal(monday.key, '2026-09-14');
+});
+
+test('UTC tournament weeks remain correct across a year boundary', () => {
+  const week = BattlePiczBackend.utcWeekWindow('2027-01-01T12:00:00Z');
+  assert.equal(week.key, '2026-12-28');
+  assert.equal(new Date(week.end).toISOString(), '2027-01-04T00:00:00.000Z');
+});
+
+test('builds the weekly record and original coin reward from completed matches', () => {
+  const me = { user_id: 'me' };
+  const base = {
+    match: { status: 'complete', created_at: '2026-09-09T10:00:00Z' },
+    me,
+    opponent: { user_id: 'friend-1' },
+    turns: [{ user_id: 'me', round_no: 1 }, { user_id: 'me', round_no: 2 }]
+  };
+  const summary = BattlePiczBackend.weeklySummary([
+    { ...base, result: 'won' },
+    { ...base, result: 'lost', match: { ...base.match, created_at: '2026-09-10T10:00:00Z' } },
+    { ...base, result: 'draw', opponent: { user_id: 'friend-2' }, match: { ...base.match, created_at: '2026-09-11T10:00:00Z' } },
+    { ...base, result: 'won', match: { ...base.match, created_at: '2026-09-01T10:00:00Z' } }
+  ], '2026-09-12T12:00:00Z');
+  assert.deepEqual(
+    { wins: summary.wins, losses: summary.losses, draws: summary.draws },
+    { wins: 1, losses: 1, draws: 1 }
+  );
+  assert.equal(summary.matchesPlayed, 3);
+  assert.equal(summary.opponentsPlayed, 2);
+  assert.equal(summary.roundsPlayed, 6);
+  assert.equal(summary.coins, 15);
+});
