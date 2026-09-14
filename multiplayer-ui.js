@@ -156,9 +156,9 @@
       <div class="match-card-image"${image ? ` style="background-image:url('${image}')"` : ''}><span>${escapeHtml(category).slice(0, 1)}</span></div>
       <div class="match-card-main">
         <div class="match-card-top"><strong>${escapeHtml(opponentName(item))}</strong><time>${relativeTime(item.updatedAt)}</time></div>
-        <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
+        <div class="match-card-meta">Round ${item.currentRound} of 3 · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
         <div class="match-card-status">${cardStatus(item)}</div>
-        <div class="match-card-score"><span>You <b>${item.myScore.toLocaleString()}</b></span><i></i><span>Them <b>${item.theirScore.toLocaleString()}</b></span></div>
+        <div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><i></i><span>Them <b>${item.theirRoundsWon}</b></span></div>
         <div class="match-card-links">${inviteAction}${rematchAction}${nudgeAction}</div>
       </div>
       <button class="match-card-primary" data-action="${item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
@@ -434,12 +434,23 @@
       return;
     }
     try {
-      matchContext = await backend.getMatchContext(matchId, 1);
+      matchContext = await backend.getMatchContext(matchId);
       window.BATTLE_PICZ_MATCH = matchContext;
       const opponentNameValue = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
       const opponentLabel = document.querySelector('.pname.opp');
       if (opponentLabel) opponentLabel.textContent = opponentNameValue;
-      if (matchContext.ownTurn) {
+      const seenRoundKey = `battle-picz.seen-round.${matchId}`;
+      const lastCompletedRound = matchContext.roundResults.length;
+      const lastSeenRound = Number(localStorage.getItem(seenRoundKey) || 0);
+      if (lastCompletedRound > lastSeenRound) {
+        matchContext = await backend.getMatchContext(matchId, lastCompletedRound);
+        window.BATTLE_PICZ_MATCH = matchContext;
+        window.showBattlePiczMatchResult?.(matchContext);
+      } else if (matchContext.match.status === 'complete') {
+        matchContext = await backend.getMatchContext(matchId, 3);
+        window.BATTLE_PICZ_MATCH = matchContext;
+        window.showBattlePiczMatchResult?.(matchContext);
+      } else if (matchContext.ownTurn) {
         if (matchContext.opponentTurn) {
           window.showBattlePiczMatchResult?.(matchContext);
         } else {
@@ -464,7 +475,7 @@
   window.battlePiczSaveRound = async payload => {
     if (!matchContext) throw new Error('Match is not ready');
     await backend.submitTurn(matchContext.match.id, payload.roundNo, payload.score,
-      payload.answers, payload.ghostTimeline, true);
+      payload.answers, payload.ghostTimeline, payload.roundNo === 3);
     matchContext = await backend.getMatchContext(matchContext.match.id, payload.roundNo);
     window.BATTLE_PICZ_MATCH = matchContext;
     return matchContext;

@@ -188,7 +188,7 @@ test('sorts dashboard matches into my turn, their turn, and completed', () => {
   assert.equal(waiting.action, 'waiting');
 
   const complete = BattlePiczBackend.describeMatch(
-    { ...baseMatch, status: 'complete' }, players, [], 'me'
+    { ...baseMatch, status: 'complete', winner_id: 'them' }, players, [], 'me'
   );
   assert.equal(complete.bucket, 'completed');
   assert.equal(complete.result, 'lost');
@@ -206,6 +206,22 @@ test('marks an unaccepted direct rematch as actionable', () => {
   );
   assert.equal(item.bucket, 'your-turn');
   assert.equal(item.action, 'accept');
+});
+
+test('does not let the creator configure a round before an opponent joins', async () => {
+  const session = { access_token: 'token', expires_at: 9_999_999_999, user: { id: 'me' } };
+  const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
+  const replies = [
+    [{ id: 'waiting-match', status: 'waiting', game_config: {} }],
+    [{ user_id: 'me', player_no: 1, accepted_at: 'now' }],
+    []
+  ];
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async () => response(replies.shift())
+  });
+  const context = await backend.getMatchContext('waiting-match');
+  assert.equal(context.canChoose, false);
 });
 
 test('creates a rematch and returns its share URL', async () => {
@@ -301,4 +317,44 @@ test('builds the weekly record and original coin reward from completed matches',
   assert.equal(summary.opponentsPlayed, 2);
   assert.equal(summary.roundsPlayed, 6);
   assert.equal(summary.coins, 15);
+});
+
+test('advances only after both players complete each of three rounds', () => {
+  const match = { status: 'active' };
+  assert.equal(BattlePiczBackend.currentRound(match, []), 1);
+  assert.equal(BattlePiczBackend.currentRound(match, [
+    { user_id: 'one', round_no: 1 }
+  ]), 1);
+  assert.equal(BattlePiczBackend.currentRound(match, [
+    { user_id: 'one', round_no: 1 },
+    { user_id: 'two', round_no: 1 }
+  ]), 2);
+  assert.equal(BattlePiczBackend.currentRound(match, [
+    { user_id: 'one', round_no: 1 }, { user_id: 'two', round_no: 1 },
+    { user_id: 'one', round_no: 2 }, { user_id: 'two', round_no: 2 }
+  ]), 3);
+});
+
+test('scores the overall match by rounds won rather than raw points', () => {
+  const results = BattlePiczBackend.roundResults([
+    { user_id: 'me', round_no: 1, score: 100 }, { user_id: 'them', round_no: 1, score: 90 },
+    { user_id: 'me', round_no: 2, score: 100 }, { user_id: 'them', round_no: 2, score: 90 },
+    { user_id: 'me', round_no: 3, score: 1 }, { user_id: 'them', round_no: 3, score: 10000 }
+  ], 'me');
+  assert.deepEqual(results.map(result => result.result), ['won', 'won', 'lost']);
+});
+
+test('alternates the category chooser across the three rounds', () => {
+  const match = { id: 'three-round-match', status: 'active', game_config: {} };
+  const players = [
+    { user_id: 'one', player_no: 1, accepted_at: 'now' },
+    { user_id: 'two', player_no: 2, accepted_at: 'now' }
+  ];
+  const roundTwoTurns = [
+    { user_id: 'one', round_no: 1, score: 100 },
+    { user_id: 'two', round_no: 1, score: 90 }
+  ];
+  assert.equal(BattlePiczBackend.describeMatch(match, players, [], 'one').action, 'choose');
+  assert.equal(BattlePiczBackend.describeMatch(match, players, roundTwoTurns, 'one').action, 'waiting');
+  assert.equal(BattlePiczBackend.describeMatch(match, players, roundTwoTurns, 'two').action, 'choose');
 });

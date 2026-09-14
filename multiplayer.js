@@ -168,7 +168,7 @@
       });
     }
 
-    async getMatchContext(matchId, roundNo = 1) {
+    async getMatchContext(matchId, roundNo = null) {
       const session = await this.ensureSession();
       const [match, players, turns] = await Promise.all([
         this.getMatch(matchId),
@@ -179,20 +179,35 @@
       const me = players.find(player => player.user_id === userId);
       if (!me) throw new Error('You are not part of this match');
       const opponent = players.find(player => player.user_id !== userId) || null;
+      const currentRound = BattlePiczBackend.currentRound(match, turns);
+      const viewedRound = Number(roundNo) || currentRound;
       const ownTurn = turns.find(turn =>
-        turn.user_id === userId && Number(turn.round_no) === Number(roundNo)
+        turn.user_id === userId && Number(turn.round_no) === viewedRound
       ) || null;
       const opponentTurn = turns.find(turn =>
-        turn.user_id !== userId && Number(turn.round_no) === Number(roundNo)
+        turn.user_id !== userId && Number(turn.round_no) === viewedRound
       ) || null;
+      const roundResults = BattlePiczBackend.roundResults(turns, userId);
+      const myRoundsWon = roundResults.filter(result => result.result === 'won').length;
+      const theirRoundsWon = roundResults.filter(result => result.result === 'lost').length;
       return {
         match,
         me,
         opponent,
+        turns,
         ownTurn,
         opponentTurn,
-        roundConfig: match.game_config?.rounds?.[String(roundNo)] || null,
-        canChoose: me.player_no === (roundNo % 2 === 1 ? 1 : 2)
+        currentRound,
+        roundNo: viewedRound,
+        roundResults,
+        myRoundsWon,
+        theirRoundsWon,
+        result: match.status !== 'complete' ? null
+          : match.winner_id == null ? 'draw'
+            : match.winner_id === userId ? 'won' : 'lost',
+        roundConfig: match.game_config?.rounds?.[String(viewedRound)] || null,
+        canChoose: match.status === 'active' &&
+          me.player_no === (viewedRound % 2 === 1 ? 1 : 2)
       };
     }
 
@@ -286,6 +301,39 @@
       return /^[A-Z0-9]{6}$/.test(code) ? code : '';
     }
 
+    static currentRound(match, turns = []) {
+      if (match?.status === 'complete') return 3;
+      for (let roundNo = 1; roundNo <= 3; roundNo += 1) {
+        const submittedPlayers = new Set((turns || [])
+          .filter(turn => Number(turn.round_no) === roundNo)
+          .map(turn => turn.user_id));
+        if (submittedPlayers.size < 2) return roundNo;
+      }
+      return 3;
+    }
+
+    static roundResults(turns = [], userId) {
+      const results = [];
+      for (let roundNo = 1; roundNo <= 3; roundNo += 1) {
+        const mine = turns.find(turn =>
+          turn.user_id === userId && Number(turn.round_no) === roundNo
+        );
+        const theirs = turns.find(turn =>
+          turn.user_id !== userId && Number(turn.round_no) === roundNo
+        );
+        if (!mine || !theirs) continue;
+        const myScore = Number(mine.score) || 0;
+        const theirScore = Number(theirs.score) || 0;
+        results.push({
+          roundNo,
+          myScore,
+          theirScore,
+          result: myScore === theirScore ? 'draw' : myScore > theirScore ? 'won' : 'lost'
+        });
+      }
+      return results;
+    }
+
     static utcWeekWindow(value = Date.now(), weekOffset = 0) {
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) throw new Error('Invalid week date');
@@ -335,12 +383,12 @@
       const me = players.find(player => player.user_id === userId) || null;
       if (!me) return null;
       const opponent = players.find(player => player.user_id !== userId) || null;
-      const roundNumbers = Object.keys(match.game_config?.rounds || {}).map(Number).filter(Number.isFinite);
-      const currentRound = Math.max(1, ...roundNumbers, ...(turns || []).map(turn => Number(turn.round_no) || 1));
+      const currentRound = BattlePiczBackend.currentRound(match, turns);
       const roundConfig = match.game_config?.rounds?.[String(currentRound)] || null;
       const ownTurn = turns.find(turn => turn.user_id === userId && Number(turn.round_no) === currentRound) || null;
       const opponentTurn = turns.find(turn => turn.user_id !== userId && Number(turn.round_no) === currentRound) || null;
-      const canChoose = me.player_no === (currentRound % 2 === 1 ? 1 : 2);
+      const canChoose = match.status === 'active' &&
+        me.player_no === (currentRound % 2 === 1 ? 1 : 2);
       let bucket = 'waiting';
       let action = 'waiting';
 
@@ -350,9 +398,9 @@
       } else if (!me.accepted_at) {
         bucket = 'your-turn';
         action = 'accept';
-      } else if (ownTurn) {
+      } else if (match.status === 'waiting') {
         bucket = 'waiting';
-      } else if (match.status === 'waiting' && opponent) {
+      } else if (ownTurn) {
         bucket = 'waiting';
       } else if (roundConfig || canChoose) {
         bucket = 'your-turn';
@@ -363,13 +411,19 @@
         match.started_at, match.created_at].filter(Boolean).map(value => new Date(value).getTime());
       const myScore = Number(me.total_score) || 0;
       const theirScore = Number(opponent?.total_score) || 0;
+      const roundResults = BattlePiczBackend.roundResults(turns, userId);
+      const myRoundsWon = roundResults.filter(result => result.result === 'won').length;
+      const theirRoundsWon = roundResults.filter(result => result.result === 'lost').length;
       const lastSentNudge = nudges.find(nudge => nudge.from_user_id === userId) || null;
       const lastReceivedNudge = nudges.find(nudge => nudge.to_user_id === userId) || null;
       const nudgeCooldownMs = 6 * 60 * 60 * 1000;
       return {
         id: match.id, match, me, opponent, turns, ownTurn, opponentTurn,
         currentRound, roundConfig, canChoose, bucket, action, myScore, theirScore,
-        result: myScore === theirScore ? 'draw' : myScore > theirScore ? 'won' : 'lost',
+        roundResults, myRoundsWon, theirRoundsWon,
+        result: match.status !== 'complete' ? null
+          : match.winner_id == null ? 'draw'
+            : match.winner_id === userId ? 'won' : 'lost',
         lastSentNudge,
         lastReceivedNudge,
         canNudge: bucket === 'waiting' && Boolean(opponent) &&

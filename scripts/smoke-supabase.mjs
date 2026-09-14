@@ -43,31 +43,41 @@ const joinedMatchId = await request('/rest/v1/rpc/join_challenge', {
 });
 if (joinedMatchId !== challenge.match_id) throw new Error('Opponent joined the wrong match');
 
-const roundConfig = await request('/rest/v1/rpc/set_round_config', {
-  token: creator,
-  body: {
-    p_match_id: challenge.match_id,
-    p_round_no: 1,
-    p_category: 'ANIMALS',
-    p_difficulty: 'easy'
-  }
-});
-if (roundConfig?.category !== 'ANIMALS' || roundConfig?.difficulty !== 'easy') {
-  throw new Error('Shared round configuration was not saved');
-}
+const rounds = [
+  { chooser: creator, category: 'ANIMALS', difficulty: 'easy', scores: [3200, 2800] },
+  { chooser: opponent, category: 'FOOD', difficulty: 'medium', scores: [2600, 3000] },
+  { chooser: creator, category: 'SPORT', difficulty: 'hard', scores: [3400, 3100] }
+];
 
-for (const [token, score] of [[creator, 3200], [opponent, 2800]]) {
-  await request('/rest/v1/rpc/submit_turn', {
-    token,
+for (const [index, round] of rounds.entries()) {
+  const roundNo = index + 1;
+  const roundConfig = await request('/rest/v1/rpc/set_round_config', {
+    token: round.chooser,
     body: {
       p_match_id: challenge.match_id,
-      p_round_no: 1,
-      p_score: score,
-      p_answers: [{ correct: true, elapsed_ms: 2500, tiles_used: 4 }],
-      p_ghost_timeline: [{ at_ms: 2500, score }],
-      p_is_final: true
+      p_round_no: roundNo,
+      p_category: round.category,
+      p_difficulty: round.difficulty
     }
   });
+  if (roundConfig?.category !== round.category || roundConfig?.difficulty !== round.difficulty) {
+    throw new Error(`Round ${roundNo} configuration was not saved`);
+  }
+
+  for (const [playerIndex, token] of [creator, opponent].entries()) {
+    const score = round.scores[playerIndex];
+    await request('/rest/v1/rpc/submit_turn', {
+      token,
+      body: {
+        p_match_id: challenge.match_id,
+        p_round_no: roundNo,
+        p_score: score,
+        p_answers: [{ correct: true, elapsed_ms: 2500, tiles_used: 4, score }],
+        p_ghost_timeline: [{ at_ms: 2500, score }],
+        p_is_final: roundNo === 3
+      }
+    });
+  }
 }
 
 const matches = await request(
@@ -78,4 +88,4 @@ if (matches?.[0]?.status !== 'complete' || !matches[0].winner_id) {
   throw new Error('Completed match state was not calculated');
 }
 
-console.log('Supabase smoke test passed: two guests created, joined, scored, and completed a match.');
+console.log('Supabase smoke test passed: two guests completed all three rounds and produced a winner.');
