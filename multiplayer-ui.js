@@ -441,6 +441,7 @@
         window.BATTLE_PICZ_MATCH = matchContext;
         window.showBattlePiczMatchResult?.(matchContext);
       } else if (matchContext.ownTurn) {
+        window.BattlePiczProgress?.clear(localStorage, matchId, matchContext.currentRound || 1);
         if (matchContext.opponentTurn) {
           window.showBattlePiczMatchResult?.(matchContext);
         } else {
