@@ -190,6 +190,8 @@
       const roundResults = BattlePiczBackend.roundResults(turns, userId);
       const myRoundsWon = roundResults.filter(result => result.result === 'won').length;
       const theirRoundsWon = roundResults.filter(result => result.result === 'lost').length;
+      const canPlayOpeningTurn = match.status === 'waiting' &&
+        me.player_no === 1 && viewedRound === 1;
       return {
         match,
         me,
@@ -206,7 +208,7 @@
           : match.winner_id == null ? 'draw'
             : match.winner_id === userId ? 'won' : 'lost',
         roundConfig: match.game_config?.rounds?.[String(viewedRound)] || null,
-        canChoose: match.status === 'active' &&
+        canChoose: (match.status === 'active' || canPlayOpeningTurn) &&
           me.player_no === (viewedRound % 2 === 1 ? 1 : 2)
       };
     }
@@ -387,7 +389,9 @@
       const roundConfig = match.game_config?.rounds?.[String(currentRound)] || null;
       const ownTurn = turns.find(turn => turn.user_id === userId && Number(turn.round_no) === currentRound) || null;
       const opponentTurn = turns.find(turn => turn.user_id !== userId && Number(turn.round_no) === currentRound) || null;
-      const canChoose = match.status === 'active' &&
+      const canPlayOpeningTurn = match.status === 'waiting' &&
+        me.player_no === 1 && currentRound === 1;
+      const canChoose = (match.status === 'active' || canPlayOpeningTurn) &&
         me.player_no === (currentRound % 2 === 1 ? 1 : 2);
       let bucket = 'waiting';
       let action = 'waiting';
@@ -398,6 +402,9 @@
       } else if (!me.accepted_at) {
         bucket = 'your-turn';
         action = 'accept';
+      } else if (match.status === 'waiting' && canPlayOpeningTurn && !ownTurn) {
+        bucket = 'your-turn';
+        action = roundConfig ? 'play' : 'choose';
       } else if (match.status === 'waiting') {
         bucket = 'waiting';
       } else if (ownTurn) {

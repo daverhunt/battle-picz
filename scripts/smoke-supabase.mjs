@@ -37,12 +37,6 @@ const [challenge] = await request('/rest/v1/rpc/create_challenge', {
 
 if (!challenge?.match_id || !challenge?.invite_code) throw new Error('Challenge creation failed');
 
-const joinedMatchId = await request('/rest/v1/rpc/join_challenge', {
-  token: opponent,
-  body: { p_invite_code: challenge.invite_code }
-});
-if (joinedMatchId !== challenge.match_id) throw new Error('Opponent joined the wrong match');
-
 const rounds = [
   { chooser: creator, category: 'ANIMALS', difficulty: 'easy', scores: [3200, 2800] },
   { chooser: opponent, category: 'FOOD', difficulty: 'medium', scores: [2600, 3000] },
@@ -64,7 +58,29 @@ for (const [index, round] of rounds.entries()) {
     throw new Error(`Round ${roundNo} configuration was not saved`);
   }
 
-  for (const [playerIndex, token] of [creator, opponent].entries()) {
+  if (roundNo === 1) {
+    const score = round.scores[0];
+    await request('/rest/v1/rpc/submit_turn', {
+      token: creator,
+      body: {
+        p_match_id: challenge.match_id,
+        p_round_no: roundNo,
+        p_score: score,
+        p_answers: [{ correct: true, elapsed_ms: 2500, tiles_used: 4, score }],
+        p_ghost_timeline: [{ at_ms: 2500, score }],
+        p_is_final: false
+      }
+    });
+
+    const joinedMatchId = await request('/rest/v1/rpc/join_challenge', {
+      token: opponent,
+      body: { p_invite_code: challenge.invite_code }
+    });
+    if (joinedMatchId !== challenge.match_id) throw new Error('Opponent joined the wrong match');
+  }
+
+  const playersThisRound = roundNo === 1 ? [[1, opponent]] : [[0, creator], [1, opponent]];
+  for (const [playerIndex, token] of playersThisRound) {
     const score = round.scores[playerIndex];
     await request('/rest/v1/rpc/submit_turn', {
       token,

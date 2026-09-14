@@ -341,10 +341,8 @@
       const challenge = await backend.createChallenge({ version: 1 });
       sessionStorage.setItem('battle-picz.pending-share-url', challenge.share_url);
       sessionStorage.setItem('battle-picz.pending-share-code', challenge.invite_code);
-      await copyText(challenge.share_url, `Challenge ${challenge.invite_code} copied — send it to a friend`);
-      matches = await backend.getMatchesDashboard();
-      activeTab = 'your-turn';
-      render();
+      const match = await backend.getMatch(challenge.match_id);
+      location.assign(matchUrl({ id: challenge.match_id, match }));
     } catch (error) {
       showError(error);
     } finally {
@@ -389,17 +387,9 @@
         state.textContent = 'Nudge sent. You can nudge them again in 6 hours.';
       }
       if (action === 'rematch') {
-        await backend.createRematch(item.id);
-        const dashboard = await backend.getWeeklyDashboard();
-        matches = dashboard.matches;
-        currentWeek = dashboard.current;
-        previousWeek = dashboard.previous;
-        activeTab = 'waiting';
-        render();
-        renderWeeklyRecord();
-        state.hidden = false;
-        state.className = 'matches-state success';
-        state.textContent = 'Rematch sent — it will appear for your opponent to accept.';
+        const rematch = await backend.createRematch(item.id);
+        const match = await backend.getMatch(rematch.match_id);
+        return location.assign(matchUrl({ id: rematch.match_id, match }));
       }
     } catch (error) {
       showError(error);
@@ -457,7 +447,9 @@
           open('waiting');
           state.hidden = false;
           state.className = 'matches-state success';
-          state.textContent = 'Round saved. Your friend’s turn now.';
+          state.textContent = matchContext.opponent
+            ? 'Round saved. Your friend’s turn now.'
+            : 'Round saved. Send the invite link and wait for your friend.';
         }
       } else if (matchContext.roundConfig || matchContext.canChoose) {
         close();

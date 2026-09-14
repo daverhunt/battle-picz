@@ -208,7 +208,7 @@ test('marks an unaccepted direct rematch as actionable', () => {
   assert.equal(item.action, 'accept');
 });
 
-test('does not let the creator configure a round before an opponent joins', async () => {
+test('lets the creator configure round one before an opponent joins', async () => {
   const session = { access_token: 'token', expires_at: 9_999_999_999, user: { id: 'me' } };
   const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
   const replies = [
@@ -221,7 +221,31 @@ test('does not let the creator configure a round before an opponent joins', asyn
     fetchImpl: async () => response(replies.shift())
   });
   const context = await backend.getMatchContext('waiting-match');
-  assert.equal(context.canChoose, false);
+  assert.equal(context.canChoose, true);
+});
+
+test('makes an unjoined challenge actionable until the creator submits round one', () => {
+  const match = {
+    id: 'opening-match', status: 'waiting', game_config: {}, created_at: '2026-09-14T10:00:00Z'
+  };
+  const players = [{ user_id: 'creator', player_no: 1, accepted_at: 'now', total_score: 0 }];
+  const opening = BattlePiczBackend.describeMatch(match, players, [], 'creator');
+  assert.equal(opening.bucket, 'your-turn');
+  assert.equal(opening.action, 'choose');
+
+  const configured = BattlePiczBackend.describeMatch(
+    { ...match, game_config: { rounds: { 1: { category: 'FOOD', difficulty: 'easy' } } } },
+    players,
+    [],
+    'creator'
+  );
+  assert.equal(configured.action, 'play');
+
+  const submitted = BattlePiczBackend.describeMatch(match, players, [
+    { user_id: 'creator', round_no: 1, score: 1200 }
+  ], 'creator');
+  assert.equal(submitted.bucket, 'waiting');
+  assert.equal(submitted.action, 'waiting');
 });
 
 test('creates a rematch and returns its share URL', async () => {
