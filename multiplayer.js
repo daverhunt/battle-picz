@@ -216,7 +216,7 @@
     async listMatches(userId) {
       const playerFilter = userId ? `user_id=eq.${encodeURIComponent(userId)}&` : '';
       return this.request(
-        `match_players?${playerFilter}select=user_id,player_no,total_score,accepted_at,joined_at,matches(id,mode,status,invite_code,seed,game_config,created_by,winner_id,week_start,created_at,started_at,completed_at)&order=joined_at.desc`
+        `match_players?${playerFilter}select=user_id,player_no,total_score,accepted_at,joined_at,matches!match_players_match_id_fkey(id,mode,status,invite_code,seed,game_config,created_by,winner_id,week_start,created_at,started_at,completed_at)&order=joined_at.desc`
       );
     }
 

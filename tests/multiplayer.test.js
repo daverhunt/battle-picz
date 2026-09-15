@@ -275,6 +275,7 @@ test('dashboard query only requests the current player memberships', async () =>
   });
   assert.deepEqual(await backend.getMatchesDashboard(), []);
   assert.match(calls[0], /match_players\?user_id=eq\.player-123&select=/);
+  assert.match(calls[0], /matches!match_players_match_id_fkey\(/);
 });
 
 test('only allows a waiting player to nudge once per cooldown', () => {
