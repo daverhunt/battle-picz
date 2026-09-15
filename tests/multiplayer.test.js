@@ -319,19 +319,42 @@ test('UTC tournament weeks remain correct across a year boundary', () => {
   assert.equal(new Date(week.end).toISOString(), '2027-01-04T00:00:00.000Z');
 });
 
-test('builds the weekly record and original coin reward from completed matches', () => {
+test('builds the weekly record from ongoing battles and completed rounds', () => {
   const me = { user_id: 'me' };
   const base = {
-    match: { status: 'complete', created_at: '2026-09-09T10:00:00Z' },
+    match: { status: 'active', week_start: '2026-09-07', created_at: '2026-09-09T10:00:00Z' },
     me,
     opponent: { user_id: 'friend-1' },
-    turns: [{ user_id: 'me', round_no: 1 }, { user_id: 'me', round_no: 2 }]
+    turns: [
+      { user_id: 'me', round_no: 1, score: 50 },
+      { user_id: 'friend-1', round_no: 1, score: 100 },
+      { user_id: 'me', round_no: 2, score: 50 },
+      { user_id: 'friend-1', round_no: 2, score: 100 }
+    ]
   };
   const summary = BattlePiczBackend.weeklySummary([
-    { ...base, result: 'won' },
-    { ...base, result: 'lost', match: { ...base.match, created_at: '2026-09-10T10:00:00Z' } },
-    { ...base, result: 'draw', opponent: { user_id: 'friend-2' }, match: { ...base.match, created_at: '2026-09-11T10:00:00Z' } },
-    { ...base, result: 'won', match: { ...base.match, created_at: '2026-09-01T10:00:00Z' } }
+    {
+      ...base,
+      turns: [
+        { user_id: 'me', round_no: 1, score: 200 },
+        { user_id: 'friend-1', round_no: 1, score: 100 },
+        { user_id: 'me', round_no: 2, score: 200 },
+        { user_id: 'friend-1', round_no: 2, score: 100 }
+      ]
+    },
+    { ...base, match: { ...base.match, created_at: '2026-09-10T10:00:00Z' } },
+    {
+      ...base,
+      opponent: { user_id: 'friend-2' },
+      match: { ...base.match, created_at: '2026-09-11T10:00:00Z' },
+      turns: [
+        { user_id: 'me', round_no: 1, score: 100 },
+        { user_id: 'friend-2', round_no: 1, score: 100 },
+        { user_id: 'me', round_no: 2, score: 100 },
+        { user_id: 'friend-2', round_no: 2, score: 100 }
+      ]
+    },
+    { ...base, match: { ...base.match, week_start: '2026-08-31', created_at: '2026-09-01T10:00:00Z' } }
   ], '2026-09-12T12:00:00Z');
   assert.deepEqual(
     { wins: summary.wins, losses: summary.losses, draws: summary.draws },
@@ -341,9 +364,13 @@ test('builds the weekly record and original coin reward from completed matches',
   assert.equal(summary.opponentsPlayed, 2);
   assert.equal(summary.roundsPlayed, 6);
   assert.equal(summary.coins, 15);
+  assert.deepEqual(
+    { wins: summary.roundWins, losses: summary.roundLosses, draws: summary.roundDraws },
+    { wins: 2, losses: 2, draws: 2 }
+  );
 });
 
-test('advances only after both players complete each of three rounds', () => {
+test('keeps advancing after both players complete every round', () => {
   const match = { status: 'active' };
   assert.equal(BattlePiczBackend.currentRound(match, []), 1);
   assert.equal(BattlePiczBackend.currentRound(match, [
@@ -357,6 +384,10 @@ test('advances only after both players complete each of three rounds', () => {
     { user_id: 'one', round_no: 1 }, { user_id: 'two', round_no: 1 },
     { user_id: 'one', round_no: 2 }, { user_id: 'two', round_no: 2 }
   ]), 3);
+  assert.equal(BattlePiczBackend.currentRound(match, Array.from({ length: 24 }, (_, index) => [
+    { user_id: 'one', round_no: index + 1 },
+    { user_id: 'two', round_no: index + 1 }
+  ]).flat()), 25);
 });
 
 test('scores the overall match by rounds won rather than raw points', () => {
@@ -368,8 +399,8 @@ test('scores the overall match by rounds won rather than raw points', () => {
   assert.deepEqual(results.map(result => result.result), ['won', 'won', 'lost']);
 });
 
-test('alternates the category chooser across the three rounds', () => {
-  const match = { id: 'three-round-match', status: 'active', game_config: {} };
+test('alternates the category chooser for unlimited rounds', () => {
+  const match = { id: 'weekly-battle', status: 'active', game_config: {} };
   const players = [
     { user_id: 'one', player_no: 1, accepted_at: 'now' },
     { user_id: 'two', player_no: 2, accepted_at: 'now' }
@@ -381,4 +412,12 @@ test('alternates the category chooser across the three rounds', () => {
   assert.equal(BattlePiczBackend.describeMatch(match, players, [], 'one').action, 'choose');
   assert.equal(BattlePiczBackend.describeMatch(match, players, roundTwoTurns, 'one').action, 'waiting');
   assert.equal(BattlePiczBackend.describeMatch(match, players, roundTwoTurns, 'two').action, 'choose');
+
+  const throughRoundThree = [...roundTwoTurns,
+    { user_id: 'one', round_no: 2, score: 100 },
+    { user_id: 'two', round_no: 2, score: 90 },
+    { user_id: 'one', round_no: 3, score: 100 },
+    { user_id: 'two', round_no: 3, score: 90 }
+  ];
+  assert.equal(BattlePiczBackend.describeMatch(match, players, throughRoundThree, 'two').action, 'choose');
 });

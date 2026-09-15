@@ -141,7 +141,7 @@
 
     async getMatch(matchId) {
       const rows = await this.request(
-        `matches?id=eq.${encodeURIComponent(matchId)}&select=id,mode,status,invite_code,seed,game_config,created_by,winner_id,created_at,started_at,completed_at`
+        `matches?id=eq.${encodeURIComponent(matchId)}&select=id,mode,status,invite_code,seed,game_config,created_by,winner_id,week_start,created_at,started_at,completed_at`
       );
       if (!rows?.[0]) throw new Error('Match not found');
       return rows[0];
@@ -216,8 +216,21 @@
     async listMatches(userId) {
       const playerFilter = userId ? `user_id=eq.${encodeURIComponent(userId)}&` : '';
       return this.request(
-        `match_players?${playerFilter}select=user_id,player_no,total_score,accepted_at,joined_at,matches(id,mode,status,invite_code,seed,game_config,created_by,winner_id,created_at,started_at,completed_at)&order=joined_at.desc`
+        `match_players?${playerFilter}select=user_id,player_no,total_score,accepted_at,joined_at,matches(id,mode,status,invite_code,seed,game_config,created_by,winner_id,week_start,created_at,started_at,completed_at)&order=joined_at.desc`
       );
+    }
+
+    async getProfile() {
+      const session = await this.ensureSession();
+      const userId = session.user?.id;
+      const rows = await this.request(
+        `profiles?id=eq.${encodeURIComponent(userId)}&select=id,display_name,xp,coins,skill_rating,games_played,games_won`
+      );
+      return rows?.[0] || null;
+    }
+
+    finalizeWeeklyTournaments() {
+      return this.rpc('finalize_weekly_tournaments');
     }
 
     async getMatchesDashboard() {
@@ -239,13 +252,19 @@
           (nudges || []).filter(nudge => nudge.match_id === match.id)
         );
       }));
-      return dashboard.filter(Boolean).sort((a, b) => b.updatedAt - a.updatedAt);
+      return dashboard.filter(item => item && item.match.status !== 'cancelled')
+        .sort((a, b) => b.updatedAt - a.updatedAt);
     }
 
     async getWeeklyDashboard(referenceTime = this.now()) {
-      const matches = await this.getMatchesDashboard();
+      await this.finalizeWeeklyTournaments();
+      const [matches, profile] = await Promise.all([
+        this.getMatchesDashboard(),
+        this.getProfile()
+      ]);
       return {
         matches,
+        profile,
         current: BattlePiczBackend.weeklySummary(matches, referenceTime),
         previous: BattlePiczBackend.weeklySummary(matches, referenceTime, -1)
       };
@@ -304,19 +323,25 @@
     }
 
     static currentRound(match, turns = []) {
-      if (match?.status === 'complete') return 3;
-      for (let roundNo = 1; roundNo <= 3; roundNo += 1) {
+      let roundNo = 1;
+      while (true) {
         const submittedPlayers = new Set((turns || [])
           .filter(turn => Number(turn.round_no) === roundNo)
           .map(turn => turn.user_id));
-        if (submittedPlayers.size < 2) return roundNo;
+        if (submittedPlayers.size < 2) {
+          return match?.status === 'complete' ? Math.max(1, roundNo - 1) : roundNo;
+        }
+        roundNo += 1;
       }
-      return 3;
     }
 
     static roundResults(turns = [], userId) {
       const results = [];
-      for (let roundNo = 1; roundNo <= 3; roundNo += 1) {
+      const roundNumbers = [...new Set((turns || [])
+        .map(turn => Number(turn.round_no))
+        .filter(roundNo => Number.isInteger(roundNo) && roundNo >= 1))]
+        .sort((a, b) => a - b);
+      for (const roundNo of roundNumbers) {
         const mine = turns.find(turn =>
           turn.user_id === userId && Number(turn.round_no) === roundNo
         );
@@ -353,31 +378,44 @@
 
     static weeklySummary(items = [], referenceTime = Date.now(), weekOffset = 0) {
       const window = BattlePiczBackend.utcWeekWindow(referenceTime, weekOffset);
-      const completed = items.filter(item => {
-        const createdAt = new Date(item?.match?.created_at || 0).getTime();
-        return item?.match?.status === 'complete' && createdAt >= window.start && createdAt < window.end;
+      const battles = items.filter(item => {
+        const weekStart = item?.match?.week_start
+          ? new Date(`${item.match.week_start}T00:00:00.000Z`).getTime()
+          : new Date(item?.match?.created_at || 0).getTime();
+        return item?.match?.status !== 'cancelled' && weekStart >= window.start && weekStart < window.end;
       });
       const result = { wins: 0, losses: 0, draws: 0 };
+      const roundRecord = { roundWins: 0, roundLosses: 0, roundDraws: 0 };
       const opponents = new Set();
       let roundsPlayed = 0;
-      completed.forEach(item => {
-        if (item.result === 'won') result.wins += 1;
-        else if (item.result === 'lost') result.losses += 1;
-        else result.draws += 1;
+      let matchesPlayed = 0;
+      battles.forEach(item => {
+        const rounds = item.roundResults || BattlePiczBackend.roundResults(
+          item.turns || [], item.me?.user_id
+        );
+        if (!rounds.length) return;
+        matchesPlayed += 1;
         if (item.opponent?.user_id) opponents.add(item.opponent.user_id);
-        const ownRoundNumbers = new Set((item.turns || [])
-          .filter(turn => turn.user_id === item.me?.user_id)
-          .map(turn => Number(turn.round_no))
-          .filter(Number.isFinite));
-        roundsPlayed += ownRoundNumbers.size;
+        roundsPlayed += rounds.length;
+        rounds.forEach(round => {
+          if (round.result === 'won') roundRecord.roundWins += 1;
+          else if (round.result === 'lost') roundRecord.roundLosses += 1;
+          else roundRecord.roundDraws += 1;
+        });
+        const myWins = rounds.filter(round => round.result === 'won').length;
+        const theirWins = rounds.filter(round => round.result === 'lost').length;
+        if (myWins > theirWins) result.wins += 1;
+        else if (theirWins > myWins) result.losses += 1;
+        else result.draws += 1;
       });
       return {
         ...window,
         ...result,
-        matchesPlayed: completed.length,
+        ...roundRecord,
+        matchesPlayed,
         opponentsPlayed: opponents.size,
         roundsPlayed,
-        coins: completed.length ? 10 + result.wins * 5 : 0
+        coins: matchesPlayed ? 10 + result.wins * 5 : 0
       };
     }
 

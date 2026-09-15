@@ -19,7 +19,7 @@
   panel.innerHTML = `
     <header class="matches-header">
       <button class="matches-back" aria-label="Back to game">‹</button>
-      <div><h2>Your Battles</h2><p>Pick up where you left off</p></div>
+      <div><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
       <button class="matches-refresh" aria-label="Refresh matches">↻</button>
     </header>
     <section class="weekly-strip" aria-label="This week's tournament record">
@@ -49,16 +49,16 @@
         <p class="weekly-kicker">WEEK COMPLETE</p>
         <h2 id="weekly-summary-title">Weekly tournament results</h2>
         <div class="weekly-result-grid">
-          <div><strong data-weekly="wins">0</strong><span>Games won</span></div>
-          <div><strong data-weekly="losses">0</strong><span>Games lost</span></div>
+          <div><strong data-weekly="wins">0</strong><span>Battles won</span></div>
+          <div><strong data-weekly="losses">0</strong><span>Battles lost</span></div>
           <div><strong data-weekly="draws">0</strong><span>Draws</span></div>
         </div>
         <dl class="weekly-details">
-          <div><dt>Matches played</dt><dd data-weekly="matches">0</dd></div>
+          <div><dt>Battles played</dt><dd data-weekly="matches">0</dd></div>
           <div><dt>Opponents played</dt><dd data-weekly="opponents">0</dd></div>
           <div><dt>Rounds played</dt><dd data-weekly="rounds">0</dd></div>
         </dl>
-        <div class="weekly-coins">🪙 <strong data-weekly="coins">+0 COINS</strong><small>10 participation + 5 per win</small></div>
+        <div class="weekly-coins">🪙 <strong data-weekly="coins">+0 COINS</strong><small>10 participation + 5 per battle won</small></div>
         <button class="weekly-continue">START NEW WEEK!</button>
         <small class="weekly-preview-note" hidden>Test preview only — no coins awarded and the real week is unchanged.</small>
       </section>
@@ -77,6 +77,7 @@
   const weeklyCountdown = panel.querySelector('.weekly-countdown');
   const weeklySummary = panel.querySelector('.weekly-summary');
   const weeklyPreviewNote = panel.querySelector('.weekly-preview-note');
+  const balanceLabel = panel.querySelector('.matches-balance');
   let activeTab = 'your-turn';
   let matches = [];
   let currentWeek = null;
@@ -127,7 +128,7 @@
     if (item.bucket === 'completed') return item.result.toUpperCase();
     if (item.lastReceivedNudge && item.bucket === 'your-turn') return 'THEY NUDGED YOU · YOUR TURN';
     if (item.action === 'accept') return 'NEW CHALLENGE';
-    if (item.action === 'choose') return 'CHOOSE THE ROUND';
+    if (item.action === 'choose') return `CHOOSE ROUND ${item.currentRound}`;
     if (item.action === 'play') return 'READY TO PLAY';
     if (!item.opponent) return 'INVITE SENT';
     return 'WAITING FOR THEIR TURN';
@@ -156,7 +157,7 @@
       <div class="match-card-image"${image ? ` style="background-image:url('${image}')"` : ''}><span>${escapeHtml(category).slice(0, 1)}</span></div>
       <div class="match-card-main">
         <div class="match-card-top"><strong>${escapeHtml(opponentName(item))}</strong><time>${relativeTime(item.updatedAt)}</time></div>
-        <div class="match-card-meta">Round ${item.currentRound} of 3 · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
+        <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
         <div class="match-card-status">${cardStatus(item)}</div>
         <div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><i></i><span>Them <b>${item.theirRoundsWon}</b></span></div>
         <div class="match-card-links">${inviteAction}${rematchAction}${nudgeAction}</div>
@@ -168,7 +169,7 @@
   function emptyMessage(tab) {
     if (tab === 'your-turn') return ['You’re all caught up', 'Start a new battle or check games waiting on friends.'];
     if (tab === 'waiting') return ['Nobody’s keeping you waiting', 'Battles you’ve played or invited friends to will appear here.'];
-    return ['No completed battles yet', 'Finish a battle and your results will be saved here.'];
+    return ['No completed battles yet', 'Battles finish when the UTC tournament week ends.'];
   }
 
   function render() {
@@ -275,6 +276,7 @@
       matches = dashboard.matches;
       currentWeek = dashboard.current;
       previousWeek = dashboard.previous;
+      balanceLabel.textContent = `🪙 ${Number(dashboard.profile?.coins || 0).toLocaleString()} COINS`;
       render();
       renderWeeklyRecord();
       notifyAboutNudges();
@@ -424,6 +426,7 @@
       return;
     }
     try {
+      await backend.finalizeWeeklyTournaments();
       matchContext = await backend.getMatchContext(matchId);
       window.BATTLE_PICZ_MATCH = matchContext;
       const opponentNameValue = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
@@ -437,7 +440,7 @@
         window.BATTLE_PICZ_MATCH = matchContext;
         window.showBattlePiczMatchResult?.(matchContext);
       } else if (matchContext.match.status === 'complete') {
-        matchContext = await backend.getMatchContext(matchId, 3);
+        matchContext = await backend.getMatchContext(matchId, matchContext.currentRound);
         window.BATTLE_PICZ_MATCH = matchContext;
         window.showBattlePiczMatchResult?.(matchContext);
       } else if (matchContext.ownTurn) {
@@ -468,7 +471,7 @@
   window.battlePiczSaveRound = async payload => {
     if (!matchContext) throw new Error('Match is not ready');
     await backend.submitTurn(matchContext.match.id, payload.roundNo, payload.score,
-      payload.answers, payload.ghostTimeline, payload.roundNo === 3);
+      payload.answers, payload.ghostTimeline, false);
     matchContext = await backend.getMatchContext(matchContext.match.id, payload.roundNo);
     window.BATTLE_PICZ_MATCH = matchContext;
     return matchContext;

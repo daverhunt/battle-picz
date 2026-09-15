@@ -25,11 +25,13 @@ async function request(path, { token, body, method = 'POST' } = {}) {
 async function guest() {
   const session = await request('/auth/v1/signup', { body: {} });
   if (!session?.access_token) throw new Error('Anonymous sign-in returned no access token');
-  return session.access_token;
+  return session;
 }
 
-const creator = await guest();
-const opponent = await guest();
+const creatorSession = await guest();
+const opponentSession = await guest();
+const creator = creatorSession.access_token;
+const opponent = opponentSession.access_token;
 const [challenge] = await request('/rest/v1/rpc/create_challenge', {
   token: creator,
   body: { p_game_config: { version: 1, smoke_test: true }, p_invited_user_id: null }
@@ -40,7 +42,8 @@ if (!challenge?.match_id || !challenge?.invite_code) throw new Error('Challenge 
 const rounds = [
   { chooser: creator, category: 'ANIMALS', difficulty: 'easy', scores: [3200, 2800] },
   { chooser: opponent, category: 'FOOD', difficulty: 'medium', scores: [2600, 3000] },
-  { chooser: creator, category: 'SPORT', difficulty: 'hard', scores: [3400, 3100] }
+  { chooser: creator, category: 'SPORT', difficulty: 'hard', scores: [3400, 3100] },
+  { chooser: opponent, category: 'ANIMALS', difficulty: 'medium', scores: [2500, 2500] }
 ];
 
 for (const [index, round] of rounds.entries()) {
@@ -90,7 +93,7 @@ for (const [index, round] of rounds.entries()) {
         p_score: score,
         p_answers: [{ correct: true, elapsed_ms: 2500, tiles_used: 4, score }],
         p_ghost_timeline: [{ at_ms: 2500, score }],
-        p_is_final: roundNo === 3
+        p_is_final: false
       }
     });
   }
@@ -100,8 +103,21 @@ const matches = await request(
   `/rest/v1/matches?id=eq.${encodeURIComponent(challenge.match_id)}&select=status,winner_id`,
   { token: creator, method: 'GET' }
 );
-if (matches?.[0]?.status !== 'complete' || !matches[0].winner_id) {
-  throw new Error('Completed match state was not calculated');
+if (matches?.[0]?.status !== 'active' || matches[0].winner_id) {
+  throw new Error('The weekly battle ended instead of advancing beyond round three');
 }
 
-console.log('Supabase smoke test passed: two guests completed all three rounds and produced a winner.');
+const creatorProfile = await request(
+  `/rest/v1/profiles?id=eq.${creatorSession.user.id}&select=coins`,
+  { token: creator, method: 'GET' }
+);
+const opponentProfile = await request(
+  `/rest/v1/profiles?id=eq.${opponentSession.user.id}&select=coins`,
+  { token: opponent, method: 'GET' }
+);
+
+if (creatorProfile?.[0]?.coins !== 9 || opponentProfile?.[0]?.coins !== 7) {
+  throw new Error(`Round coin rewards were wrong (${creatorProfile?.[0]?.coins}/${opponentProfile?.[0]?.coins})`);
+}
+
+console.log('Supabase smoke test passed: two guests completed four rounds, stayed active, and received 3/2/1 coin rewards.');
