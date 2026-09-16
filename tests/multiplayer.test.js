@@ -198,6 +198,15 @@ test('sorts dashboard matches into my turn, their turn, and completed', () => {
   assert.equal(complete.result, 'lost');
 });
 
+test('only shows a round comparison after both players finish the three pictures', () => {
+  const ownTurn = { user_id: 'me', round_no: 1, answers: [{}, {}, {}] };
+  const opponentTurn = { user_id: 'them', round_no: 1, answers: [{}, {}, {}] };
+
+  assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn, opponentTurn: null }), false);
+  assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn: null, opponentTurn }), false);
+  assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn, opponentTurn }), true);
+});
+
 test('marks an unaccepted direct rematch as actionable', () => {
   const item = BattlePiczBackend.describeMatch(
     { id: 'match-5', status: 'waiting', game_config: {}, created_at: '2026-09-09T10:00:00Z' },

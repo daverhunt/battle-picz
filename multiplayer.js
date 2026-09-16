@@ -383,6 +383,10 @@
       return results;
     }
 
+    static isRoundComparisonReady(context) {
+      return Boolean(context?.ownTurn && context?.opponentTurn);
+    }
+
     static utcWeekWindow(value = Date.now(), weekOffset = 0) {
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) throw new Error('Invalid week date');
