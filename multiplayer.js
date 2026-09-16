@@ -149,7 +149,7 @@
 
     async getMatchPlayers(matchId) {
       return this.request(
-        `match_players?match_id=eq.${encodeURIComponent(matchId)}&select=user_id,player_no,total_score,accepted_at,profiles(display_name)&order=player_no`
+        `match_players?match_id=eq.${encodeURIComponent(matchId)}&select=user_id,player_no,total_score,accepted_at,profiles!match_players_user_id_fkey(display_name)&order=player_no`
       );
     }
 

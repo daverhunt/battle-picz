@@ -155,9 +155,10 @@ test('builds a current-player context with the opponent turn', async () => {
     [{ user_id: 'me', player_no: 2 }, { user_id: 'them', player_no: 1 }],
     [{ user_id: 'them', round_no: 1, score: 4200, answers: [] }]
   ];
+  const calls = [];
   const backend = new BattlePiczBackend({
     url: 'https://example.supabase.co', publishableKey: 'public', storage,
-    fetchImpl: async () => response(replies.shift())
+    fetchImpl: async url => { calls.push(url); return response(replies.shift()); }
   });
   const context = await backend.getMatchContext('match-3', 1);
   assert.equal(context.me.player_no, 2);
@@ -165,6 +166,7 @@ test('builds a current-player context with the opponent turn', async () => {
   assert.equal(context.opponentTurn.score, 4200);
   assert.deepEqual(context.roundConfig, { category: 'FOOD', difficulty: 'hard' });
   assert.equal(context.canChoose, false);
+  assert.match(calls[1], /profiles!match_players_user_id_fkey\(display_name\)/);
 });
 
 test('sorts dashboard matches into my turn, their turn, and completed', () => {
