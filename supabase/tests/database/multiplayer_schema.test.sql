@@ -1,6 +1,6 @@
 begin;
 
-select plan(23);
+select plan(25);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'matches', 'matches table exists');
@@ -40,6 +40,20 @@ select has_function(
   'finalize_weekly_tournaments',
   array[]::text[],
   'weekly tournament finalizer exists'
+);
+select has_function(
+  'public',
+  'reset_my_game_data',
+  array[]::text[],
+  'current-player test reset RPC exists'
+);
+select function_privs_are(
+  'public',
+  'reset_my_game_data',
+  array[]::text[],
+  'authenticated',
+  array['EXECUTE'],
+  'authenticated players can reset their own test game data'
 );
 select function_privs_are(
   'private',

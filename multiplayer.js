@@ -233,6 +233,28 @@
       return this.rpc('finalize_weekly_tournaments');
     }
 
+    clearLocalGameData() {
+      if (!this.storage) return;
+      const session = this.storage.getItem?.(SESSION_KEY) || null;
+      const keys = [];
+      if (typeof this.storage.length === 'number' && typeof this.storage.key === 'function') {
+        for (let index = 0; index < this.storage.length; index += 1) {
+          const key = this.storage.key(index);
+          if (key?.startsWith('battle-picz.')) keys.push(key);
+        }
+      } else {
+        keys.push(MATCH_KEY);
+      }
+      keys.forEach(key => this.storage.removeItem?.(key));
+      if (session) this.storage.setItem?.(SESSION_KEY, session);
+    }
+
+    async resetMyGameData() {
+      const result = await this.rpc('reset_my_game_data');
+      this.clearLocalGameData();
+      return result;
+    }
+
     async getMatchesDashboard() {
       const session = await this.ensureSession();
       const userId = session.user?.id;

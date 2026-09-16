@@ -26,6 +26,7 @@
       <div><span>THIS WEEK</span><strong class="weekly-record">0 WINS · 0 LOSSES</strong></div>
       <div><span>ENDS IN</span><strong class="weekly-countdown">—</strong></div>
       <button class="matches-test-week">TEST: END WEEK</button>
+      <button class="matches-test-reset">TEST: RESET GAME</button>
     </section>
     <div class="invite-banner" hidden>
       <strong>You’ve been challenged!</strong><span class="invite-banner-code"></span>
@@ -78,6 +79,7 @@
   const weeklySummary = panel.querySelector('.weekly-summary');
   const weeklyPreviewNote = panel.querySelector('.weekly-preview-note');
   const balanceLabel = panel.querySelector('.matches-balance');
+  const resetButton = panel.querySelector('.matches-test-reset');
   let activeTab = 'your-turn';
   let matches = [];
   let currentWeek = null;
@@ -255,6 +257,7 @@
     busy = value;
     panel.classList.toggle('is-busy', value);
     refreshButton.disabled = value;
+    resetButton.disabled = value;
     if (message) {
       state.hidden = false;
       state.className = 'matches-state';
@@ -327,6 +330,19 @@
   panel.querySelector('.matches-test-week').onclick = () => {
     if (!currentWeek) return;
     showWeeklySummary(currentWeek, true);
+  };
+  resetButton.onclick = async () => {
+    if (busy || !window.confirm('Reset your test game? This removes your battles, coins, XP and saved progress.')) return;
+    setBusy(true, 'Resetting your test game…');
+    try {
+      await backend.resetMyGameData();
+      sessionStorage.removeItem('battle-picz.pending-share-url');
+      sessionStorage.removeItem('battle-picz.pending-share-code');
+      location.replace(new URL(location.pathname, location.origin).toString());
+    } catch (error) {
+      showError(error);
+      setBusy(false);
+    }
   };
   panel.querySelector('.weekly-continue').onclick = () => {
     if (shownSummaryKey) {

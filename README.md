@@ -25,6 +25,10 @@ pays 3 coins for a win, 2 for a draw, and 1 for a loss. At rollover, each weekly
 is decided by rounds won; the weekly reward is 10 participation coins plus 5 for every
 battle won. Reward ledgers make both payouts safe to retry without duplicate coins.
 
+The lobby's `TEST: RESET GAME` control calls a protected current-player RPC. It removes
+that tester's battles and progression plus local Battle Picz save data, while preserving
+their guest identity and device registration. It never exposes a global database reset.
+
 The browser/mobile client must use only the Supabase publishable key. Secret or
 service-role keys belong in server-side Vercel environment variables and must never be
 committed to this repository.

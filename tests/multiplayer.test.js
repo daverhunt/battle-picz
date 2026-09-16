@@ -5,6 +5,8 @@ const { BattlePiczBackend, SESSION_KEY, MATCH_KEY } = require('../multiplayer.js
 function memoryStorage(seed = {}) {
   const values = new Map(Object.entries(seed));
   return {
+    get length() { return values.size; },
+    key: index => [...values.keys()][index] ?? null,
     getItem: key => values.has(key) ? values.get(key) : null,
     setItem: (key, value) => values.set(key, String(value)),
     removeItem: key => values.delete(key)
@@ -306,6 +308,33 @@ test('sends a nudge through the protected RPC', async () => {
   await backend.sendNudge('match-6');
   assert.match(call.url, /rpc\/send_match_nudge$/);
   assert.deepEqual(JSON.parse(call.options.body), { p_match_id: 'match-6' });
+});
+
+test('resets backend gameplay and clears local game state while preserving the guest session', async () => {
+  const session = { access_token: 'token', expires_at: 9_999_999_999 };
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify(session),
+    [MATCH_KEY]: 'match-6',
+    'battle-picz.progress.match-6.1': '{"questionIndex":2}',
+    'battle-picz.week-summary.2026-09-07': 'shown',
+    'another-app.setting': 'keep'
+  });
+  let call;
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    fetchImpl: async (url, options) => {
+      call = { url, options };
+      return response({ matches_deleted: 1 });
+    }
+  });
+
+  assert.deepEqual(await backend.resetMyGameData(), { matches_deleted: 1 });
+  assert.match(call.url, /rpc\/reset_my_game_data$/);
+  assert.deepEqual(JSON.parse(storage.getItem(SESSION_KEY)), session);
+  assert.equal(storage.getItem(MATCH_KEY), null);
+  assert.equal(storage.getItem('battle-picz.progress.match-6.1'), null);
+  assert.equal(storage.getItem('battle-picz.week-summary.2026-09-07'), null);
+  assert.equal(storage.getItem('another-app.setting'), 'keep');
 });
 
 test('uses one global UTC tournament week from Monday to Monday', () => {
