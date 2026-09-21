@@ -192,6 +192,13 @@
       const theirRoundsWon = roundResults.filter(result => result.result === 'lost').length;
       const canPlayOpeningTurn = match.status === 'waiting' &&
         me.player_no === 1 && viewedRound === 1;
+      const roundConfig = match.game_config?.rounds?.[String(viewedRound)] || null;
+      const isRoundStarter = me.player_no === (viewedRound % 2 === 1 ? 1 : 2);
+      const canChoose = (match.status === 'active' || canPlayOpeningTurn) && isRoundStarter;
+      const canPlay = !ownTurn && Boolean(roundConfig) && (
+        canPlayOpeningTurn ||
+        (match.status === 'active' && (isRoundStarter || Boolean(opponentTurn)))
+      );
       return {
         match,
         me,
@@ -207,9 +214,9 @@
         result: match.status !== 'complete' ? null
           : match.winner_id == null ? 'draw'
             : match.winner_id === userId ? 'won' : 'lost',
-        roundConfig: match.game_config?.rounds?.[String(viewedRound)] || null,
-        canChoose: (match.status === 'active' || canPlayOpeningTurn) &&
-          me.player_no === (viewedRound % 2 === 1 ? 1 : 2)
+        roundConfig,
+        canChoose,
+        canPlay
       };
     }
 
@@ -455,8 +462,12 @@
       const opponentTurn = turns.find(turn => turn.user_id !== userId && Number(turn.round_no) === currentRound) || null;
       const canPlayOpeningTurn = match.status === 'waiting' &&
         me.player_no === 1 && currentRound === 1;
-      const canChoose = (match.status === 'active' || canPlayOpeningTurn) &&
-        me.player_no === (currentRound % 2 === 1 ? 1 : 2);
+      const isRoundStarter = me.player_no === (currentRound % 2 === 1 ? 1 : 2);
+      const canChoose = (match.status === 'active' || canPlayOpeningTurn) && isRoundStarter;
+      const canPlay = !ownTurn && Boolean(roundConfig) && (
+        canPlayOpeningTurn ||
+        (match.status === 'active' && (isRoundStarter || Boolean(opponentTurn)))
+      );
       let bucket = 'waiting';
       let action = 'waiting';
 
@@ -473,9 +484,12 @@
         bucket = 'waiting';
       } else if (ownTurn) {
         bucket = 'waiting';
-      } else if (roundConfig || canChoose) {
+      } else if (canChoose && !roundConfig) {
         bucket = 'your-turn';
-        action = roundConfig ? 'play' : 'choose';
+        action = 'choose';
+      } else if (canPlay) {
+        bucket = 'your-turn';
+        action = 'play';
       }
 
       const dates = [match.completed_at, ownTurn?.completed_at, opponentTurn?.completed_at,
@@ -490,7 +504,7 @@
       const nudgeCooldownMs = 6 * 60 * 60 * 1000;
       return {
         id: match.id, match, me, opponent, turns, ownTurn, opponentTurn,
-        currentRound, roundConfig, canChoose, bucket, action, myScore, theirScore,
+        currentRound, roundConfig, canChoose, canPlay, bucket, action, myScore, theirScore,
         roundResults, myRoundsWon, theirRoundsWon,
         result: match.status !== 'complete' ? null
           : match.winner_id == null ? 'draw'

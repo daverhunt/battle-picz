@@ -471,7 +471,7 @@
             ? 'Round saved. Your friend’s turn now.'
             : 'Round saved. Send the invite link and wait for your friend.';
         }
-      } else if (matchContext.roundConfig || matchContext.canChoose) {
+      } else if ((matchContext.canChoose && !matchContext.roundConfig) || matchContext.canPlay) {
         close();
         window.startBattlePicz?.(matchContext);
       } else {

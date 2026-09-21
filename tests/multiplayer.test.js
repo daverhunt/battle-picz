@@ -153,7 +153,7 @@ test('builds a current-player context with the opponent turn', async () => {
   const session = { access_token: 'token', expires_at: 9_999_999_999, user: { id: 'me' } };
   const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
   const replies = [
-    [{ id: 'match-3', game_config: { rounds: { 1: { category: 'FOOD', difficulty: 'hard' } } } }],
+    [{ id: 'match-3', status: 'active', game_config: { rounds: { 1: { category: 'FOOD', difficulty: 'hard' } } } }],
     [{ user_id: 'me', player_no: 2 }, { user_id: 'them', player_no: 1 }],
     [{ user_id: 'them', round_no: 1, score: 4200, answers: [] }]
   ];
@@ -168,6 +168,7 @@ test('builds a current-player context with the opponent turn', async () => {
   assert.equal(context.opponentTurn.score, 4200);
   assert.deepEqual(context.roundConfig, { category: 'FOOD', difficulty: 'hard' });
   assert.equal(context.canChoose, false);
+  assert.equal(context.canPlay, true);
   assert.match(calls[1], /profiles!match_players_user_id_fkey\(display_name\)/);
 });
 
@@ -205,6 +206,49 @@ test('only shows a round comparison after both players finish the three pictures
   assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn, opponentTurn: null }), false);
   assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn: null, opponentTurn }), false);
   assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn, opponentTurn }), true);
+});
+
+test('keeps later rounds sequential instead of letting both players start together', () => {
+  const players = [
+    { user_id: 'one', player_no: 1, accepted_at: 'now', total_score: 1000 },
+    { user_id: 'two', player_no: 2, accepted_at: 'now', total_score: 1200 }
+  ];
+  const completedRoundOne = [
+    { user_id: 'one', round_no: 1, score: 1000 },
+    { user_id: 'two', round_no: 1, score: 1200 }
+  ];
+  const baseMatch = {
+    id: 'sequential-match', status: 'active', created_at: '2026-09-21T08:00:00Z',
+    game_config: { rounds: { 1: { category: 'FOOD', difficulty: 'easy' } } }
+  };
+
+  const chooser = BattlePiczBackend.describeMatch(baseMatch, players, completedRoundOne, 'two');
+  const waitingForChoice = BattlePiczBackend.describeMatch(baseMatch, players, completedRoundOne, 'one');
+  assert.equal(chooser.action, 'choose');
+  assert.equal(waitingForChoice.action, 'waiting');
+
+  const configuredMatch = {
+    ...baseMatch,
+    game_config: {
+      rounds: {
+        ...baseMatch.game_config.rounds,
+        2: { category: 'SPORT', difficulty: 'medium' }
+      }
+    }
+  };
+  const starter = BattlePiczBackend.describeMatch(configuredMatch, players, completedRoundOne, 'two');
+  const responderWaiting = BattlePiczBackend.describeMatch(configuredMatch, players, completedRoundOne, 'one');
+  assert.equal(starter.action, 'play');
+  assert.equal(responderWaiting.action, 'waiting');
+
+  const starterFinished = [
+    ...completedRoundOne,
+    { user_id: 'two', round_no: 2, score: 1500 }
+  ];
+  const responder = BattlePiczBackend.describeMatch(configuredMatch, players, starterFinished, 'one');
+  const starterWaiting = BattlePiczBackend.describeMatch(configuredMatch, players, starterFinished, 'two');
+  assert.equal(responder.action, 'play');
+  assert.equal(starterWaiting.action, 'waiting');
 });
 
 test('marks an unaccepted direct rematch as actionable', () => {
