@@ -415,6 +415,18 @@
       return Boolean(context?.ownTurn && context?.opponentTurn);
     }
 
+    static nextRoundAction(context, displayedRound) {
+      const nextRound = Number(context?.currentRound) || 0;
+      const currentRound = Number(displayedRound) || 0;
+      const canChoose = Boolean(context?.canChoose && !context?.roundConfig);
+      const canPlay = Boolean(context?.canPlay);
+      return {
+        available: nextRound > currentRound && (canChoose || canPlay),
+        roundNo: nextRound,
+        mode: canChoose ? 'choose' : canPlay ? 'play' : 'waiting'
+      };
+    }
+
     static utcWeekWindow(value = Date.now(), weekOffset = 0) {
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) throw new Error('Invalid week date');
