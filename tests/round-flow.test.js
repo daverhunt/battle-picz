@@ -1,42 +1,66 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const { BattlePiczBackend } = require('../multiplayer.js');
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const { BattlePiczBackend } = require("../multiplayer.js");
 
-test('offers the next round only when a later round is actionable', () => {
-  assert.deepEqual(BattlePiczBackend.nextRoundAction({
-    currentRound: 2,
-    canChoose: true,
-    canPlay: false,
-    roundConfig: null
-  }, 1), { available: true, roundNo: 2, mode: 'choose' });
+test("offers the next round only when a later round is actionable", () => {
+  assert.deepEqual(
+    BattlePiczBackend.nextRoundAction(
+      {
+        currentRound: 2,
+        canChoose: true,
+        canPlay: false,
+        roundConfig: null,
+      },
+      1,
+    ),
+    { available: true, roundNo: 2, mode: "choose" },
+  );
 
-  assert.deepEqual(BattlePiczBackend.nextRoundAction({
-    currentRound: 2,
-    canChoose: false,
-    canPlay: true,
-    roundConfig: { category: 'SPORT', difficulty: 'medium' }
-  }, 1), { available: true, roundNo: 2, mode: 'play' });
+  assert.deepEqual(
+    BattlePiczBackend.nextRoundAction(
+      {
+        currentRound: 2,
+        canChoose: false,
+        canPlay: true,
+        roundConfig: { category: "SPORT", difficulty: "medium" },
+      },
+      1,
+    ),
+    { available: true, roundNo: 2, mode: "play" },
+  );
 
-  assert.equal(BattlePiczBackend.nextRoundAction({
-    currentRound: 2,
-    canChoose: false,
-    canPlay: false,
-    roundConfig: null
-  }, 1).available, false);
+  assert.equal(
+    BattlePiczBackend.nextRoundAction(
+      {
+        currentRound: 2,
+        canChoose: false,
+        canPlay: false,
+        roundConfig: null,
+      },
+      1,
+    ).available,
+    false,
+  );
 });
 
-test('uses an inline coin step and never reloads to advance a round', () => {
-  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+test("uses an inline coin step and never reloads to advance a round", () => {
+  const html = fs.readFileSync(
+    path.join(__dirname, "..", "index.html"),
+    "utf8",
+  );
   assert.match(html, /roundSummary\.insertBefore\(coinReward,\s*seeResult\)/);
   assert.match(html, /roundSummary\.appendChild\(resultActions\)/);
   assert.match(html, /seeResult\.remove\(\)/);
   assert.match(html, /lobby\.hidden\s*=\s*false/);
   assert.match(html, /showNext\s*\?\s*"1fr 1fr"\s*:\s*"1fr"/);
+  assert.match(html, /actions\.style\.visibility\s*=\s*"visible"/);
+  assert.match(html, /reward\.style\.visibility\s*=\s*"visible"/);
+  assert.match(html, /visibility:\s*"hidden"/);
   assert.match(
     html,
     /await window\.battlePiczBackend\.getMatchContext\(MATCH_ID\)/,
   );
-  assert.equal(html.includes('return location.reload()'), false);
+  assert.equal(html.includes("return location.reload()"), false);
 });

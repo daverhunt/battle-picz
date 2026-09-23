@@ -1639,6 +1639,7 @@
         lobby.hidden = false;
         actions.style.gridTemplateColumns = showNext ? "1fr 1fr" : "1fr";
         actions.classList.add("show");
+        actions.style.visibility = "visible";
       }
       function showCoinReward(amount, title) {
         $("resultTitle").textContent = title;
@@ -1647,6 +1648,7 @@
           label = $("coinEarned");
         row.innerHTML = "";
         label.textContent = "COINS +0";
+        reward.style.visibility = "visible";
         reward.classList.remove("show");
         void reward.offsetWidth;
         reward.classList.add("show");
@@ -1718,7 +1720,9 @@
           .querySelectorAll(".score-card")
           .forEach((b) => (b.onclick = () => b.classList.toggle("detail")));
         $("coinReward").classList.remove("show");
+        $("coinReward").style.visibility = "hidden";
         $("resultActions").classList.remove("show");
+        $("resultActions").style.visibility = "hidden";
         $("roundSummary").classList.add("show");
         if (!MATCH_ID || onlineContext?.opponentTurn)
           setTimeout(showFinalResult, roundResults.length * 300 + 650);
@@ -2153,6 +2157,8 @@
         bottom: "auto",
         width: "100%",
         marginTop: "5px",
+        display: "grid",
+        visibility: "hidden",
       });
       Object.assign(coinReward.style, {
         position: "static",
@@ -2162,6 +2168,8 @@
         background: "none",
         boxShadow: "none",
         borderRadius: "0",
+        display: "flex",
+        visibility: "hidden",
       });
       Object.assign($("resultTitle").style, {
         margin: "0",
