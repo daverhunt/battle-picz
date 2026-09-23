@@ -32,6 +32,8 @@ test('uses an inline coin step and never reloads to advance a round', () => {
   assert.match(html, /roundSummary\.insertBefore\(coinReward,seeResult\)/);
   assert.match(html, /roundSummary\.appendChild\(resultActions\)/);
   assert.match(html, /seeResult\.remove\(\)/);
+  assert.match(html, /lobby\.hidden=false/);
+  assert.match(html, /showNext\?'1fr 1fr':'1fr'/);
   assert.match(html, /await window\.battlePiczBackend\.getMatchContext\(MATCH_ID\)/);
   assert.equal(html.includes('return location.reload()'), false);
 });
