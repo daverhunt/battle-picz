@@ -29,11 +29,14 @@ test('offers the next round only when a later round is actionable', () => {
 
 test('uses an inline coin step and never reloads to advance a round', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-  assert.match(html, /roundSummary\.insertBefore\(coinReward,seeResult\)/);
+  assert.match(html, /roundSummary\.insertBefore\(coinReward,\s*seeResult\)/);
   assert.match(html, /roundSummary\.appendChild\(resultActions\)/);
   assert.match(html, /seeResult\.remove\(\)/);
-  assert.match(html, /lobby\.hidden=false/);
-  assert.match(html, /showNext\?'1fr 1fr':'1fr'/);
-  assert.match(html, /await window\.battlePiczBackend\.getMatchContext\(MATCH_ID\)/);
+  assert.match(html, /lobby\.hidden\s*=\s*false/);
+  assert.match(html, /showNext\s*\?\s*"1fr 1fr"\s*:\s*"1fr"/);
+  assert.match(
+    html,
+    /await window\.battlePiczBackend\.getMatchContext\(MATCH_ID\)/,
+  );
   assert.equal(html.includes('return location.reload()'), false);
 });
