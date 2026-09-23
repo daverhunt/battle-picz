@@ -445,16 +445,25 @@
       await backend.finalizeWeeklyTournaments();
       matchContext = await backend.getMatchContext(matchId);
       window.BATTLE_PICZ_MATCH = matchContext;
+      const ownNameValue = matchContext.me?.profiles?.display_name || 'YOU';
       const opponentNameValue = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
+      const ownLabel = document.querySelector('.pname.me');
       const opponentLabel = document.querySelector('.pname.opp');
+      if (ownLabel) ownLabel.textContent = ownNameValue;
       if (opponentLabel) opponentLabel.textContent = opponentNameValue;
+      const summaryOwnLabel = document.querySelector('.summary-players > span:first-child');
+      const summaryOpponentLabel = document.querySelector('.summary-players > span:last-child');
+      if (summaryOwnLabel) summaryOwnLabel.textContent = ownNameValue;
+      if (summaryOpponentLabel) summaryOpponentLabel.textContent = opponentNameValue;
       const seenRoundKey = `battle-picz.seen-round.${matchId}`;
       const lastCompletedRound = matchContext.roundResults.length;
       const lastSeenRound = Number(localStorage.getItem(seenRoundKey) || 0);
       if (lastCompletedRound > lastSeenRound) {
-        matchContext = await backend.getMatchContext(matchId, lastCompletedRound);
-        window.BATTLE_PICZ_MATCH = matchContext;
-        window.showBattlePiczMatchResult?.(matchContext);
+        const nextContext = matchContext;
+        const resultContext = await backend.getMatchContext(matchId, lastCompletedRound);
+        window.BATTLE_PICZ_MATCH = resultContext;
+        window.BATTLE_PICZ_NEXT_CONTEXT = nextContext;
+        window.showBattlePiczMatchResult?.(resultContext);
       } else if (matchContext.match.status === 'complete') {
         matchContext = await backend.getMatchContext(matchId, matchContext.currentRound);
         window.BATTLE_PICZ_MATCH = matchContext;
@@ -486,11 +495,22 @@
 
   window.battlePiczSaveRound = async payload => {
     if (!matchContext) throw new Error('Match is not ready');
-    await backend.submitTurn(matchContext.match.id, payload.roundNo, payload.score,
-      payload.answers, payload.ghostTimeline, false);
-    matchContext = await backend.getMatchContext(matchContext.match.id, payload.roundNo);
+    const matchId = matchContext.match.id;
+    try {
+      await backend.submitTurn(matchId, payload.roundNo, payload.score,
+        payload.answers, payload.ghostTimeline, false);
+    } catch (error) {
+      const savedContext = await backend.getMatchContext(matchId, payload.roundNo).catch(() => null);
+      if (!savedContext?.ownTurn) throw error;
+    }
+    const [resultContext, nextContext] = await Promise.all([
+      backend.getMatchContext(matchId, payload.roundNo),
+      backend.getMatchContext(matchId)
+    ]);
+    matchContext = nextContext;
+    window.BATTLE_PICZ_NEXT_CONTEXT = nextContext;
     window.BATTLE_PICZ_MATCH = matchContext;
-    return matchContext;
+    return resultContext;
   };
 
   if (!inviteCode) initialiseMatch();

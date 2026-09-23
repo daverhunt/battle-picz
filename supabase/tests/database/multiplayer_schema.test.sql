@@ -1,6 +1,6 @@
 begin;
 
-select plan(25);
+select plan(30);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'matches', 'matches table exists');
@@ -19,6 +19,10 @@ select ok(row_security_active('public.matchmaking_queue'::regclass), 'queue has 
 select ok(row_security_active('public.devices'::regclass), 'devices has RLS');
 select ok(row_security_active('public.match_round_rewards'::regclass), 'round rewards have RLS');
 select ok(row_security_active('public.weekly_rewards'::regclass), 'weekly rewards have RLS');
+
+select has_column('public', 'profiles', 'power_bomb', 'profiles track bomb inventory');
+select has_column('public', 'profiles', 'power_remove', 'profiles track remove-letter inventory');
+select has_column('public', 'profiles', 'power_reveal', 'profiles track reveal-letter inventory');
 
 select has_function('public', 'create_challenge', array['jsonb', 'uuid'], 'challenge RPC exists');
 select has_function('public', 'join_challenge', array['text'], 'join RPC exists');
@@ -46,6 +50,20 @@ select has_function(
   'reset_my_game_data',
   array[]::text[],
   'current-player test reset RPC exists'
+);
+select has_function(
+  'public',
+  'consume_power_up',
+  array['text'],
+  'power-up consumption RPC exists'
+);
+select function_privs_are(
+  'public',
+  'consume_power_up',
+  array['text'],
+  'authenticated',
+  array['EXECUTE'],
+  'authenticated players can consume their own power-ups'
 );
 select function_privs_are(
   'public',

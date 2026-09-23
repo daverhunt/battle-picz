@@ -506,3 +506,38 @@ test('alternates the category chooser for unlimited rounds', () => {
   ];
   assert.equal(BattlePiczBackend.describeMatch(match, players, throughRoundThree, 'two').action, 'choose');
 });
+
+test('loads persistent power-up inventory from the player profile', async () => {
+  const calls = [];
+  const session = { access_token: 'token', expires_at: 9_999_999_999, user: { id: 'me' } };
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public',
+    storage: memoryStorage({ [SESSION_KEY]: JSON.stringify(session) }),
+    fetchImpl: async (url) => {
+      calls.push(url);
+      return response([{ power_bomb: 1, power_remove: 8, power_reveal: 3 }]);
+    }
+  });
+
+  assert.deepEqual(await backend.getPowerUps(), { bomb: 1, remove: 8, reveal: 3 });
+  assert.match(calls[0], /power_bomb,power_remove,power_reveal/);
+});
+
+test('consumes one server-owned power-up and rejects unknown types', async () => {
+  const calls = [];
+  const session = { access_token: 'token', expires_at: 9_999_999_999, user: { id: 'me' } };
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public',
+    storage: memoryStorage({ [SESSION_KEY]: JSON.stringify(session) }),
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return response({ bomb: 1, remove: 10, reveal: 5 });
+    }
+  });
+
+  assert.deepEqual(await backend.consumePowerUp('bomb'), { bomb: 1, remove: 10, reveal: 5 });
+  assert.match(calls[0].url, /\/rest\/v1\/rpc\/consume_power_up$/);
+  assert.deepEqual(JSON.parse(calls[0].options.body), { p_power_up: 'bomb' });
+  await assert.rejects(() => backend.consumePowerUp('free-money'), /Unknown power-up/);
+  assert.equal(calls.length, 1);
+});

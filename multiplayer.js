@@ -231,9 +231,30 @@
       const session = await this.ensureSession();
       const userId = session.user?.id;
       const rows = await this.request(
-        `profiles?id=eq.${encodeURIComponent(userId)}&select=id,display_name,xp,coins,skill_rating,games_played,games_won`
+        `profiles?id=eq.${encodeURIComponent(userId)}&select=id,display_name,xp,coins,skill_rating,games_played,games_won,power_bomb,power_remove,power_reveal`
       );
       return rows?.[0] || null;
+    }
+
+    async getPowerUps() {
+      const profile = await this.getProfile();
+      return {
+        bomb: Number(profile?.power_bomb || 0),
+        remove: Number(profile?.power_remove || 0),
+        reveal: Number(profile?.power_reveal || 0)
+      };
+    }
+
+    async consumePowerUp(powerUp) {
+      if (!['bomb', 'remove', 'reveal'].includes(powerUp)) {
+        throw new Error('Unknown power-up');
+      }
+      const result = await this.rpc('consume_power_up', { p_power_up: powerUp });
+      return {
+        bomb: Number(result?.bomb || 0),
+        remove: Number(result?.remove || 0),
+        reveal: Number(result?.reveal || 0)
+      };
     }
 
     finalizeWeeklyTournaments() {
