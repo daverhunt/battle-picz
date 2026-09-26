@@ -169,7 +169,7 @@ test('builds a current-player context with the opponent turn', async () => {
   assert.deepEqual(context.roundConfig, { category: 'FOOD', difficulty: 'hard' });
   assert.equal(context.canChoose, false);
   assert.equal(context.canPlay, true);
-  assert.match(calls[1], /profiles!match_players_user_id_fkey\(display_name\)/);
+  assert.match(calls[1], /profiles!match_players_user_id_fkey\(\*\)/);
 });
 
 test('sorts dashboard matches into my turn, their turn, and completed', () => {
@@ -375,6 +375,37 @@ test('only allows a waiting player to nudge once per cooldown', () => {
     match_id: 'match-6', from_user_id: 'me', to_user_id: 'them', created_at: new Date().toISOString()
   }];
   assert.equal(BattlePiczBackend.describeMatch(match, players, turns, 'me', recentNudge).canNudge, false);
+});
+
+test('only marks a received nudge active for the current unplayed turn', () => {
+  const match = {
+    id: 'match-nudge-state', status: 'active', created_at: '2026-09-09T10:00:00Z',
+    game_config: {
+      rounds: {
+        1: { category: 'FOOD', difficulty: 'easy' },
+        2: { category: 'SPORT', difficulty: 'medium' }
+      }
+    }
+  };
+  const players = [
+    { user_id: 'them', player_no: 1, accepted_at: 'now', total_score: 900 },
+    { user_id: 'me', player_no: 2, accepted_at: 'now', total_score: 1000 }
+  ];
+  const turns = [
+    { user_id: 'them', round_no: 1, score: 900, completed_at: '2026-09-09T10:03:00Z' },
+    { user_id: 'me', round_no: 1, score: 1000, completed_at: '2026-09-09T10:05:00Z' }
+  ];
+  const oldNudge = [{
+    match_id: match.id, from_user_id: 'them', to_user_id: 'me',
+    created_at: '2026-09-09T10:04:00Z'
+  }];
+  const newNudge = [{
+    match_id: match.id, from_user_id: 'them', to_user_id: 'me',
+    created_at: '2026-09-09T10:06:00Z'
+  }];
+
+  assert.equal(BattlePiczBackend.describeMatch(match, players, turns, 'me', oldNudge).hasActiveReceivedNudge, false);
+  assert.equal(BattlePiczBackend.describeMatch(match, players, turns, 'me', newNudge).hasActiveReceivedNudge, true);
 });
 
 test('sends a nudge through the protected RPC', async () => {

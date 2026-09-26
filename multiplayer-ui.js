@@ -88,12 +88,6 @@
   let matchContext = null;
   let busy = false;
 
-  const categoryImages = {
-    ANIMALS: 'assets/images/animals/penguin.webp',
-    FOOD: 'assets/images/food/avocado.webp',
-    SPORT: 'assets/images/sport/football.webp'
-  };
-
   function escapeHtml(value) {
     const element = document.createElement('span');
     element.textContent = String(value ?? '');
@@ -126,6 +120,18 @@
     return item.opponent?.profiles?.display_name || (item.match.status === 'waiting' ? 'Waiting for player' : 'Opponent');
   }
 
+  function opponentAvatar(item) {
+    const profile = item.opponent?.profiles || {};
+    const value = profile.avatar_url || profile.picture || '';
+    if (!value) return '';
+    try {
+      const url = new URL(value, location.origin);
+      return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+    } catch {
+      return '';
+    }
+  }
+
   function exposeUnreadRoundResult(item) {
     const seenRound = Number(localStorage.getItem(`battle-picz.seen-round.${item.id}`) || 0);
     const resultRound = window.BattlePiczBackend.unreadCompletedRound(item, seenRound);
@@ -143,7 +149,7 @@
   function cardStatus(item) {
     if (item.bucket === 'completed') return item.result.toUpperCase();
     if (item.action === 'result') return `ROUND ${item.resultRound || item.currentRound} RESULTS`;
-    if (item.lastReceivedNudge && item.bucket === 'your-turn') return 'THEY NUDGED YOU · YOUR TURN';
+    if (item.hasActiveReceivedNudge) return 'THEY NUDGED YOU · YOUR TURN';
     if (item.action === 'accept') return 'NEW CHALLENGE';
     if (item.action === 'choose') return `CHOOSE ROUND ${item.currentRound}`;
     if (item.action === 'play') return 'READY TO PLAY';
@@ -162,7 +168,7 @@
   function renderCard(item) {
     const category = item.roundConfig?.category || 'Challenge';
     const difficulty = item.roundConfig?.difficulty || '';
-    const image = categoryImages[String(category).toUpperCase()] || '';
+    const avatar = opponentAvatar(item);
     const resultClass = item.bucket === 'completed' ? ` result-${item.result}` : '';
     const inviteAction = !item.opponent && item.match.invite_code
       ? `<button class="match-card-link" data-action="share" data-id="${item.id}">COPY INVITE</button>` : '';
@@ -171,12 +177,12 @@
     const nudgeAction = item.bucket === 'waiting' && item.opponent
       ? `<button class="match-card-link nudge-link" data-action="nudge" data-id="${item.id}" ${item.canNudge ? '' : 'disabled'}>${item.canNudge ? '🔔 NUDGE' : 'NUDGED ✓'}</button>` : '';
     return `<article class="match-card${resultClass}">
-      <div class="match-card-image"${image ? ` style="background-image:url('${image}')"` : ''}><span>${escapeHtml(category).slice(0, 1)}</span></div>
+      <div class="match-card-avatar${avatar ? ' has-image' : ''}">${avatar ? `<img src="${escapeHtml(avatar)}" alt="">` : '<span aria-hidden="true"></span>'}</div>
       <div class="match-card-main">
         <div class="match-card-top"><strong>${escapeHtml(opponentName(item))}</strong><time>${relativeTime(item.updatedAt)}</time></div>
         <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
         <div class="match-card-status">${cardStatus(item)}</div>
-        <div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><i></i><span>Them <b>${item.theirRoundsWon}</b></span></div>
+        <div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><span class="match-card-score-separator" aria-hidden="true">–</span><span>Them <b>${item.theirRoundsWon}</b></span></div>
         <div class="match-card-links">${inviteAction}${rematchAction}${nudgeAction}</div>
       </div>
       <button class="match-card-primary" data-action="${item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
@@ -252,7 +258,7 @@
 
   function notifyAboutNudges() {
     if (!('Notification' in window) || Notification.permission !== 'granted') return;
-    const received = matches.filter(item => item.lastReceivedNudge)
+    const received = matches.filter(item => item.hasActiveReceivedNudge)
       .sort((a, b) => new Date(b.lastReceivedNudge.created_at) - new Date(a.lastReceivedNudge.created_at))[0];
     if (!received) return;
     const notificationKey = `${received.id}:${received.lastReceivedNudge.created_at}`;

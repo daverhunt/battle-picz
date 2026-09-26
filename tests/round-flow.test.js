@@ -76,3 +76,22 @@ test("puts unseen round results in My Turn without waiting for the next round", 
   assert.match(ui, /dashboard\.matches\.map\(exposeUnreadRoundResult\)/);
   assert.match(ui, /ROUND \$\{item\.resultRound \|\| item\.currentRound\} RESULTS/);
 });
+
+test("uses played pictures and unambiguous player cards", () => {
+  const html = fs.readFileSync(
+    path.join(__dirname, "..", "index.html"),
+    "utf8",
+  );
+  const ui = fs.readFileSync(
+    path.join(__dirname, "..", "multiplayer-ui.js"),
+    "utf8",
+  );
+
+  assert.match(html, /<img src=\"' \+\s*r\.image/);
+  assert.match(html, /image:\s*question\.image/);
+  assert.match(ui, /function opponentAvatar\(item\)/);
+  assert.match(ui, /match-card-avatar/);
+  assert.match(ui, /hasActiveReceivedNudge/);
+  assert.equal(ui.includes("categoryImages"), false);
+  assert.equal(ui.includes("<i></i>"), false);
+});

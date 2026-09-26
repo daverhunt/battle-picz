@@ -1707,9 +1707,9 @@
               i * 300 +
               'ms">' +
               scoreCard(r.myScore, r.myBreak, r.correct, "me", i) +
-              '<div class="summary-picture"><b>' +
-              r.pic +
-              "</b><span>" +
+              '<div class="summary-picture"><b><img src="' +
+              r.image +
+              '" alt=""></b><span>' +
               r.answer +
               "</span></div>" +
               scoreCard(r.oppScore, r.oppBreak, r.oppScore > 0, "opp", i) +
@@ -2022,6 +2022,7 @@
           return {
             answer: question.a,
             pic: question.pic,
+            image: question.image,
             correct: Boolean(own?.correct),
             myScore: Number(own?.score || 0),
             myBreak: storedBreak(own),

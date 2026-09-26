@@ -149,7 +149,7 @@
 
     async getMatchPlayers(matchId) {
       return this.request(
-        `match_players?match_id=eq.${encodeURIComponent(matchId)}&select=user_id,player_no,total_score,accepted_at,profiles!match_players_user_id_fkey(display_name)&order=player_no`
+        `match_players?match_id=eq.${encodeURIComponent(matchId)}&select=user_id,player_no,total_score,accepted_at,profiles!match_players_user_id_fkey(*)&order=player_no`
       );
     }
 
@@ -543,6 +543,16 @@
       const theirRoundsWon = roundResults.filter(result => result.result === 'lost').length;
       const lastSentNudge = nudges.find(nudge => nudge.from_user_id === userId) || null;
       const lastReceivedNudge = nudges.find(nudge => nudge.to_user_id === userId) || null;
+      const lastOwnTurnAt = (turns || [])
+        .filter(turn => turn.user_id === userId && turn.completed_at)
+        .reduce((latest, turn) => Math.max(latest, new Date(turn.completed_at).getTime()), 0);
+      const lastReceivedNudgeAt = lastReceivedNudge
+        ? new Date(lastReceivedNudge.created_at).getTime()
+        : 0;
+      const hasActiveReceivedNudge = bucket === 'your-turn' &&
+        ['choose', 'play'].includes(action) &&
+        lastReceivedNudge?.from_user_id === opponent?.user_id &&
+        lastReceivedNudgeAt > lastOwnTurnAt;
       const nudgeCooldownMs = 6 * 60 * 60 * 1000;
       return {
         id: match.id, match, me, opponent, turns, ownTurn, opponentTurn,
@@ -553,6 +563,7 @@
             : match.winner_id === userId ? 'won' : 'lost',
         lastSentNudge,
         lastReceivedNudge,
+        hasActiveReceivedNudge,
         canNudge: bucket === 'waiting' && Boolean(opponent) &&
           (!lastSentNudge || Date.now() - new Date(lastSentNudge.created_at).getTime() >= nudgeCooldownMs),
         updatedAt: dates.length ? Math.max(...dates) : 0
