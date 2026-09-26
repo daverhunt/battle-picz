@@ -64,3 +64,15 @@ test("uses an inline coin step and never reloads to advance a round", () => {
   );
   assert.equal(html.includes("return location.reload()"), false);
 });
+
+test("puts unseen round results in My Turn without waiting for the next round", () => {
+  const ui = fs.readFileSync(
+    path.join(__dirname, "..", "multiplayer-ui.js"),
+    "utf8",
+  );
+  assert.match(ui, /function exposeUnreadRoundResult\(item\)/);
+  assert.match(ui, /bucket:\s*'your-turn'/);
+  assert.match(ui, /action:\s*'result'/);
+  assert.match(ui, /dashboard\.matches\.map\(exposeUnreadRoundResult\)/);
+  assert.match(ui, /ROUND \$\{item\.resultRound \|\| item\.currentRound\} RESULTS/);
+});

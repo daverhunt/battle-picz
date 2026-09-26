@@ -126,8 +126,23 @@
     return item.opponent?.profiles?.display_name || (item.match.status === 'waiting' ? 'Waiting for player' : 'Opponent');
   }
 
+  function exposeUnreadRoundResult(item) {
+    const seenRound = Number(localStorage.getItem(`battle-picz.seen-round.${item.id}`) || 0);
+    const resultRound = window.BattlePiczBackend.unreadCompletedRound(item, seenRound);
+    if (!resultRound) return item;
+    return {
+      ...item,
+      bucket: 'your-turn',
+      action: 'result',
+      currentRound: resultRound,
+      resultRound,
+      roundConfig: item.match.game_config?.rounds?.[String(resultRound)] || item.roundConfig
+    };
+  }
+
   function cardStatus(item) {
     if (item.bucket === 'completed') return item.result.toUpperCase();
+    if (item.action === 'result') return `ROUND ${item.resultRound || item.currentRound} RESULTS`;
     if (item.lastReceivedNudge && item.bucket === 'your-turn') return 'THEY NUDGED YOU · YOUR TURN';
     if (item.action === 'accept') return 'NEW CHALLENGE';
     if (item.action === 'choose') return `CHOOSE ROUND ${item.currentRound}`;
@@ -276,7 +291,7 @@
     setBusy(true, message);
     try {
       const dashboard = await backend.getWeeklyDashboard();
-      matches = dashboard.matches;
+      matches = dashboard.matches.map(exposeUnreadRoundResult);
       currentWeek = dashboard.current;
       previousWeek = dashboard.previous;
       balanceLabel.textContent = `🪙 ${Number(dashboard.profile?.coins || 0).toLocaleString()} COINS`;
@@ -397,7 +412,7 @@
       }
       if (action === 'nudge') {
         await backend.sendNudge(item.id);
-        matches = await backend.getMatchesDashboard();
+        matches = (await backend.getMatchesDashboard()).map(exposeUnreadRoundResult);
         activeTab = 'waiting';
         render();
         state.hidden = false;

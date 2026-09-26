@@ -415,6 +415,15 @@
       return Boolean(context?.ownTurn && context?.opponentTurn);
     }
 
+    static unreadCompletedRound(context, lastSeenRound = 0) {
+      if (context?.match?.status === 'complete') return 0;
+      const seenRound = Math.max(0, Number(lastSeenRound) || 0);
+      return (context?.roundResults || []).reduce((latest, result) => {
+        const roundNo = Number(result?.roundNo) || 0;
+        return roundNo > seenRound ? Math.max(latest, roundNo) : latest;
+      }, 0);
+    }
+
     static nextRoundAction(context, displayedRound) {
       const nextRound = Number(context?.currentRound) || 0;
       const currentRound = Number(displayedRound) || 0;

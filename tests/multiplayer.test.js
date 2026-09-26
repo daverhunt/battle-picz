@@ -208,6 +208,34 @@ test('only shows a round comparison after both players finish the three pictures
   assert.equal(BattlePiczBackend.isRoundComparisonReady({ ownTurn, opponentTurn }), true);
 });
 
+test('offers an unseen completed round result before the next round starts', () => {
+  const context = BattlePiczBackend.describeMatch(
+    {
+      id: 'result-before-next-round',
+      status: 'active',
+      created_at: '2026-09-26T08:00:00Z',
+      game_config: { rounds: { 1: { category: 'FOOD', difficulty: 'easy' } } }
+    },
+    [
+      { user_id: 'one', player_no: 1, accepted_at: 'now', total_score: 1100 },
+      { user_id: 'two', player_no: 2, accepted_at: 'now', total_score: 900 }
+    ],
+    [
+      { user_id: 'one', round_no: 1, score: 1100 },
+      { user_id: 'two', round_no: 1, score: 900 }
+    ],
+    'one'
+  );
+
+  assert.equal(context.action, 'waiting');
+  assert.equal(BattlePiczBackend.unreadCompletedRound(context, 0), 1);
+  assert.equal(BattlePiczBackend.unreadCompletedRound(context, 1), 0);
+  assert.equal(BattlePiczBackend.unreadCompletedRound({
+    ...context,
+    match: { status: 'complete' }
+  }, 0), 0);
+});
+
 test('keeps later rounds sequential instead of letting both players start together', () => {
   const players = [
     { user_id: 'one', player_no: 1, accepted_at: 'now', total_score: 1000 },
