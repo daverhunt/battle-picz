@@ -6,6 +6,15 @@
   if (!backend.configured) return;
 
   const game = document.getElementById('game');
+  const ONBOARDING_KEY = 'battle-picz.onboarding-complete';
+  const providerNames = {
+    apple: 'Apple',
+    google: 'Google',
+    facebook: 'Facebook',
+    twitter: 'X',
+    email: 'Email'
+  };
+  let applicationStarted = false;
   const trigger = document.createElement('button');
   trigger.className = 'match-button';
   trigger.innerHTML = '<span class="match-button-dot"></span> Matches';
@@ -65,6 +74,164 @@
       </section>
     </div>`;
   game.append(trigger, panel);
+
+  function showWelcomeScreen() {
+    trigger.hidden = true;
+    const welcome = document.createElement('section');
+    welcome.className = 'welcome-screen';
+    welcome.setAttribute('role', 'dialog');
+    welcome.setAttribute('aria-modal', 'true');
+    welcome.setAttribute('aria-label', 'Choose how to play Battle Picz');
+    welcome.innerHTML = `
+      <header class="welcome-hero">
+        <h1>BATTLE <span>PICZ</span></h1>
+        <p>Reveal it. Name it. Beat your friends.</p>
+        <div class="welcome-picture-mark" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </header>
+      <main class="welcome-card">
+        <section class="welcome-options">
+          <h2>LET'S PLAY</h2>
+          <p>Choose how you want to continue</p>
+          <div class="welcome-auth-buttons">
+            <button class="welcome-auth welcome-guest" type="button" data-auth="guest">
+              <span class="welcome-auth-icon" aria-hidden="true">▶</span>
+              <strong>PLAY AS GUEST</strong>
+              <small>FASTEST</small>
+            </button>
+            <button class="welcome-auth welcome-apple" type="button" data-provider="apple">
+              <span class="welcome-auth-icon" aria-hidden="true"></span>
+              <strong>CONTINUE WITH APPLE</strong>
+              <span></span>
+            </button>
+            <button class="welcome-auth welcome-google" type="button" data-provider="google">
+              <span class="welcome-auth-icon welcome-google-icon" aria-hidden="true">G</span>
+              <strong>CONTINUE WITH GOOGLE</strong>
+              <span></span>
+            </button>
+            <button class="welcome-auth welcome-more" type="button" aria-expanded="false">
+              <span class="welcome-auth-icon" aria-hidden="true">＋</span>
+              <strong>MORE SIGN-IN OPTIONS</strong>
+              <span aria-hidden="true">⌄</span>
+            </button>
+          </div>
+          <div class="welcome-extra-options" hidden>
+            <button class="welcome-auth welcome-facebook" type="button" data-provider="facebook">
+              <span class="welcome-auth-icon" aria-hidden="true">f</span>
+              <strong>CONTINUE WITH FACEBOOK</strong><span></span>
+            </button>
+            <button class="welcome-auth welcome-x" type="button" data-provider="twitter">
+              <span class="welcome-auth-icon" aria-hidden="true">X</span>
+              <strong>CONTINUE WITH X</strong><span></span>
+            </button>
+            <button class="welcome-auth welcome-email" type="button" data-provider="email">
+              <span class="welcome-auth-icon" aria-hidden="true">@</span>
+              <strong>CONTINUE WITH EMAIL</strong><span></span>
+            </button>
+          </div>
+          <p class="welcome-device-note">Guest progress stays on this device. You can link an account later to keep your games, coins and XP.</p>
+          <p class="welcome-legal">By continuing, you agree to the Terms and Privacy Policy.</p>
+        </section>
+        <section class="welcome-name-step" hidden>
+          <button class="welcome-name-back" type="button">‹ BACK</button>
+          <div class="welcome-player-icon" aria-hidden="true"><span></span></div>
+          <h2>YOUR PLAYER NAME</h2>
+          <p>This is what your friends will see.</p>
+          <form class="welcome-name-form">
+            <label for="welcome-player-name">Player name</label>
+            <input id="welcome-player-name" name="player-name" type="text" minlength="2" maxlength="24" autocomplete="nickname" placeholder="e.g. Dave" required>
+            <small>2–24 characters. You can change it later.</small>
+            <button class="welcome-start" type="submit">START PLAYING</button>
+          </form>
+        </section>
+        <div class="welcome-status" role="status" aria-live="polite"></div>
+      </main>`;
+    game.append(welcome);
+
+    const options = welcome.querySelector('.welcome-options');
+    const nameStep = welcome.querySelector('.welcome-name-step');
+    const nameInput = welcome.querySelector('#welcome-player-name');
+    const nameForm = welcome.querySelector('.welcome-name-form');
+    const status = welcome.querySelector('.welcome-status');
+    const moreButton = welcome.querySelector('.welcome-more');
+    const extraOptions = welcome.querySelector('.welcome-extra-options');
+    const authButtons = [...welcome.querySelectorAll('button')];
+
+    function setWelcomeBusy(value) {
+      welcome.classList.toggle('is-busy', value);
+      authButtons.forEach(button => { button.disabled = value; });
+      nameInput.disabled = value;
+    }
+
+    function setWelcomeStatus(message, isError = false) {
+      status.textContent = message || '';
+      status.classList.toggle('error', isError);
+    }
+
+    moreButton.onclick = () => {
+      const expanded = moreButton.getAttribute('aria-expanded') === 'true';
+      moreButton.setAttribute('aria-expanded', String(!expanded));
+      extraOptions.hidden = expanded;
+      moreButton.querySelector('strong').textContent = expanded
+        ? 'MORE SIGN-IN OPTIONS' : 'FEWER SIGN-IN OPTIONS';
+      moreButton.lastElementChild.textContent = expanded ? '⌄' : '⌃';
+      setWelcomeStatus('');
+    };
+
+    welcome.querySelector('[data-auth="guest"]').onclick = () => {
+      options.hidden = true;
+      nameStep.hidden = false;
+      setWelcomeStatus('');
+      nameInput.focus({ preventScroll: true });
+      backend.getProfile().then(profile => {
+        const currentName = profile?.display_name || '';
+        if (currentName && !/^Player\b/i.test(currentName) && !nameInput.value) {
+          nameInput.value = currentName;
+          nameInput.select();
+        }
+      }).catch(() => {});
+    };
+
+    welcome.querySelector('.welcome-name-back').onclick = () => {
+      nameStep.hidden = true;
+      options.hidden = false;
+      setWelcomeStatus('');
+    };
+
+    welcome.querySelectorAll('[data-provider]').forEach(button => {
+      button.onclick = () => {
+        const provider = button.dataset.provider;
+        const label = providerNames[provider] || 'This option';
+        const configured = config.authProviders?.[provider] === true;
+        setWelcomeStatus(configured
+          ? `${label} is configured, but account linking is paused in this test build. Play as Guest for now and your progress will be kept.`
+          : `${label} sign-in is ready to connect once its Supabase provider is configured. Play as Guest to test the game now.`
+        );
+      };
+    });
+
+    nameForm.onsubmit = async event => {
+      event.preventDefault();
+      const displayName = window.BattlePiczBackend.normaliseDisplayName(nameInput.value);
+      if (!displayName) {
+        setWelcomeStatus('Choose a player name between 2 and 24 characters.', true);
+        nameInput.focus();
+        return;
+      }
+      setWelcomeBusy(true);
+      setWelcomeStatus('Creating your guest player…');
+      try {
+        await backend.updateDisplayName(displayName);
+        localStorage.setItem(ONBOARDING_KEY, 'guest');
+        welcome.remove();
+        startApplication();
+      } catch (error) {
+        setWelcomeBusy(false);
+        setWelcomeStatus(error?.message || 'Could not create your guest player. Try again.', true);
+      }
+    };
+  }
 
   const list = panel.querySelector('.matches-list');
   const state = panel.querySelector('.matches-state');
@@ -438,7 +605,7 @@
   };
 
   const inviteCode = backend.inviteCodeFromLocation();
-  if (inviteCode) {
+  function prepareInvite() {
     panel.classList.add('show');
     trigger.hidden = true;
     inviteBanner.hidden = false;
@@ -534,5 +701,13 @@
     return resultContext;
   };
 
-  if (!inviteCode) initialiseMatch();
+  function startApplication() {
+    if (applicationStarted) return;
+    applicationStarted = true;
+    if (inviteCode) prepareInvite();
+    else initialiseMatch();
+  }
+
+  if (localStorage.getItem(ONBOARDING_KEY)) startApplication();
+  else showWelcomeScreen();
 })();

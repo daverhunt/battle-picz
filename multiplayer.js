@@ -236,6 +236,24 @@
       return rows?.[0] || null;
     }
 
+    async updateDisplayName(value) {
+      const displayName = BattlePiczBackend.normaliseDisplayName(value);
+      if (!displayName) throw new Error('Choose a player name between 2 and 24 characters');
+      const session = await this.ensureSession();
+      const userId = session.user?.id;
+      if (!userId) throw new Error('Your guest account is not ready yet');
+      const rows = await this.request(
+        `profiles?id=eq.${encodeURIComponent(userId)}&select=id,display_name`,
+        {
+          method: 'PATCH',
+          headers: { Prefer: 'return=representation' },
+          body: JSON.stringify({ display_name: displayName })
+        }
+      );
+      if (!rows?.[0]) throw new Error('Could not save your player name');
+      return rows[0];
+    }
+
     async getPowerUps() {
       const profile = await this.getProfile();
       return {
@@ -370,6 +388,11 @@
     static normaliseInviteCode(value) {
       const code = String(value || '').trim().toUpperCase();
       return /^[A-Z0-9]{6}$/.test(code) ? code : '';
+    }
+
+    static normaliseDisplayName(value) {
+      const name = String(value || '').trim().replace(/\s+/g, ' ');
+      return name.length >= 2 && name.length <= 24 ? name : '';
     }
 
     static currentRound(match, turns = []) {

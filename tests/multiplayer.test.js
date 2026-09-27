@@ -26,6 +26,35 @@ test('normalises share codes and rejects malformed values', () => {
   assert.equal(BattlePiczBackend.normaliseInviteCode('too-long'), '');
 });
 
+test('normalises player names and rejects names outside the UI limits', () => {
+  assert.equal(BattlePiczBackend.normaliseDisplayName('  Battle   Dave  '), 'Battle Dave');
+  assert.equal(BattlePiczBackend.normaliseDisplayName('D'), '');
+  assert.equal(BattlePiczBackend.normaliseDisplayName('x'.repeat(25)), '');
+});
+
+test('updates the signed-in player name through the protected profile row', async () => {
+  const calls = [];
+  const session = {
+    access_token: 'guest-token', expires_at: 9_999_999_999, user: { id: 'player-1' }
+  };
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public',
+    storage: memoryStorage({ [SESSION_KEY]: JSON.stringify(session) }),
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return response([{ id: 'player-1', display_name: 'Battle Dave' }]);
+    }
+  });
+
+  assert.deepEqual(await backend.updateDisplayName('  Battle   Dave  '), {
+    id: 'player-1', display_name: 'Battle Dave'
+  });
+  assert.match(calls[0].url, /profiles\?id=eq\.player-1&select=id,display_name$/);
+  assert.equal(calls[0].options.method, 'PATCH');
+  assert.equal(calls[0].options.headers.Prefer, 'return=representation');
+  assert.deepEqual(JSON.parse(calls[0].options.body), { display_name: 'Battle Dave' });
+});
+
 test('reuses an unexpired anonymous session', async () => {
   const session = { access_token: 'token', expires_at: 2_000_000_000 };
   const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
@@ -429,6 +458,7 @@ test('resets backend gameplay and clears local game state while preserving the g
     [MATCH_KEY]: 'match-6',
     'battle-picz.progress.match-6.1': '{"questionIndex":2}',
     'battle-picz.week-summary.2026-09-07': 'shown',
+    'battle-picz.onboarding-complete': 'guest',
     'another-app.setting': 'keep'
   });
   let call;
@@ -446,6 +476,7 @@ test('resets backend gameplay and clears local game state while preserving the g
   assert.equal(storage.getItem(MATCH_KEY), null);
   assert.equal(storage.getItem('battle-picz.progress.match-6.1'), null);
   assert.equal(storage.getItem('battle-picz.week-summary.2026-09-07'), null);
+  assert.equal(storage.getItem('battle-picz.onboarding-complete'), null);
   assert.equal(storage.getItem('another-app.setting'), 'keep');
 });
 

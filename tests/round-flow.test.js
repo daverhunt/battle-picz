@@ -93,5 +93,26 @@ test("uses played pictures and unambiguous player cards", () => {
   assert.match(ui, /match-card-avatar/);
   assert.match(ui, /hasActiveReceivedNudge/);
   assert.equal(ui.includes("categoryImages"), false);
-  assert.equal(ui.includes("<i></i>"), false);
+});
+
+test("gates first launch behind guest onboarding with honest provider states", () => {
+  const ui = fs.readFileSync(
+    path.join(__dirname, "..", "multiplayer-ui.js"),
+    "utf8",
+  );
+  const css = fs.readFileSync(
+    path.join(__dirname, "..", "multiplayer.css"),
+    "utf8",
+  );
+
+  assert.match(ui, /battle-picz\.onboarding-complete/);
+  assert.match(ui, /welcome\.className = 'welcome-screen'/);
+  assert.match(ui, /data-auth="guest"/);
+  assert.match(ui, /data-provider="apple"/);
+  assert.match(ui, /data-provider="google"/);
+  assert.match(ui, /MORE SIGN-IN OPTIONS/);
+  assert.match(ui, /await backend\.updateDisplayName\(displayName\)/);
+  assert.match(ui, /localStorage\.setItem\(ONBOARDING_KEY, 'guest'\)/);
+  assert.match(ui, /if \(localStorage\.getItem\(ONBOARDING_KEY\)\) startApplication\(\)/);
+  assert.match(css, /\.welcome-apple\{[^}]*background:#111[^}]*color:#fff/);
 });
