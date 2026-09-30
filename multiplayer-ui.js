@@ -29,7 +29,10 @@
     <header class="matches-header">
       <button class="matches-back" aria-label="Back to game">‹</button>
       <div><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
-      <button class="matches-refresh" aria-label="Refresh matches">↻</button>
+      <div class="matches-header-actions">
+        <button class="matches-settings" aria-label="Settings">⚙</button>
+        <button class="matches-refresh" aria-label="Refresh matches">↻</button>
+      </div>
     </header>
     <section class="weekly-strip" aria-label="This week's tournament record">
       <div><span>THIS WEEK</span><strong class="weekly-record">0 WINS · 0 LOSSES</strong></div>
@@ -420,10 +423,13 @@
       alertsButton.disabled = true;
       return;
     }
-    alertsButton.textContent = Notification.permission === 'granted' ? '🔔 ALERTS ON' : '🔔 ALERTS';
+    const enabled = Notification.permission === 'granted'
+      && window.battlePiczPreferences?.notificationsEnabled !== false;
+    alertsButton.textContent = enabled ? '🔔 ALERTS ON' : '🔔 ALERTS';
   }
 
   function notifyAboutNudges() {
+    if (window.battlePiczPreferences?.notificationsEnabled === false) return;
     if (!('Notification' in window) || Notification.permission !== 'granted') return;
     const received = matches.filter(item => item.hasActiveReceivedNudge)
       .sort((a, b) => new Date(b.lastReceivedNudge.created_at) - new Date(a.lastReceivedNudge.created_at))[0];
@@ -505,10 +511,18 @@
   trigger.onclick = () => open();
   panel.querySelector('.matches-back').onclick = close;
   refreshButton.onclick = () => loadMatches('Refreshing battles…');
+  window.addEventListener('battle-picz:profile-updated', () => loadMatches('Updating your profile…'));
+  window.addEventListener('battle-picz:settings-changed', event => {
+    if (event.detail?.notificationsEnabled) notifyAboutNudges();
+    updateAlertsButton();
+  });
   tabs.forEach(tab => tab.onclick = () => { activeTab = tab.dataset.tab; render(); });
   alertsButton.onclick = async () => {
     if (!('Notification' in window)) return;
     await Notification.requestPermission();
+    if (Notification.permission === 'granted' && window.battlePiczPreferences) {
+      window.battlePiczPreferences.notificationsEnabled = true;
+    }
     updateAlertsButton();
     notifyAboutNudges();
   };

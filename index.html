@@ -7,6 +7,7 @@
     />
     <title>Battle Picz</title>
     <link rel="stylesheet" href="multiplayer.css" />
+    <link rel="stylesheet" href="settings.css" />
     <style>
       * {
         box-sizing: border-box;
@@ -1716,9 +1717,10 @@
               "</div>",
           )
           .join("");
-        document
-          .querySelectorAll(".score-card")
-          .forEach((b) => (b.onclick = () => b.classList.toggle("detail")));
+        document.querySelectorAll(".score-card").forEach((b) => {
+          b.classList.toggle("detail", Boolean(window.battlePiczPreferences?.roundDetail));
+          b.onclick = () => b.classList.toggle("detail");
+        });
         $("coinReward").classList.remove("show");
         $("coinReward").style.visibility = "hidden";
         $("resultActions").classList.remove("show");
@@ -1834,8 +1836,6 @@
           roundResults = Array.isArray(saved.roundResults)
             ? saved.roundResults
             : [];
-          $("myscore").textContent = my.toLocaleString();
-          $("opscore").textContent = opp.toLocaleString();
         } else {
           qi = 0;
           streak = 0;
@@ -1848,6 +1848,10 @@
             x.querySelector("span").textContent = "?";
           });
         }
+        // Render the restored or freshly reset totals before the intro begins.
+        // Otherwise a new round briefly shows the previous round's score.
+        $("myscore").textContent = my.toLocaleString();
+        $("opscore").textContent = opp.toLocaleString();
         $("categoryChooser").classList.add("hidden");
         if (qi >= qs.length) {
           endRound();
@@ -2293,6 +2297,8 @@
       };
       if (!MATCH_ID) loadPowerUps().finally(showCategoryChooser);
     </script>
+    <script src="preferences.js"></script>
     <script src="multiplayer-ui.js"></script>
+    <script src="settings-ui.js"></script>
   </body>
 </html>

@@ -95,6 +95,23 @@ test("uses played pictures and unambiguous player cards", () => {
   assert.equal(ui.includes("categoryImages"), false);
 });
 
+test("renders reset scores before a fresh round starts", () => {
+  const html = fs.readFileSync(
+    path.join(__dirname, "..", "index.html"),
+    "utf8",
+  );
+  const resetIndex = html.indexOf("my = 0;\n          opp = 0;");
+  const myScoreRender = html.indexOf(
+    '$("myscore").textContent = my.toLocaleString();',
+    resetIndex,
+  );
+  const startQuestion = html.indexOf("startQ(saved);", resetIndex);
+  assert.ok(resetIndex > -1, "fresh rounds reset their score values");
+  assert.ok(myScoreRender > resetIndex, "the reset player score is rendered");
+  assert.ok(myScoreRender < startQuestion, "the reset is visible before question one starts");
+  assert.match(html.slice(myScoreRender, startQuestion), /opscore/);
+});
+
 test("gates first launch behind guest onboarding with honest provider states", () => {
   const ui = fs.readFileSync(
     path.join(__dirname, "..", "multiplayer-ui.js"),
