@@ -5,6 +5,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const SESSION_KEY = 'battle-picz.supabase-session';
   const MATCH_KEY = 'battle-picz.current-match';
+  const AUTH_PENDING_KEY = 'battle-picz.auth-pending';
 
   class BattlePiczBackend {
     constructor(options = {}) {
@@ -13,6 +14,7 @@
       this.fetch = options.fetchImpl || globalThis.fetch?.bind(globalThis);
       this.storage = options.storage || globalThis.localStorage;
       this.location = options.location || globalThis.location;
+      this.history = options.history || globalThis.history;
       this.now = options.now || (() => Date.now());
     }
 
@@ -43,6 +45,161 @@
         body: JSON.stringify(body)
       });
       return this.readResponse(response);
+    }
+
+    authRedirectUrl() {
+      const url = new URL(this.location?.href || `${this.location?.origin || ''}${this.location?.pathname || '/'}`);
+      url.search = '';
+      url.hash = '';
+      return url.toString();
+    }
+
+    savePendingAuth(value) {
+      this.storage?.setItem(AUTH_PENDING_KEY, JSON.stringify({ ...value, startedAt: this.now() }));
+    }
+
+    readPendingAuth() {
+      try {
+        return JSON.parse(this.storage?.getItem(AUTH_PENDING_KEY) || 'null');
+      } catch {
+        return null;
+      }
+    }
+
+    clearPendingAuth() {
+      this.storage?.removeItem(AUTH_PENDING_KEY);
+    }
+
+    async getAuthUser(accessToken) {
+      const response = await this.fetch(`${this.url}/auth/v1/user`, {
+        headers: {
+          apikey: this.publishableKey,
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      const data = await this.readResponse(response);
+      return data?.user || data;
+    }
+
+    async beginOAuth(provider, { link = false, redirectTo = this.authRedirectUrl() } = {}) {
+      if (!['google', 'apple', 'facebook', 'twitter'].includes(provider)) {
+        throw new Error('Unknown sign-in provider');
+      }
+      const session = link ? await this.ensureSession() : null;
+      if (link && !session?.user?.id) throw new Error('Your guest account is not ready yet');
+      this.savePendingAuth({
+        mode: link ? 'link' : 'signin',
+        provider,
+        expectedUserId: link ? session.user.id : null
+      });
+      const path = link ? 'user/identities/authorize' : 'authorize';
+      const query = new URLSearchParams({
+        provider,
+        redirect_to: redirectTo,
+        skip_http_redirect: 'true'
+      });
+      const response = await this.fetch(`${this.url}/auth/v1/${path}?${query}`, {
+        headers: {
+          apikey: this.publishableKey,
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {})
+        }
+      });
+      const data = await this.readResponse(response);
+      if (!data?.url) {
+        this.clearPendingAuth();
+        throw new Error(`Could not start ${provider} sign-in`);
+      }
+      return data.url;
+    }
+
+    async linkEmailIdentity(value, redirectTo = this.authRedirectUrl()) {
+      const email = BattlePiczBackend.normaliseEmail(value);
+      if (!email) throw new Error('Enter a valid email address');
+      const session = await this.ensureSession();
+      const expectedUserId = session.user?.id;
+      if (!expectedUserId) throw new Error('Your guest account is not ready yet');
+      this.savePendingAuth({ mode: 'link', provider: 'email', expectedUserId });
+      const response = await this.fetch(
+        `${this.url}/auth/v1/user?redirect_to=${encodeURIComponent(redirectTo)}`,
+        {
+          method: 'PUT',
+          headers: {
+            apikey: this.publishableKey,
+            Authorization: `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        }
+      );
+      try {
+        const data = await this.readResponse(response);
+        const user = data?.user || data;
+        this.saveSession({ ...session, user });
+        return user;
+      } catch (error) {
+        this.clearPendingAuth();
+        throw error;
+      }
+    }
+
+    async sendEmailSignIn(value, redirectTo = this.authRedirectUrl()) {
+      const email = BattlePiczBackend.normaliseEmail(value);
+      if (!email) throw new Error('Enter a valid email address');
+      this.savePendingAuth({ mode: 'signin', provider: 'email', expectedUserId: null });
+      try {
+        await this.authRequest(`otp?redirect_to=${encodeURIComponent(redirectTo)}`, {
+          email,
+          create_user: false
+        });
+      } catch (error) {
+        this.clearPendingAuth();
+        throw error;
+      }
+      return true;
+    }
+
+    clearAuthRedirect() {
+      if (!this.location || !this.history?.replaceState) return;
+      this.history.replaceState(null, '', `${this.location.pathname || '/'}${this.location.search || ''}`);
+    }
+
+    async completeAuthRedirect() {
+      const hash = String(this.location?.hash || '').replace(/^#/, '');
+      if (!hash) return null;
+      const params = new URLSearchParams(hash);
+      const hasAuthResult = params.has('access_token') || params.has('error') || params.has('error_description');
+      if (!hasAuthResult) return null;
+      const pending = this.readPendingAuth();
+      const errorMessage = params.get('error_description') || params.get('error');
+      if (errorMessage) {
+        this.clearPendingAuth();
+        this.clearAuthRedirect();
+        throw new Error(errorMessage);
+      }
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      if (!accessToken || !refreshToken) throw new Error('The sign-in response was incomplete');
+      const user = await this.getAuthUser(accessToken);
+      if (pending?.mode === 'link' && pending.expectedUserId && user?.id !== pending.expectedUserId) {
+        this.clearPendingAuth();
+        this.clearAuthRedirect();
+        throw new Error('That sign-in belongs to another Battle Picz account. Your guest progress was kept on this device.');
+      }
+      const expiresIn = Number(params.get('expires_in') || 3600);
+      const session = {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        token_type: params.get('token_type') || 'bearer',
+        expires_in: expiresIn,
+        expires_at: Math.floor(this.now() / 1000) + expiresIn,
+        provider_token: params.get('provider_token') || undefined,
+        provider_refresh_token: params.get('provider_refresh_token') || undefined,
+        user
+      };
+      this.saveSession(session);
+      this.clearPendingAuth();
+      this.clearAuthRedirect();
+      return { linked: pending?.mode === 'link', provider: pending?.provider || 'account', user, session };
     }
 
     async ensureSession() {
@@ -395,6 +552,11 @@
       return name.length >= 2 && name.length <= 24 ? name : '';
     }
 
+    static normaliseEmail(value) {
+      const email = String(value || '').trim().toLowerCase();
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254 ? email : '';
+    }
+
     static currentRound(match, turns = []) {
       let roundNo = 1;
       while (true) {
@@ -594,5 +756,5 @@
     }
   }
 
-  return { BattlePiczBackend, SESSION_KEY, MATCH_KEY };
+  return { BattlePiczBackend, SESSION_KEY, MATCH_KEY, AUTH_PENDING_KEY };
 });

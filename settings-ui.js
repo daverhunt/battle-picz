@@ -69,6 +69,14 @@
         <div class="settings-modal-actions"><button class="settings-cancel-name" type="button">Cancel</button><button class="settings-save-name" type="submit">Save name</button></div>
         <div class="settings-modal-status" role="status" aria-live="polite"></div>
       </form>
+    </div>
+    <div class="settings-modal settings-email-modal" hidden>
+      <form class="settings-modal-card settings-email-link-form">
+        <h3>Secure with email</h3><p>We’ll send a verification link. Your current games, coins and XP stay with this player.</p>
+        <input name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+        <div class="settings-modal-actions"><button class="settings-cancel-email" type="button">Cancel</button><button class="settings-save-name" type="submit">Send link</button></div>
+        <div class="settings-modal-status settings-email-status" role="status" aria-live="polite"></div>
+      </form>
     </div>`;
   game.append(screen);
 
@@ -77,6 +85,9 @@
   const modal = screen.querySelector('.settings-modal');
   const nameInput = modal.querySelector('input');
   const modalStatus = modal.querySelector('.settings-modal-status');
+  const emailModal = screen.querySelector('.settings-email-modal');
+  const emailInput = emailModal.querySelector('input');
+  const emailStatus = emailModal.querySelector('.settings-email-status');
   let profile = null;
 
   function setSwitch(button, value) {
@@ -113,8 +124,17 @@
     screen.querySelector('[data-stat="wins"]').textContent = Number(profile.games_won || 0).toLocaleString();
     const session = backend.readSession();
     const user = session?.user || {};
-    const linked = Boolean(user.email || (user.identities || []).some(identity => identity.provider !== 'anonymous'));
+    const providers = (user.identities || []).map(identity => identity.provider);
+    const emailLinked = providers.includes('email') || Boolean(user.email_confirmed_at);
+    const linked = emailLinked || providers.some(provider => provider !== 'anonymous');
     screen.querySelector('.settings-account-status').textContent = linked ? 'Linked account · progress secured' : 'Guest account · this device';
+    screen.querySelectorAll('[data-provider]').forEach(button => {
+      const connected = providers.includes(button.dataset.provider) ||
+        (button.dataset.provider === 'email' && emailLinked);
+      button.classList.toggle('connected', connected);
+      button.textContent = `${button.dataset.provider === 'apple' ? 'Apple' : button.dataset.provider === 'google' ? 'Google' : 'Email'}${connected ? ' ✓' : ''}`;
+      button.disabled = connected;
+    });
     const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || '';
     if (avatarUrl && /^https?:\/\//i.test(avatarUrl)) {
       const avatar = screen.querySelector('.settings-avatar');
@@ -168,6 +188,7 @@
     nameInput.select();
   };
   screen.querySelector('.settings-cancel-name').onclick = () => { modal.hidden = true; };
+  screen.querySelector('.settings-cancel-email').onclick = () => { emailModal.hidden = true; };
   modal.querySelector('form').onsubmit = async event => {
     event.preventDefault();
     modalStatus.textContent = 'Saving…';
@@ -182,13 +203,56 @@
     }
   };
   screen.querySelectorAll('[data-provider]').forEach(button => {
-    button.onclick = () => {
+    button.onclick = async () => {
       const provider = button.dataset.provider;
       const label = provider === 'apple' ? 'Apple' : provider === 'google' ? 'Google' : 'Email';
       const configured = config.authProviders?.[provider] === true;
+      if (provider === 'email' && configured) {
+        emailStatus.textContent = '';
+        emailInput.value = '';
+        emailInput.disabled = false;
+        emailModal.hidden = false;
+        emailInput.focus({ preventScroll: true });
+        return;
+      }
+      if (provider === 'google' && configured) {
+        const status = screen.querySelector('.settings-provider-status');
+        status.textContent = 'Opening Google…';
+        try {
+          location.assign(await backend.beginOAuth('google', { link: true }));
+        } catch (error) {
+          status.textContent = error?.message || 'Could not start Google linking.';
+        }
+        return;
+      }
       screen.querySelector('.settings-provider-status').textContent = configured
-        ? `${label} is configured; linking will be enabled after the secure account-upgrade flow is connected.`
+        ? `${label} linking is not available in this test build yet.`
         : `${label} needs enabling in Supabase before account linking can go live.`;
     };
+  });
+
+  emailModal.querySelector('form').onsubmit = async event => {
+    event.preventDefault();
+    emailStatus.textContent = 'Sending verification email…';
+    try {
+      await backend.linkEmailIdentity(emailInput.value);
+      emailStatus.textContent = 'Email sent. Open the link on this device to finish securing your player.';
+      emailInput.disabled = true;
+    } catch (error) {
+      emailStatus.textContent = error?.message || 'Could not send the verification email.';
+    }
+  };
+
+  window.addEventListener('battle-picz:auth-linked', async event => {
+    await openSettings();
+    const status = screen.querySelector('.settings-provider-status');
+    if (event.detail?.error) {
+      status.textContent = event.detail.error;
+      return;
+    }
+    const label = event.detail?.provider === 'google' ? 'Google' : event.detail?.provider === 'email' ? 'Email' : 'Account';
+    status.textContent = event.detail?.linked
+      ? `${label} connected. Your games, coins and XP are secured.`
+      : `Signed in with ${label}. Your player has been restored.`;
   });
 })();

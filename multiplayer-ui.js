@@ -78,7 +78,7 @@
     </div>`;
   game.append(trigger, panel);
 
-  function showWelcomeScreen() {
+  function showWelcomeScreen(initialError = '') {
     trigger.hidden = true;
     const welcome = document.createElement('section');
     welcome.className = 'welcome-screen';
@@ -148,14 +148,29 @@
             <button class="welcome-start" type="submit">START PLAYING</button>
           </form>
         </section>
+        <section class="welcome-email-step" hidden>
+          <button class="welcome-email-back" type="button">‹ BACK</button>
+          <div class="welcome-player-icon" aria-hidden="true"><span></span></div>
+          <h2>SIGN IN WITH EMAIL</h2>
+          <p>We’ll email you a secure sign-in link.</p>
+          <form class="welcome-email-form">
+            <label for="welcome-player-email">Email address</label>
+            <input id="welcome-player-email" name="player-email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+            <small>Use the email previously linked to your Battle Picz player.</small>
+            <button class="welcome-start" type="submit">EMAIL MY SIGN-IN LINK</button>
+          </form>
+        </section>
         <div class="welcome-status" role="status" aria-live="polite"></div>
       </main>`;
     game.append(welcome);
 
     const options = welcome.querySelector('.welcome-options');
     const nameStep = welcome.querySelector('.welcome-name-step');
+    const emailStep = welcome.querySelector('.welcome-email-step');
     const nameInput = welcome.querySelector('#welcome-player-name');
+    const emailInput = welcome.querySelector('#welcome-player-email');
     const nameForm = welcome.querySelector('.welcome-name-form');
+    const emailForm = welcome.querySelector('.welcome-email-form');
     const status = welcome.querySelector('.welcome-status');
     const moreButton = welcome.querySelector('.welcome-more');
     const extraOptions = welcome.querySelector('.welcome-extra-options');
@@ -165,6 +180,7 @@
       welcome.classList.toggle('is-busy', value);
       authButtons.forEach(button => { button.disabled = value; });
       nameInput.disabled = value;
+      emailInput.disabled = value;
     }
 
     function setWelcomeStatus(message, isError = false) {
@@ -202,17 +218,55 @@
       setWelcomeStatus('');
     };
 
+    welcome.querySelector('.welcome-email-back').onclick = () => {
+      emailStep.hidden = true;
+      options.hidden = false;
+      setWelcomeStatus('');
+    };
+
     welcome.querySelectorAll('[data-provider]').forEach(button => {
-      button.onclick = () => {
+      button.onclick = async () => {
         const provider = button.dataset.provider;
         const label = providerNames[provider] || 'This option';
         const configured = config.authProviders?.[provider] === true;
+        if (provider === 'email' && configured) {
+          options.hidden = true;
+          emailStep.hidden = false;
+          setWelcomeStatus('');
+          emailInput.focus({ preventScroll: true });
+          return;
+        }
+        if (provider === 'google' && configured) {
+          setWelcomeBusy(true);
+          setWelcomeStatus('Opening Google sign-in…');
+          try {
+            location.assign(await backend.beginOAuth('google'));
+          } catch (error) {
+            setWelcomeBusy(false);
+            setWelcomeStatus(error?.message || 'Could not start Google sign-in.', true);
+          }
+          return;
+        }
         setWelcomeStatus(configured
-          ? `${label} is configured, but account linking is paused in this test build. Play as Guest for now and your progress will be kept.`
+          ? `${label} is configured, but is not available in this test build yet.`
           : `${label} sign-in is ready to connect once its Supabase provider is configured. Play as Guest to test the game now.`
         );
       };
     });
+
+    emailForm.onsubmit = async event => {
+      event.preventDefault();
+      setWelcomeBusy(true);
+      setWelcomeStatus('Sending your secure sign-in link…');
+      try {
+        await backend.sendEmailSignIn(emailInput.value);
+        setWelcomeBusy(false);
+        setWelcomeStatus('Email sent. Open the link on this device to restore your player.');
+      } catch (error) {
+        setWelcomeBusy(false);
+        setWelcomeStatus(error?.message || 'Could not send the sign-in email.', true);
+      }
+    };
 
     nameForm.onsubmit = async event => {
       event.preventDefault();
@@ -234,6 +288,8 @@
         setWelcomeStatus(error?.message || 'Could not create your guest player. Try again.', true);
       }
     };
+
+    if (initialError) setWelcomeStatus(initialError, true);
   }
 
   const list = panel.querySelector('.matches-list');
@@ -722,6 +778,26 @@
     else initialiseMatch();
   }
 
-  if (localStorage.getItem(ONBOARDING_KEY)) startApplication();
-  else showWelcomeScreen();
+  async function bootstrap() {
+    let authResult = null;
+    let authError = null;
+    try {
+      authResult = await backend.completeAuthRedirect();
+      if (authResult?.user) localStorage.setItem(ONBOARDING_KEY, 'linked');
+    } catch (error) {
+      authError = error;
+    }
+    const onboarded = Boolean(localStorage.getItem(ONBOARDING_KEY));
+    if (onboarded) startApplication();
+    else showWelcomeScreen(authError?.message || '');
+    if (onboarded && (authResult || authError)) {
+      setTimeout(() => window.dispatchEvent(new CustomEvent('battle-picz:auth-linked', {
+        detail: authError
+          ? { error: authError.message || 'Could not complete sign-in.' }
+          : { provider: authResult.provider, linked: authResult.linked, user: authResult.user }
+      })), 0);
+    }
+  }
+
+  bootstrap();
 })();

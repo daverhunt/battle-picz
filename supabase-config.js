@@ -3,9 +3,9 @@ window.BATTLE_PICZ_SUPABASE = {
   publishableKey: 'sb_publishable_Zt41-EUHV5vAolqBWWkwiQ_5rJvdEvm',
   authProviders: {
     apple: false,
-    google: false,
+    google: true,
     facebook: false,
     twitter: false,
-    email: false
+    email: true
   }
 };
