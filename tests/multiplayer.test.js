@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { BattlePiczBackend, SESSION_KEY, MATCH_KEY } = require('../multiplayer.js');
+const { BattlePiczBackend, SESSION_KEY, MATCH_KEY, AUTH_PENDING_KEY } = require('../multiplayer.js');
 
 function memoryStorage(seed = {}) {
   const values = new Map(Object.entries(seed));
@@ -30,6 +30,129 @@ test('normalises player names and rejects names outside the UI limits', () => {
   assert.equal(BattlePiczBackend.normaliseDisplayName('  Battle   Dave  '), 'Battle Dave');
   assert.equal(BattlePiczBackend.normaliseDisplayName('D'), '');
   assert.equal(BattlePiczBackend.normaliseDisplayName('x'.repeat(25)), '');
+});
+
+test('normalises email addresses used for account recovery', () => {
+  assert.equal(BattlePiczBackend.normaliseEmail(' Dave@Example.COM '), 'dave@example.com');
+  assert.equal(BattlePiczBackend.normaliseEmail('not-an-email'), '');
+});
+
+test('starts Google identity linking as the existing guest user', async () => {
+  const calls = [];
+  const session = {
+    access_token: 'guest-token', expires_at: 9_999_999_999,
+    user: { id: 'guest-1', is_anonymous: true }
+  };
+  const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    location: { href: 'https://game.example/?matchId=old#ignored', origin: 'https://game.example', pathname: '/', search: '', hash: '' },
+    now: () => 123,
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return response({ url: 'https://accounts.google.test/authorize' });
+    }
+  });
+
+  assert.equal(await backend.beginOAuth('google', { link: true }), 'https://accounts.google.test/authorize');
+  assert.match(calls[0].url, /\/auth\/v1\/user\/identities\/authorize\?/);
+  assert.match(calls[0].url, /provider=google/);
+  assert.match(calls[0].url, /skip_http_redirect=true/);
+  assert.equal(calls[0].options.headers.Authorization, 'Bearer guest-token');
+  assert.deepEqual(JSON.parse(storage.getItem(AUTH_PENDING_KEY)), {
+    mode: 'link', provider: 'google', expectedUserId: 'guest-1', startedAt: 123
+  });
+});
+
+test('email linking updates the existing guest instead of creating another player', async () => {
+  const calls = [];
+  const session = {
+    access_token: 'guest-token', refresh_token: 'guest-refresh', expires_at: 9_999_999_999,
+    user: { id: 'guest-1', is_anonymous: true }
+  };
+  const storage = memoryStorage({ [SESSION_KEY]: JSON.stringify(session) });
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    location: { href: 'https://game.example/', origin: 'https://game.example', pathname: '/', search: '', hash: '' },
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return response({ id: 'guest-1', email: 'dave@example.com', is_anonymous: true });
+    }
+  });
+
+  await backend.linkEmailIdentity(' Dave@Example.com ');
+  assert.match(calls[0].url, /\/auth\/v1\/user\?redirect_to=/);
+  assert.equal(calls[0].options.method, 'PUT');
+  assert.equal(calls[0].options.headers.Authorization, 'Bearer guest-token');
+  assert.deepEqual(JSON.parse(calls[0].options.body), { email: 'dave@example.com' });
+  assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).user.id, 'guest-1');
+  assert.equal(JSON.parse(storage.getItem(AUTH_PENDING_KEY)).expectedUserId, 'guest-1');
+});
+
+test('completes an auth redirect only when linking preserves the guest user id', async () => {
+  const oldSession = {
+    access_token: 'old-token', refresh_token: 'old-refresh', expires_at: 9_999_999_999,
+    user: { id: 'guest-1', is_anonymous: true }
+  };
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify(oldSession),
+    [AUTH_PENDING_KEY]: JSON.stringify({ mode: 'link', provider: 'email', expectedUserId: 'guest-1' })
+  });
+  const historyCalls = [];
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    now: () => 1_000_000,
+    location: {
+      pathname: '/', search: '',
+      hash: '#access_token=new-token&refresh_token=new-refresh&expires_in=3600&token_type=bearer'
+    },
+    history: { replaceState: (...args) => historyCalls.push(args) },
+    fetchImpl: async () => response({ id: 'guest-1', email: 'dave@example.com', is_anonymous: false })
+  });
+
+  const result = await backend.completeAuthRedirect();
+  assert.equal(result.linked, true);
+  assert.equal(result.provider, 'email');
+  assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).user.id, 'guest-1');
+  assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).user.is_anonymous, false);
+  assert.equal(storage.getItem(AUTH_PENDING_KEY), null);
+  assert.deepEqual(historyCalls[0], [null, '', '/']);
+});
+
+test('rejects an identity callback for a different user and keeps guest progress attached', async () => {
+  const oldSession = {
+    access_token: 'old-token', refresh_token: 'old-refresh', expires_at: 9_999_999_999,
+    user: { id: 'guest-1', is_anonymous: true }
+  };
+  const storage = memoryStorage({
+    [SESSION_KEY]: JSON.stringify(oldSession),
+    [AUTH_PENDING_KEY]: JSON.stringify({ mode: 'link', provider: 'google', expectedUserId: 'guest-1' })
+  });
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    location: { pathname: '/', search: '', hash: '#access_token=other&refresh_token=other-refresh' },
+    history: { replaceState: () => {} },
+    fetchImpl: async () => response({ id: 'different-user', is_anonymous: false })
+  });
+
+  await assert.rejects(() => backend.completeAuthRedirect(), /another Battle Picz account/);
+  assert.deepEqual(JSON.parse(storage.getItem(SESSION_KEY)), oldSession);
+});
+
+test('email sign-in restores an existing account without creating a new user', async () => {
+  const calls = [];
+  const storage = memoryStorage();
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    location: { href: 'https://game.example/', pathname: '/', search: '', hash: '' },
+    fetchImpl: async (url, options) => { calls.push({ url, options }); return response({}); }
+  });
+  await backend.sendEmailSignIn('dave@example.com');
+  assert.match(calls[0].url, /\/auth\/v1\/otp\?redirect_to=/);
+  assert.deepEqual(JSON.parse(calls[0].options.body), {
+    email: 'dave@example.com', create_user: false
+  });
+  assert.equal(JSON.parse(storage.getItem(AUTH_PENDING_KEY)).mode, 'signin');
 });
 
 test('updates the signed-in player name through the protected profile row', async () => {

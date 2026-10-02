@@ -130,6 +130,21 @@ test("gates first launch behind guest onboarding with honest provider states", (
   assert.match(ui, /MORE SIGN-IN OPTIONS/);
   assert.match(ui, /await backend\.updateDisplayName\(displayName\)/);
   assert.match(ui, /localStorage\.setItem\(ONBOARDING_KEY, 'guest'\)/);
-  assert.match(ui, /if \(localStorage\.getItem\(ONBOARDING_KEY\)\) startApplication\(\)/);
+  assert.match(ui, /authResult = await backend\.completeAuthRedirect\(\)/);
+  assert.match(ui, /if \(onboarded\) startApplication\(\)/);
+  assert.match(ui, /welcome-email-form/);
+  assert.match(ui, /showWelcomeScreen\(authError\?\.message \|\| ''\)/);
+  assert.match(ui, /await backend\.sendEmailSignIn\(emailInput\.value\)/);
+  assert.match(ui, /setWelcomeBusy\(false\);\s*setWelcomeStatus\('Email sent/);
   assert.match(css, /\.welcome-apple\{[^}]*background:#111[^}]*color:#fff/);
+});
+
+test('links guest accounts from settings without replacing the player', () => {
+  const settings = fs.readFileSync(path.join(__dirname, '..', 'settings-ui.js'), 'utf8');
+  const config = fs.readFileSync(path.join(__dirname, '..', 'supabase-config.js'), 'utf8');
+  assert.match(settings, /await backend\.linkEmailIdentity\(emailInput\.value\)/);
+  assert.match(settings, /await backend\.beginOAuth\('google', \{ link: true \}\)/);
+  assert.match(settings, /battle-picz:auth-linked/);
+  assert.match(settings, /user\.email_confirmed_at/);
+  assert.match(config, /email: true/);
 });
