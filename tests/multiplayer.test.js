@@ -64,6 +64,24 @@ test('starts Google identity linking as the existing guest user', async () => {
   });
 });
 
+test('starts normal Google sign-in with a browser navigation URL', async () => {
+  let fetched = false;
+  const storage = memoryStorage();
+  const backend = new BattlePiczBackend({
+    url: 'https://example.supabase.co', publishableKey: 'public', storage,
+    location: { href: 'https://game.example/', origin: 'https://game.example', pathname: '/', search: '', hash: '' },
+    fetchImpl: async () => { fetched = true; return response({}); }
+  });
+
+  const url = await backend.beginOAuth('google');
+  assert.equal(fetched, false);
+  assert.match(url, /^https:\/\/example\.supabase\.co\/auth\/v1\/authorize\?/);
+  assert.match(url, /provider=google/);
+  assert.match(url, /redirect_to=https%3A%2F%2Fgame\.example%2F/);
+  assert.doesNotMatch(url, /skip_http_redirect/);
+  assert.equal(JSON.parse(storage.getItem(AUTH_PENDING_KEY)).mode, 'signin');
+});
+
 test('email linking updates the existing guest instead of creating another player', async () => {
   const calls = [];
   const session = {
