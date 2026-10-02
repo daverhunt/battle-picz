@@ -92,16 +92,16 @@
         provider,
         expectedUserId: link ? session.user.id : null
       });
-      const path = link ? 'user/identities/authorize' : 'authorize';
       const query = new URLSearchParams({
         provider,
-        redirect_to: redirectTo,
-        skip_http_redirect: 'true'
+        redirect_to: redirectTo
       });
-      const response = await this.fetch(`${this.url}/auth/v1/${path}?${query}`, {
+      if (!link) return `${this.url}/auth/v1/authorize?${query}`;
+      query.set('skip_http_redirect', 'true');
+      const response = await this.fetch(`${this.url}/auth/v1/user/identities/authorize?${query}`, {
         headers: {
           apikey: this.publishableKey,
-          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {})
+          Authorization: `Bearer ${session.access_token}`
         }
       });
       const data = await this.readResponse(response);
