@@ -205,36 +205,40 @@
     async ensureSession() {
       if (!this.configured) throw new Error('Supabase is not configured');
       const saved = this.readSession();
-      if (saved?.access_token && Number(saved.expires_at) * 1000 > this.now() + 60_000) {
-        return saved;
+      if (saved?.access_token && Number(saved.expires_at) * 1000 > this.now() + 60_000) return saved;
+      if (saved) return this.recoverSession();
+      // Only a genuinely new player may create an anonymous account.
+      if (!this.sessionPromise) {
+        this.sessionPromise = this.authRequest('signup', {}).then(value => this.saveSession(value))
+          .finally(() => { this.sessionPromise = null; });
       }
-      if (saved?.refresh_token) {
-        try {
-          return this.saveSession(await this.authRequest(
-            'token?grant_type=refresh_token',
-            { refresh_token: saved.refresh_token }
-          ));
-        } catch {
-          this.storage?.removeItem(SESSION_KEY);
-        }
-      }
-      return this.saveSession(await this.authRequest('signup', {}));
+      return this.sessionPromise;
     }
 
     async recoverSession() {
-      const saved = this.readSession();
-      if (saved?.refresh_token) {
+      if (this.sessionPromise) return this.sessionPromise;
+      const before = this.readSession();
+      const refresh = async () => {
+        const saved = this.readSession();
+        // Another tab may have rotated the token while this tab waited.
+        if (saved?.access_token !== before?.access_token &&
+            Number(saved?.expires_at) * 1000 > this.now() + 60_000) return saved;
+        if (!saved?.refresh_token) throw new Error('Please sign in again to restore your player. Your saved account has been kept.');
         try {
-          return this.saveSession(await this.authRequest(
-            'token?grant_type=refresh_token',
-            { refresh_token: saved.refresh_token }
-          ));
-        } catch {
-          // The refresh token is no longer usable, so start a new guest session.
+          return this.saveSession(await this.authRequest('token?grant_type=refresh_token', {
+            refresh_token: saved.refresh_token
+          }));
+        } catch (error) {
+          const authExpired = [400, 401, 403].includes(error.status);
+          throw new Error(authExpired
+            ? 'Your session has expired. Open Settings and sign in to your existing Google account. Your player has been kept.'
+            : 'Connection lost. Your player has been kept. Check your connection and retry.');
         }
-      }
-      this.storage?.removeItem(SESSION_KEY);
-      return this.saveSession(await this.authRequest('signup', {}));
+      };
+      this.sessionPromise = (globalThis.navigator?.locks
+        ? globalThis.navigator.locks.request('battle-picz-session-refresh', refresh)
+        : refresh()).finally(() => { this.sessionPromise = null; });
+      return this.sessionPromise;
     }
 
     async readResponse(response) {
@@ -245,7 +249,9 @@
       }
       if (!response.ok) {
         const message = data?.message || data?.msg || data?.error_description || data?.error || text;
-        throw new Error(message || `Supabase request failed (${response.status})`);
+        const error = new Error(message || `Supabase request failed (${response.status})`);
+        error.status = response.status;
+        throw error;
       }
       return data;
     }
@@ -739,6 +745,10 @@
         lastReceivedNudge?.from_user_id === opponent?.user_id &&
         lastReceivedNudgeAt > lastOwnTurnAt;
       const nudgeCooldownMs = 6 * 60 * 60 * 1000;
+      const waitingSince = Math.max(
+        ...turns.map(turn => Date.parse(turn.completed_at) || 0),
+        Date.parse(match.started_at) || Date.parse(match.created_at) || 0
+      );
       return {
         id: match.id, match, me, opponent, turns, ownTurn, opponentTurn,
         currentRound, roundConfig, canChoose, canPlay, bucket, action, myScore, theirScore,
@@ -749,7 +759,8 @@
         lastSentNudge,
         lastReceivedNudge,
         hasActiveReceivedNudge,
-        canNudge: bucket === 'waiting' && Boolean(opponent) &&
+        canNudge: match.status === 'active' && bucket === 'waiting' && Boolean(opponent) &&
+          waitingSince > 0 && Date.now() - waitingSince >= nudgeCooldownMs &&
           (!lastSentNudge || Date.now() - new Date(lastSentNudge.created_at).getTime() >= nudgeCooldownMs),
         updatedAt: dates.length ? Math.max(...dates) : 0
       };

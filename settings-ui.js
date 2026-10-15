@@ -42,6 +42,8 @@
           <button type="button" data-provider="google">Google</button>
           <button type="button" data-provider="email">Email</button>
         </div>
+        <button type="button" class="settings-google-signin">Sign in to existing Google account</button>
+        <div class="settings-link-status">Already played with Google? Sign in to restore that player. Linking above adds Google to this guest; it does not merge accounts.</div>
         <div class="settings-link-status settings-provider-status" role="status" aria-live="polite">Account linking will activate when the chosen Supabase providers are configured.</div>
       </section>
 
@@ -200,6 +202,15 @@
       window.dispatchEvent(new CustomEvent('battle-picz:profile-updated', { detail: updated }));
     } catch (error) {
       modalStatus.textContent = error?.message || 'Could not save your name';
+    }
+  };
+  screen.querySelector('.settings-google-signin').onclick = async () => {
+    const status = screen.querySelector('.settings-provider-status');
+    status.textContent = 'Opening Google sign-in…';
+    try {
+      location.assign(await backend.beginOAuth('google', { link: false }));
+    } catch (error) {
+      status.textContent = error.message || 'Could not open Google. Please retry.';
     }
   };
   screen.querySelectorAll('[data-provider]').forEach(button => {

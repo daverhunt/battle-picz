@@ -1253,6 +1253,21 @@
           let s = document.createElement("div");
           s.className = "slot";
           s.textContent = picked[i]?.l || "";
+          if (picked[i]) {
+            s.setAttribute("role", "button");
+            s.tabIndex = 0;
+            s.setAttribute("aria-label", "Remove letter " + (i + 1));
+            s.onclick = () => {
+              if (intro || ended) return;
+              const [removed] = picked.splice(i, 1);
+              removed?.b.classList.remove("used");
+              ans();
+              saveProgress();
+            };
+            s.onkeydown = event => {
+              if (event.key === "Enter" || event.key === " ") { event.preventDefault(); s.click(); }
+            };
+          }
           $("answer").appendChild(s);
         });
       }
@@ -1453,6 +1468,10 @@
         d.className = "ctrl del";
         d.setAttribute("aria-label", "Delete last letter");
         d.onclick = del;
+        d.title = "Delete last letter; hold to clear answer";
+        let clearHold;
+        d.onpointerdown = () => { clearHold = setTimeout(() => { if (!intro && !ended) clearLetters(); }, 600); };
+        d.onpointerup = d.onpointerleave = d.onpointercancel = () => clearTimeout(clearHold);
         $("letters").appendChild(d);
         let s = document.createElement("button");
         s.className = "ctrl skip";
@@ -1524,7 +1543,7 @@
                 : "ANSWER: " + q().a;
               if (tries) {
                 showRetry();
-                setTimeout(clearLetters, 450);
+                // Keep the guess available for correction.
               } else {
                 showFeedback(false);
                 ended = true;
@@ -1537,6 +1556,7 @@
       }
 
       function del() {
+        if (intro || ended) return;
         let x = picked.pop();
         if (x) x.b.classList.remove("used");
         ans();
@@ -1610,9 +1630,7 @@
               qi++;
               if (qi < qs.length) {
                 startQ();
-                board.classList.remove("slide-out");
-                void board.offsetWidth;
-                board.classList.add("slide-in");
+                // startQ restores the board before starting its clock.
               } else {
                 endRound();
               }
@@ -2084,12 +2102,29 @@
         p.style.setProperty("--picture-y", y + "px");
         p.classList.remove("fallback");
         $("pictureSubject").textContent = q().pic;
-        img.alt = q().label || q().a;
-        img.onerror = () => p.classList.add("fallback");
-        img.onload = () => p.classList.remove("fallback");
-        img.src = q().image;
+        img.alt = "Hidden picture";
+        return new Promise(resolve => {
+          let settled = false;
+          const ready = (fallback) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeout);
+            img.onload = img.onerror = null;
+            p.classList.toggle("fallback", fallback);
+            resolve();
+          };
+          const timeout = setTimeout(() => ready(true), 15000);
+          img.onerror = () => ready(true);
+          img.onload = () => ready(false);
+          img.src = q().image;
+          if (img.complete && img.naturalWidth > 0) ready(false);
+        });
       }
-      function startQ(saved) {
+      let pictureLoadVersion = 0;
+      async function startQ(saved) {
+        const loadVersion = ++pictureLoadVersion;
+        document.querySelector(".board").classList.remove("slide-out", "slide-in");
+        intro = true;
         picked = [];
         currentResult = saved?.currentResult || null;
         letterPool =
@@ -2104,7 +2139,7 @@
         $("reveals").textContent = rev;
         $("reveals").classList.remove("empty");
         $("cat").textContent = q().cat + " · " + difficulty.label;
-        positionPicture();
+        const pictureReady = positionPicture();
         $("msg").textContent = saved
           ? "GAME RESTORED"
           : "REVEAL TILES THEN SPELL THE ANSWER";
@@ -2139,6 +2174,13 @@
           }
         });
         ans();
+        $("msg").textContent = "LOADING PICTURE…";
+        await pictureReady;
+        // Allow the grid and loaded picture (or emoji fallback) to paint first.
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        if (loadVersion !== pictureLoadVersion) return;
+        $("msg").textContent = "REVEAL TILES THEN SPELL THE ANSWER · HOLD DEL TO CLEAR";
+        start = performance.now() - Math.max(0, Number(saved?.elapsedMs) || 0);
         if (saved) {
           intro = false;
           saveProgress();

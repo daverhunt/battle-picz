@@ -374,7 +374,8 @@
 
   function cardStatus(item) {
     if (item.bucket === 'completed') return item.result.toUpperCase();
-    if (item.action === 'result') return `ROUND ${item.resultRound || item.currentRound} RESULTS`;
+    if (item.resultRound) return 'RESULTS READY';
+    if (item.action === 'result') return 'RESULTS READY';
     if (item.hasActiveReceivedNudge) return 'THEY NUDGED YOU · YOUR TURN';
     if (item.action === 'accept') return 'NEW CHALLENGE';
     if (item.action === 'choose') return `CHOOSE ROUND ${item.currentRound}`;
@@ -395,20 +396,20 @@
     const category = item.roundConfig?.category || 'Challenge';
     const difficulty = item.roundConfig?.difficulty || '';
     const avatar = opponentAvatar(item);
-    const resultClass = item.bucket === 'completed' ? ` result-${item.result}` : '';
+    const resultClass = item.bucket === 'completed' && !item.resultRound ? ` result-${item.result}` : '';
     const inviteAction = !item.opponent && item.match.invite_code
       ? `<button class="match-card-link" data-action="share" data-id="${item.id}">COPY INVITE</button>` : '';
     const rematchAction = item.bucket === 'completed'
       ? `<button class="match-card-link" data-action="rematch" data-id="${item.id}">REMATCH</button>` : '';
-    const nudgeAction = item.bucket === 'waiting' && item.opponent
-      ? `<button class="match-card-link nudge-link" data-action="nudge" data-id="${item.id}" ${item.canNudge ? '' : 'disabled'}>${item.canNudge ? '🔔 NUDGE' : 'NUDGED ✓'}</button>` : '';
+    const nudgeAction = item.bucket === 'waiting' && item.canNudge
+      ? `<button class="match-card-link nudge-link" data-action="nudge" data-id="${item.id}">🔔 NUDGE</button>` : '';
     return `<article class="match-card${resultClass}">
       <div class="match-card-avatar${avatar ? ' has-image' : ''}">${avatar ? `<img src="${escapeHtml(avatar)}" alt="">` : '<span aria-hidden="true"></span>'}</div>
       <div class="match-card-main">
         <div class="match-card-top"><strong>${escapeHtml(opponentName(item))}</strong><time>${relativeTime(item.updatedAt)}</time></div>
         <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
         <div class="match-card-status">${cardStatus(item)}</div>
-        <div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><span class="match-card-score-separator" aria-hidden="true">–</span><span>Them <b>${item.theirRoundsWon}</b></span></div>
+        ${item.resultRound ? '<div class="match-card-score">Open Results to see the score</div>' : `<div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><span class="match-card-score-separator" aria-hidden="true">–</span><span>Them <b>${item.theirRoundsWon}</b></span></div>`}
         <div class="match-card-links">${inviteAction}${rematchAction}${nudgeAction}</div>
       </div>
       <button class="match-card-primary" data-action="${item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
@@ -518,7 +519,7 @@
   function showError(error) {
     state.hidden = false;
     state.className = 'matches-state error';
-    state.textContent = error?.message || 'Something went wrong. Please try again.';
+    state.textContent = (error?.message || 'Connection lost. Your player has been kept.') + ' Use Refresh to retry, or Settings to sign in.';
   }
 
   async function loadMatches(message = 'Loading battles…') {

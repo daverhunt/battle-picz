@@ -74,7 +74,7 @@ test("puts unseen round results in My Turn without waiting for the next round", 
   assert.match(ui, /bucket:\s*'your-turn'/);
   assert.match(ui, /action:\s*'result'/);
   assert.match(ui, /dashboard\.matches\.map\(exposeUnreadRoundResult\)/);
-  assert.match(ui, /ROUND \$\{item\.resultRound \|\| item\.currentRound\} RESULTS/);
+  assert.match(ui, /RESULTS READY/);
 });
 
 test("uses played pictures and unambiguous player cards", () => {

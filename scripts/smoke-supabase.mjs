@@ -9,6 +9,7 @@ if (!url || !publishableKey) throw new Error('Supabase public configuration is m
 async function request(path, { token, body, method = 'POST' } = {}) {
   const response = await fetch(`${url}${path}`, {
     method,
+    signal: AbortSignal.timeout(15000),
     headers: {
       apikey: publishableKey,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -82,7 +83,8 @@ for (const [index, round] of rounds.entries()) {
     if (joinedMatchId !== challenge.match_id) throw new Error('Opponent joined the wrong match');
   }
 
-  const playersThisRound = roundNo === 1 ? [[1, opponent]] : [[0, creator], [1, opponent]];
+  const playersThisRound = roundNo === 1 ? [[1, opponent]]
+    : roundNo % 2 === 0 ? [[1, opponent], [0, creator]] : [[0, creator], [1, opponent]];
   for (const [playerIndex, token] of playersThisRound) {
     const score = round.scores[playerIndex];
     await request('/rest/v1/rpc/submit_turn', {
@@ -121,3 +123,6 @@ if (creatorProfile?.[0]?.coins !== 9 || opponentProfile?.[0]?.coins !== 7) {
 }
 
 console.log('Supabase smoke test passed: two guests completed four rounds, stayed active, and received 3/2/1 coin rewards.');
+
+await request('/rest/v1/rpc/reset_my_game_data', { token: creator, body: {} });
+console.log('Smoke-test battle removed; two test guest identities remain until the authorised full reset.');

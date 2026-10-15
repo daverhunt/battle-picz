@@ -246,7 +246,7 @@ test('refreshes and retries when Supabase rejects a stale guest token', async ()
   assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).access_token, 'fresh-token');
 });
 
-test('starts a new guest session when a stale session cannot be refreshed', async () => {
+test('keeps the existing account when a stale session cannot be refreshed', async () => {
   const storage = memoryStorage({
     [SESSION_KEY]: JSON.stringify({
       access_token: 'stale-token', refresh_token: 'dead-refresh', expires_at: 9_999_999_999
@@ -267,9 +267,9 @@ test('starts a new guest session when a stale session cannot be refreshed', asyn
     }
   });
 
-  assert.deepEqual(await backend.listMatches(), []);
-  assert.match(calls[2].url, /\/auth\/v1\/signup$/);
-  assert.equal(calls[3].options.headers.Authorization, 'Bearer new-guest-token');
+  await assert.rejects(backend.listMatches(), /session has expired/);
+  assert.equal(calls.length, 2);
+  assert.equal(JSON.parse(storage.getItem(SESSION_KEY)).refresh_token, 'dead-refresh');
 });
 
 test('creates a challenge and returns a shareable URL', async () => {
