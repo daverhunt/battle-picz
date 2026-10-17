@@ -772,3 +772,21 @@ test('consumes one server-owned power-up and rejects unknown types', async () =>
   await assert.rejects(() => backend.consumePowerUp('free-money'), /Unknown power-up/);
   assert.equal(calls.length, 1);
 });
+
+for (const [name, google, expected] of [['Player', true, 'Google Dave'], ['Dave', true, 'Dave'], ['Player', false, 'Player']]) {
+  test(`profile name sync: ${name}, Google=${google}`, async () => {
+    const backend = new BattlePiczBackend({});
+    backend.ensureSession = async () => ({user: {id: 'test', identities: google ? [{provider: 'google', identity_data: {full_name: 'Google Dave'}}] : []}});
+    const writes = [];
+    backend.request = async (path, options) => {
+      if (!options) return [{id: 'test', display_name: name, coins: 7}];
+      writes.push({path, options});
+      return [{display_name: JSON.parse(options.body).display_name}];
+    };
+    const profile = await backend.getProfile();
+    assert.equal(profile.display_name, expected);
+    assert.equal(profile.coins, 7);
+    assert.equal(writes.length, name === 'Player' && google ? 1 : 0);
+    if (writes.length) assert.match(writes[0].path, /display_name=eq.Player/);
+  });
+}

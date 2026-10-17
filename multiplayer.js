@@ -396,7 +396,23 @@
       const rows = await this.request(
         `profiles?id=eq.${encodeURIComponent(userId)}&select=id,display_name,xp,coins,skill_rating,games_played,games_won,power_bomb,power_remove,power_reveal`
       );
-      return rows?.[0] || null;
+      const profile = rows?.[0] || null;
+      const google = session.user?.identities?.find(identity => identity.provider === 'google');
+      const isGoogle = google || session.user?.app_metadata?.providers?.includes('google');
+      const metadata = google?.identity_data || session.user?.user_metadata || {};
+      const googleName = BattlePiczBackend.normaliseDisplayName(
+        String(metadata.full_name || metadata.name || '').trim().replace(/\s+/g, ' ').slice(0, 24)
+      );
+      if (profile?.display_name === 'Player' && isGoogle && googleName) {
+        // Conditional update protects a name changed concurrently on another device.
+        const updated = await this.request(
+          `profiles?id=eq.${encodeURIComponent(userId)}&display_name=eq.Player&select=display_name`,
+          { method: 'PATCH', headers: { Prefer: 'return=representation' },
+            body: JSON.stringify({ display_name: googleName }) }
+        );
+        if (updated?.[0]) profile.display_name = updated[0].display_name;
+      }
+      return profile;
     }
 
     async updateDisplayName(value) {

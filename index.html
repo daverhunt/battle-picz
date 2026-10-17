@@ -1131,7 +1131,7 @@
       let qs = [];
       const SEARCH_PARAMS = new URLSearchParams(location.search),
         MATCH_ID = SEARCH_PARAMS.get("matchId"),
-        ROUND_MS = 20000,
+        ROUND_MS = 120000, // Temporary playtest limit: two minutes per picture.
         ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         MATCH_SEED =
           SEARCH_PARAMS.get("match") ||
