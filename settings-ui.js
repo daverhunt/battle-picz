@@ -58,10 +58,11 @@
           <div class="settings-segment" aria-label="Round score display"><button type="button" data-detail="false">Summary</button><button type="button" data-detail="true">Detailed</button></div>
         </div>
         <div class="settings-row">
-          <span class="settings-row-icon">♢</span><span><strong>Turn alerts</strong><small class="settings-notification-copy">Browser notifications for nudges</small></span>
+          <span class="settings-row-icon">♢</span><span><strong>Turn alerts</strong><small class="settings-notification-copy">Turn, result and nudge alerts</small></span>
           <button class="settings-switch settings-notifications" type="button" role="switch" aria-label="Turn alerts"></button>
         </div>
       </section>
+      <button type="button" class="settings-row settings-test-push">Send test alert</button>
       <p class="settings-version">BATTLE PICZ · TEST BUILD</p>
     </div>
     <div class="settings-modal" hidden>
@@ -97,7 +98,7 @@
   }
 
   function notificationAvailable() {
-    return 'Notification' in window;
+    return Boolean(window.BattlePiczPush?.available());
   }
 
   function renderPreferences() {
@@ -106,16 +107,10 @@
     screen.querySelectorAll('[data-detail]').forEach(button => {
       button.classList.toggle('active', button.dataset.detail === String(detailed));
     });
-    const canNotify = notificationAvailable();
-    setSwitch(notificationsSwitch, canNotify && prefs.notificationsEnabled && Notification.permission === 'granted');
-    notificationsSwitch.disabled = !canNotify;
-    screen.querySelector('.settings-notification-copy').textContent = !canNotify
-      ? 'Not available in this browser'
-      : Notification.permission === 'denied'
-        ? 'Blocked in browser settings'
-        : Notification.permission === 'granted'
-          ? 'Browser notifications for nudges'
-          : 'Tap to allow browser notifications';
+    setSwitch(notificationsSwitch, window.BattlePiczPush?.enabled);
+    notificationsSwitch.disabled = false;
+    screen.querySelector('.settings-notification-copy').textContent = window.BattlePiczPush?.status() || 'Loading alerts…';
+
   }
 
   function renderProfile() {
@@ -172,15 +167,19 @@
       renderPreferences();
     };
   });
+  window.addEventListener('battle-picz:push-changed', renderPreferences);
   notificationsSwitch.onclick = async () => {
-    if (!notificationAvailable()) return;
-    const alreadyGranted = Notification.permission === 'granted';
-    if (!alreadyGranted) await Notification.requestPermission();
-    prefs.notificationsEnabled = Notification.permission === 'granted'
-      ? (alreadyGranted ? !prefs.notificationsEnabled : true)
-      : false;
-    renderPreferences();
-    window.dispatchEvent(new CustomEvent('battle-picz:settings-changed', { detail: { notificationsEnabled: prefs.notificationsEnabled } }));
+    try {
+      if (window.BattlePiczPush.enabled) await window.BattlePiczPush.disable();
+      else await window.BattlePiczPush.enable();
+      renderPreferences();
+    } catch (error) { screen.querySelector('.settings-notification-copy').textContent = error.message; }
+  };
+  screen.querySelector('.settings-test-push').onclick = async () => {
+    try {
+      await window.BattlePiczPush.test();
+      screen.querySelector('.settings-notification-copy').textContent = 'Test queued. Allow up to a minute for delivery.';
+    } catch (error) { screen.querySelector('.settings-notification-copy').textContent = error.message; }
   };
   screen.querySelector('.settings-edit-name').onclick = () => {
     nameInput.value = profile?.display_name || '';

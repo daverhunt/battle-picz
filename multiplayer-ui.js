@@ -475,34 +475,10 @@
   }
 
   function updateAlertsButton() {
-    if (!('Notification' in window)) {
-      alertsButton.textContent = 'ALERTS N/A';
-      alertsButton.disabled = true;
-      return;
-    }
-    const enabled = Notification.permission === 'granted'
-      && window.battlePiczPreferences?.notificationsEnabled !== false;
-    alertsButton.textContent = enabled ? '🔔 ALERTS ON' : '🔔 ALERTS';
+    alertsButton.textContent = window.BattlePiczPush?.enabled ? '🔔 ALERTS ON' : '🔔 ENABLE ALERTS';
+    alertsButton.disabled = false;
   }
-
-  function notifyAboutNudges() {
-    if (window.battlePiczPreferences?.notificationsEnabled === false) return;
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-    const received = matches.filter(item => item.hasActiveReceivedNudge)
-      .sort((a, b) => new Date(b.lastReceivedNudge.created_at) - new Date(a.lastReceivedNudge.created_at))[0];
-    if (!received) return;
-    const notificationKey = `${received.id}:${received.lastReceivedNudge.created_at}`;
-    if (localStorage.getItem('battle-picz.last-nudge-notification') === notificationKey) return;
-    try {
-      new Notification('Your turn in Battle Picz', {
-        body: `${opponentName(received)} gave you a nudge. Ready to play?`,
-        tag: `battle-picz-${received.id}`
-      });
-      localStorage.setItem('battle-picz.last-nudge-notification', notificationKey);
-    } catch {
-      // Some mobile browsers expose Notification but require service-worker delivery.
-    }
-  }
+  function notifyAboutNudges() { /* Background push handles delivery. */ }
 
   function setBusy(value, message) {
     busy = value;
@@ -574,14 +550,14 @@
     updateAlertsButton();
   });
   tabs.forEach(tab => tab.onclick = () => { activeTab = tab.dataset.tab; render(); });
+  window.addEventListener('battle-picz:push-changed', updateAlertsButton);
   alertsButton.onclick = async () => {
-    if (!('Notification' in window)) return;
-    await Notification.requestPermission();
-    if (Notification.permission === 'granted' && window.battlePiczPreferences) {
-      window.battlePiczPreferences.notificationsEnabled = true;
-    }
+    try {
+      if (!window.BattlePiczPush.enabled) await window.BattlePiczPush.enable();
+      state.hidden = false;
+      state.textContent = window.BattlePiczPush.status();
+    } catch (error) { showError(error); }
     updateAlertsButton();
-    notifyAboutNudges();
   };
   updateAlertsButton();
   setInterval(updateCountdown, 30_000);
