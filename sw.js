@@ -17,6 +17,12 @@ self.addEventListener('notificationclick', event => {
   catch { url = new URL('/', self.location.origin); }
   if (url.origin !== self.location.origin) url = new URL('/', self.location.origin);
   event.waitUntil((async () => {
+    // Preserve the tap across iOS Home Screen launches that ignore openWindow's URL.
+    // Only a deliberate tap writes this; receiving an alert never redirects play.
+    try {
+      const cache = await caches.open('battle-picz-notification-navigation');
+      await cache.put('/__notification-target', new Response(JSON.stringify({url: url.href, at: Date.now()})));
+    } catch { /* Normal navigation still works without Cache Storage. */ }
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const client = windows.find(w => new URL(w.url).origin === self.location.origin);
     if (client) {
@@ -24,9 +30,14 @@ self.addEventListener('notificationclick', event => {
       // unchanged: the app may currently be displaying its lobby or old results.
       try {
         const navigated = await client.navigate(url.href);
-        if (navigated) return navigated.focus();
+        if (navigated) {
+          await navigated.focus();
+          navigated.postMessage?.({type: 'battle-picz:notification-tap'});
+          return;
+        }
       } catch { /* Fall back to a new app window if the old one closed. */ }
     }
-    return self.clients.openWindow(url.href);
+    const opened = await self.clients.openWindow(url.href);
+    opened?.postMessage?.({type: 'battle-picz:notification-tap'});
   })());
 });

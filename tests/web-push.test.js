@@ -22,7 +22,7 @@ test('permission alone never marks alerts enabled when backend registration fail
  const window={Notification:{permission:'granted',requestPermission:async()=> 'granted'},PushManager:{},
   battlePiczPreferences:{notificationsEnabled:false},battlePiczBackend:{readSession:()=>({user:{id:'a'}}),rpc:async(name)=>{rpcCalls.push(name);if(name==='web_push_public_key')return 'BAAA';throw Error('Network unavailable');}},
   dispatchEvent(){},addEventListener:(n,f)=>handlers[n]=f};
- const context={window,Notification:window.Notification,navigator:{serviceWorker:{register:async()=>reg,ready:Promise.resolve(reg)},userAgent:'Chrome'},matchMedia:()=>({matches:false}),atob:s=>Buffer.from(s,'base64').toString('binary'),Uint8Array,CustomEvent:class{}};
+ const context={document:{addEventListener(){}},window,Notification:window.Notification,navigator:{serviceWorker:{register:async()=>reg,ready:Promise.resolve(reg)},userAgent:'Chrome'},matchMedia:()=>({matches:false}),atob:s=>Buffer.from(s,'base64').toString('binary'),Uint8Array,CustomEvent:class{}};
  vm.runInNewContext(fs.readFileSync('push.js','utf8'), context);
  await assert.rejects(window.BattlePiczPush.enable(),/Network unavailable/);
  assert.equal(window.BattlePiczPush.enabled,false);
@@ -60,3 +60,25 @@ test('Google auth redirect retains a notification destination but removes auth p
  const backend=new BattlePiczBackend({location:{href:'https://game.test/?match=seed&matchId=one&screen=results&round=2&code=secret#token'}});
  assert.equal(backend.authRedirectUrl(),'https://game.test/?match=seed&matchId=one&screen=results&round=2');
 });
+
+for (const warm of [false,true]) {
+ test(`iPhone root-page launch recovers tapped result destination (${warm?'warm':'cold'})`,async()=>{
+  const entries=new Map(), handlers={}, pageEvents={}, navigations=[];
+  const cache={put:async(k,v)=>entries.set(k,v),match:async k=>entries.get(k),delete:async k=>entries.delete(k)};
+  const caches={open:async()=>cache};
+  const target='https://game.test/?match=seed&matchId=one&screen=results&round=2';
+  const self={location:{origin:'https://game.test'},addEventListener:(n,f)=>handlers[n]=f,
+   clients:{matchAll:async()=>[],openWindow:async()=>null}}; // iOS discards target URL.
+  vm.runInNewContext(fs.readFileSync('sw.js','utf8'),{self,URL,caches,Response,Date});
+  let redirected;const reached=new Promise(resolve=>redirected=resolve);
+  const window={caches,addEventListener:(n,f)=>{(pageEvents[n] ||= []).push(f);}};
+  const page={window,caches,URL,Date,document:{addEventListener(){}},navigator:{},location:{origin:'https://game.test',href:'https://game.test/',replace:url=>{navigations.push(url);redirected();}}};
+  if(warm) {vm.runInNewContext(fs.readFileSync('push.js','utf8'),page);await new Promise(resolve=>setImmediate(resolve));}
+  let clicked;handlers.notificationclick({notification:{close(){},data:{url:target}},waitUntil:p=>clicked=p});await clicked;
+  assert.ok(entries.has('/__notification-target'));
+  if(warm) {for(const fn of pageEvents.focus) fn();} else vm.runInNewContext(fs.readFileSync('push.js','utf8'),page);
+  await reached;
+  assert.deepEqual(navigations,[target]);
+  assert.equal(entries.has('/__notification-target'),false);
+ });
+}

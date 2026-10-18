@@ -60,7 +60,36 @@
   window.BattlePiczPush = { available, status, enable, disable, sync, get enabled() { return subscribed; },
     async test() { if (!subscribed) throw new Error('Enable alerts first'); await backend().rpc('test_web_push'); }
   };
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+  let routing = false;
+  async function recoverNotificationTap() {
+    if (routing || !('caches' in window)) return;
+    routing = true;
+    try {
+      const cache = await caches.open('battle-picz-notification-navigation');
+      const response = await cache.match('/__notification-target');
+      if (!response) return;
+      const target = await response.json();
+      await cache.delete('/__notification-target');
+      if (!Number.isFinite(target.at) || Date.now() - target.at > 120000 || target.at > Date.now()) return;
+      const url = new URL(target.url, location.origin);
+      if (url.origin !== location.origin || url.pathname !== '/') return;
+      // The new page's normal bootstrap handles a URL already at its destination.
+      if (location.href !== url.href) location.replace(url.href);
+    } catch { /* A damaged/expired destination must never prevent normal startup. */ }
+    finally { routing = false; }
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(reg => reg.update()).catch(() => {});
+    navigator.serviceWorker.addEventListener?.('message', event => {
+      if (event.data?.type === 'battle-picz:notification-tap') recoverNotificationTap();
+    });
+  }
+  window.addEventListener('pageshow', recoverNotificationTap);
+  window.addEventListener('focus', recoverNotificationTap);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') recoverNotificationTap();
+  });
+  recoverNotificationTap();
   window.addEventListener('focus', () => sync().catch(() => {}));
   window.addEventListener('battle-picz:profile-updated', () => sync().catch(() => {}));
   sync().catch(() => {});
