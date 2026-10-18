@@ -155,7 +155,7 @@
       try {
         await this.authRequest(`otp?redirect_to=${encodeURIComponent(redirectTo)}`, {
           email,
-          create_user: false
+          create_user: true
         });
       } catch (error) {
         this.clearPendingAuth();

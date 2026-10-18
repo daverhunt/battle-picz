@@ -157,7 +157,7 @@ test('rejects an identity callback for a different user and keeps guest progress
   assert.deepEqual(JSON.parse(storage.getItem(SESSION_KEY)), oldSession);
 });
 
-test('email sign-in restores an existing account without creating a new user', async () => {
+test('email welcome flow permits new accounts as well as existing sign-ins', async () => {
   const calls = [];
   const storage = memoryStorage();
   const backend = new BattlePiczBackend({
@@ -168,7 +168,7 @@ test('email sign-in restores an existing account without creating a new user', a
   await backend.sendEmailSignIn('dave@example.com');
   assert.match(calls[0].url, /\/auth\/v1\/otp\?redirect_to=/);
   assert.deepEqual(JSON.parse(calls[0].options.body), {
-    email: 'dave@example.com', create_user: false
+    email: 'dave@example.com', create_user: true
   });
   assert.equal(JSON.parse(storage.getItem(AUTH_PENDING_KEY)).mode, 'signin');
 });

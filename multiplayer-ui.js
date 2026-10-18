@@ -156,7 +156,7 @@
           <form class="welcome-email-form">
             <label for="welcome-player-email">Email address</label>
             <input id="welcome-player-email" name="player-email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
-            <small>Use the email previously linked to your Battle Picz player.</small>
+            <small>New here? This creates your account. Returning players: use your existing account’s email.</small>
             <button class="welcome-start" type="submit">EMAIL MY SIGN-IN LINK</button>
           </form>
         </section>
