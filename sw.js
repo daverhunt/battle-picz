@@ -12,13 +12,21 @@ self.addEventListener('push', event => {
 });
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  let url = new URL(event.notification.data?.url || '/', self.location.origin);
+  let url;
+  try { url = new URL(event.notification.data?.url || '/', self.location.origin); }
+  catch { url = new URL('/', self.location.origin); }
   if (url.origin !== self.location.origin) url = new URL('/', self.location.origin);
   event.waitUntil((async () => {
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    const client = windows.find(w => w.url === url.href);
-    if (client) return client.focus();
-    // Do not navigate an existing in-progress game away from its round.
+    const client = windows.find(w => new URL(w.url).origin === self.location.origin);
+    if (client) {
+      // A notification tap explicitly requests navigation, even when the URL is
+      // unchanged: the app may currently be displaying its lobby or old results.
+      try {
+        const navigated = await client.navigate(url.href);
+        if (navigated) return navigated.focus();
+      } catch { /* Fall back to a new app window if the old one closed. */ }
+    }
     return self.clients.openWindow(url.href);
   })());
 });

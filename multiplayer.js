@@ -49,7 +49,13 @@
 
     authRedirectUrl() {
       const url = new URL(this.location?.href || `${this.location?.origin || ''}${this.location?.pathname || '/'}`);
-      url.search = '';
+      const destination = new URLSearchParams();
+      if (['game', 'results'].includes(url.searchParams.get('screen'))) {
+        for (const key of ['match', 'matchId', 'screen', 'round']) {
+          if (url.searchParams.has(key)) destination.set(key, url.searchParams.get(key));
+        }
+      }
+      url.search = destination.toString();
       url.hash = '';
       return url.toString();
     }

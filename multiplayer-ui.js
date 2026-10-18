@@ -671,7 +671,8 @@
   }
 
   async function initialiseMatch() {
-    const matchId = new URLSearchParams(location.search).get('matchId');
+    const notificationParams = new URLSearchParams(location.search);
+    const matchId = notificationParams.get('matchId');
     if (!matchId) {
       open();
       return;
@@ -693,7 +694,26 @@
       const seenRoundKey = `battle-picz.seen-round.${matchId}`;
       const lastCompletedRound = matchContext.roundResults.length;
       const lastSeenRound = Number(localStorage.getItem(seenRoundKey) || 0);
-      if (lastCompletedRound > lastSeenRound) {
+      const requestedRound = Number(notificationParams.get('round'));
+      if (notificationParams.get('screen') === 'results' &&
+          Number.isSafeInteger(requestedRound) && requestedRound > 0 &&
+          requestedRound <= lastCompletedRound) {
+        const resultContext = await backend.getMatchContext(matchId, requestedRound);
+        if (resultContext.ownTurn && resultContext.opponentTurn) {
+          window.BATTLE_PICZ_MATCH = resultContext;
+          window.BATTLE_PICZ_NEXT_CONTEXT = matchContext;
+          close();
+          window.showBattlePiczMatchResult?.(resultContext);
+          return;
+        }
+      }
+      // A turn notification targets the currently playable round. If it is stale,
+      // use the normal results/waiting flow rather than replaying a submitted turn.
+      if (notificationParams.get('screen') === 'game' &&
+          ((matchContext.canChoose && !matchContext.roundConfig) || matchContext.canPlay)) {
+        close();
+        window.startBattlePicz?.(matchContext);
+      } else if (lastCompletedRound > lastSeenRound) {
         const nextContext = matchContext;
         const resultContext = await backend.getMatchContext(matchId, lastCompletedRound);
         window.BATTLE_PICZ_MATCH = resultContext;

@@ -47,7 +47,11 @@ Deno.serve(async req => {
         let url = '/';
         if (event.match_id) {
           const match = await db(`matches?id=eq.${event.match_id}&select=seed`);
-          if (match[0]) url = `/?match=${encodeURIComponent(match[0].seed)}&matchId=${encodeURIComponent(event.match_id)}`;
+          if (match[0]) {
+            const screen = event.event_type === 'results_ready' ? 'results' : 'game';
+            url = `/?match=${encodeURIComponent(match[0].seed)}&matchId=${encodeURIComponent(event.match_id)}&screen=${screen}`;
+            if (event.round_no) url += `&round=${encodeURIComponent(event.round_no)}`;
+          }
         }
         for (const sub of subscriptions) {
           if (done.has(sub.id) || new Date(sub.created_at) > new Date(event.created_at)) continue;

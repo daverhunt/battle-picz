@@ -2071,7 +2071,7 @@
             : "ROUND SCORES";
         localStorage.setItem(
           "battle-picz.seen-round." + MATCH_ID,
-          String(roundNo),
+          String(Math.max(roundNo, Number(localStorage.getItem("battle-picz.seen-round." + MATCH_ID) || 0))),
         );
         intro = true;
         ended = true;
