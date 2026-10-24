@@ -12,6 +12,7 @@
     <link rel="apple-touch-icon" href="/assets/app-icon-192.png" />
     <link rel="stylesheet" href="multiplayer.css" />
     <link rel="stylesheet" href="settings.css" />
+
     <style>
       * {
         box-sizing: border-box;
@@ -973,6 +974,7 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="categories.css" />
   </head>
   <body>
     <div id="game">
@@ -980,9 +982,7 @@
         <h2 id="chooserTitle">CHOOSE CATEGORY</h2>
         <p id="chooserPlayer">Dave chooses Round 1</p>
         <div class="category-options" id="categoryOptions">
-          <button data-cat="ANIMALS">ANIMALS</button
-          ><button data-cat="FOOD">FOOD</button
-          ><button data-cat="SPORT">SPORT</button>
+
         </div>
         <div class="difficulty-options hidden" id="difficultyOptions">
           <button data-difficulty="easy">
@@ -1062,12 +1062,14 @@
         </div>
         <div class="grid" id="grid"></div>
       </div>
-      <div class="credit">Photo attribution · prototype</div>
+      <div class="credit"><a id="pictureAttribution" target="_blank" rel="noopener noreferrer">Photo attribution</a></div>
       <div class="answer" id="answer"></div>
       <div class="msg" id="msg">REVEAL TILES THEN SPELL THE ANSWER</div>
       <div class="letters" id="letters"></div>
     </div>
     <script src="questions.js"></script>
+    <script src="category-pictures.js"></script>
+    <script src="categories.js"></script>
     <script src="supabase-config.js"></script>
     <script src="multiplayer.js"></script>
     <script src="game-state.js"></script>
@@ -1780,6 +1782,7 @@
         $("categoryOptions").style.display = "grid";
         $("difficultyOptions").classList.add("hidden");
         $("categoryChooser").classList.remove("hidden");
+        window.BattlePiczCategories.render($("categoryOptions"), chooseCategory);
       }
       function chooseCategory(cat) {
         roundCategory = cat;
@@ -1792,7 +1795,7 @@
       function prepareQuestions(key) {
         difficultyKey = key;
         difficulty = DIFFICULTIES[key];
-        let bank = QUESTION_BANKS[roundCategory].map((x) => ({
+        let bank = (QUESTION_BANKS[roundCategory] || []).map((x) => ({
             ...x,
             cat: roundCategory,
           })),
@@ -1811,7 +1814,12 @@
           let j = Math.floor(rand() * (i + 1));
           [bank[i], bank[j]] = [bank[j], bank[i]];
         }
-        qs = bank.slice(0, 3);
+        // New rounds carry an immutable server-selected deal. Old rounds retain
+        // their original seeded ordering so ongoing battles are not changed.
+        qs = onlineContext?.roundConfig?.questions?.length === 3
+          ? onlineContext.roundConfig.questions.map(item => ({...item, cat: roundCategory}))
+          : bank.slice(0, 3);
+        if (qs.length !== 3) throw new Error("This category is not ready yet");
         if (MATCH_ID) {
           let answers = onlineContext?.opponentTurn?.answers || [];
           qs.forEach((item, index) => {
@@ -2106,6 +2114,12 @@
         p.style.setProperty("--picture-y", y + "px");
         p.classList.remove("fallback");
         $("pictureSubject").textContent = q().pic;
+        const attribution = $("pictureAttribution");
+        if (attribution) {
+          attribution.textContent = q().license ? "Photo: " + (q().artist || "See source") + " · " + q().license + (q().modifications ? " · resized" : "") : "Photo attribution · prototype";
+          if (q().source) attribution.href = q().source;
+          else attribution.removeAttribute("href");
+        }
         img.alt = "Hidden picture";
         const entry = roundPictures[qi];
         const version = pictureLoadVersion;

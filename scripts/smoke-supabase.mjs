@@ -43,7 +43,7 @@ if (!challenge?.match_id || !challenge?.invite_code) throw new Error('Challenge 
 const rounds = [
   { chooser: creator, category: 'ANIMALS', difficulty: 'easy', scores: [3200, 2800] },
   { chooser: opponent, category: 'FOOD', difficulty: 'medium', scores: [2600, 3000] },
-  { chooser: creator, category: 'SPORT', difficulty: 'hard', scores: [3400, 3100] },
+  { chooser: creator, category: 'ANIMALS', difficulty: 'hard', scores: [3400, 3100] },
   { chooser: opponent, category: 'ANIMALS', difficulty: 'medium', scores: [2500, 2500] }
 ];
 
