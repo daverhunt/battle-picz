@@ -1071,6 +1071,7 @@
     <script src="supabase-config.js"></script>
     <script src="multiplayer.js"></script>
     <script src="game-state.js"></script>
+    <script src="image-preloader.js"></script>
     <script>
       const ROUND_DIGITS = {
         zero: "data:image/png;base64,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",
@@ -1787,6 +1788,7 @@
         $("categoryOptions").style.display = "none";
         $("difficultyOptions").classList.remove("hidden");
       }
+      let roundPictures = [];
       function prepareQuestions(key) {
         difficultyKey = key;
         difficulty = DIFFICULTIES[key];
@@ -1820,10 +1822,8 @@
             item.gs = saved ? Number(saved.score) : 0;
           });
         }
-        qs.forEach((x) => {
-          let img = new Image();
-          img.src = x.image;
-        });
+        // Start all downloads together; keep each image and its readiness promise.
+        roundPictures = window.BattlePiczImages.preloadRound(qs);
       }
       async function chooseDifficulty(key) {
         if (
@@ -2077,7 +2077,7 @@
         ended = true;
         showRoundSummary();
       };
-      function positionPicture() {
+      async function positionPicture() {
         let r = seededRandom(
             seedNumber(
               MATCH_SEED +
@@ -2107,23 +2107,19 @@
         p.classList.remove("fallback");
         $("pictureSubject").textContent = q().pic;
         img.alt = "Hidden picture";
-        return new Promise(resolve => {
-          let settled = false;
-          const ready = (fallback) => {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timeout);
-            img.onload = img.onerror = null;
-            p.classList.toggle("fallback", fallback);
-            resolve();
-          };
-          const timeout = setTimeout(() => ready(true), 15000);
-          img.onerror = () => ready(true);
-          img.onload = () => ready(false);
-          img.src = q().image;
-          if (img.complete && img.naturalWidth > 0) ready(false);
-        });
+        const entry = roundPictures[qi];
+        const version = pictureLoadVersion;
+        const ready = await window.BattlePiczImages.waitForPicture(entry);
+        if (version !== pictureLoadVersion) return;
+        p.classList.toggle("fallback", !ready);
+        if (ready) {
+          // Reuse the downloaded, decoded image rather than starting another load.
+          entry.image.id = "pictureImage";
+          entry.image.alt = "Hidden picture";
+          img.replaceWith(entry.image);
+        }
       }
+
       let pictureLoadVersion = 0;
       async function startQ(saved) {
         const loadVersion = ++pictureLoadVersion;
