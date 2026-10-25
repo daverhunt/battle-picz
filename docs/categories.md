@@ -13,3 +13,5 @@ The shop displays actual active picture counts and blocks packs with fewer than 
 Validation: `node --test tests/*.test.js`; `tests/categories.integration.sql` runs transaction-only two-player fixtures and rolls them back. It verifies ownership checks, insufficient funds, idempotent purchases, immutable shared deals, unseen-picture selection, late-join history and free opponent play.
 
 Release catalogue: 95 pictures total (30 original and 65 new). Counts: OBJECTS 7, TRANSPORT 6, LANDMARKS 5, MUSIC 8, PLANTS 8, TOOLS 6, JOBS 8, SPACE 7, CLOTHING 10. Three unsuitable candidates were excluded during visual review. New assets are bundled WebP files with source, author, licence and modification metadata.
+
+Approved generated Animals batch (25 October 2026): ten new distinct answers, bringing Animals to 20 and the catalogue to 105. Provenance is in `generated-animal-pictures.json`. Deploy the bundled assets before applying `scripts/seed-approved-animals.sql`. Original seeded banks stay unchanged so legacy rounds remain reproducible.
