@@ -15,3 +15,7 @@ Validation: `node --test tests/*.test.js`; `tests/categories.integration.sql` ru
 Release catalogue: 95 pictures total (30 original and 65 new). Counts: OBJECTS 7, TRANSPORT 6, LANDMARKS 5, MUSIC 8, PLANTS 8, TOOLS 6, JOBS 8, SPACE 7, CLOTHING 10. Three unsuitable candidates were excluded during visual review. New assets are bundled WebP files with source, author, licence and modification metadata.
 
 Approved generated Animals batch (25 October 2026): ten new distinct answers, bringing Animals to 20 and the catalogue to 105. Provenance is in `generated-animal-pictures.json`. Deploy the bundled assets before applying `scripts/seed-approved-animals.sql`. Original seeded banks stay unchanged so legacy rounds remain reproducible.
+
+### Animals expansion: 100 pictures
+
+80 additional AI-generated animal pictures approved on 2026-10-25. Combined with the original 10 and first approved 10, Animals has 100 active pictures after applying `scripts/seed-approved-animals-80.sql`. Assets are 800px WebP. Existing round snapshots and legacy question banks are unchanged.
