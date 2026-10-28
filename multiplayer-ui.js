@@ -27,8 +27,8 @@
   panel.setAttribute('aria-label', 'Your matches');
   panel.innerHTML = `
     <header class="matches-header">
-      <span aria-hidden="true"></span>
-      <div><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p><button type="button" class="matches-categories">Categories</button></div>
+      <span class="playroom-mark" aria-hidden="true">▦</span>
+      <div><span class="playroom-kicker">BATTLE PICZ</span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p><button type="button" class="matches-categories">Categories</button></div>
       <div class="matches-header-actions">
         <button class="matches-settings" aria-label="Settings">⚙</button>
         <button class="matches-refresh" aria-label="Refresh matches">↻</button>
