@@ -28,7 +28,7 @@
   panel.innerHTML = `
     <header class="matches-header">
       <span class="playroom-mark" aria-hidden="true">▦</span>
-      <div><span class="playroom-kicker">BATTLE PICZ</span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p><button type="button" class="matches-categories">Categories</button></div>
+      <div><span class="playroom-kicker">BATTLE PICZ</span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
       <div class="matches-header-actions">
         <button class="matches-settings" aria-label="Settings">⚙</button>
         <button class="matches-refresh" aria-label="Refresh matches">↻</button>
@@ -305,7 +305,6 @@
   const weeklySummary = panel.querySelector('.weekly-summary');
   const weeklyPreviewNote = panel.querySelector('.weekly-preview-note');
   const balanceLabel = panel.querySelector('.matches-balance');
-  panel.querySelector('.matches-categories').onclick = () => window.BattlePiczCategories.openShop();
   const resetButton = panel.querySelector('.matches-test-reset');
   let activeTab = 'your-turn';
   let matches = [];
