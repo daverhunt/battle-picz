@@ -1482,6 +1482,7 @@
         $("letters").appendChild(d);
         let s = document.createElement("button");
         s.className = "ctrl skip";
+        s.setAttribute("aria-label", "Pass picture");
         s.onclick = () => {
           if (!intro && !ended) finish(false, true);
         };
@@ -2116,8 +2117,8 @@
         $("pictureSubject").textContent = q().pic;
         const attribution = $("pictureAttribution");
         if (attribution) {
-          attribution.textContent = q().license ? "Photo: " + (q().artist || "See source") + " · " + q().license + (q().modifications ? " · resized" : "") : "Photo attribution · prototype";
-          if (q().source) attribution.href = q().source;
+          attribution.textContent = q().generated ? "AI-generated image" : q().license ? "Photo: " + (q().artist || "See source") + " · " + q().license + (q().modifications ? " · resized" : "") : "Photo attribution · prototype";
+          if (/^https?:\/\//i.test(q().source || "")) attribution.href = q().source;
           else attribution.removeAttribute("href");
         }
         img.alt = "Hidden picture";
