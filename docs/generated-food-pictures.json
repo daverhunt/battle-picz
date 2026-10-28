@@ -1,0 +1,80 @@
+[
+  {
+    "id": "food:apple",
+    "a": "APPLE",
+    "label": "APPLE",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/apple-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-10-28",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:banana",
+    "a": "BANANA",
+    "label": "BANANA",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/banana-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-10-28",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:orange",
+    "a": "ORANGE",
+    "label": "ORANGE",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/orange-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-10-28",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:pear",
+    "a": "PEAR",
+    "label": "PEAR",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/pear-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-10-28",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:pineapple",
+    "a": "PINEAPPLE",
+    "label": "PINEAPPLE",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/pineapple-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-10-28",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:watermelon",
+    "a": "WATERMELON",
+    "label": "WATERMELON",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/watermelon-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-10-28",
+    "modifications": "Resized and converted to WebP"
+  }
+]
