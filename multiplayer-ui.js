@@ -27,7 +27,7 @@
   panel.setAttribute('aria-label', 'Your matches');
   panel.innerHTML = `
     <header class="matches-header">
-      <button class="matches-back" aria-label="Back to game">‹</button>
+      <span aria-hidden="true"></span>
       <div><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p><button type="button" class="matches-categories">Categories</button></div>
       <div class="matches-header-actions">
         <button class="matches-settings" aria-label="Settings">⚙</button>
@@ -543,7 +543,6 @@
   }
 
   trigger.onclick = () => open();
-  panel.querySelector('.matches-back').onclick = close;
   refreshButton.onclick = () => loadMatches('Refreshing battles…');
   window.addEventListener('battle-picz:profile-updated', () => loadMatches('Updating your profile…'));
   window.addEventListener('battle-picz:settings-changed', event => {
