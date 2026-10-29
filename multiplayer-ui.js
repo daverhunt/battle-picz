@@ -28,7 +28,7 @@
   panel.innerHTML = `
     <header class="matches-header">
       <span class="playroom-mark" aria-hidden="true">▦</span>
-      <div><span class="playroom-kicker">BATTLE PICZ</span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
+      <div class="matches-brand"><span class="playroom-kicker">BATTLE<span>PICZ</span></span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
       <div class="matches-header-actions">
         <button class="matches-settings" aria-label="Settings">⚙</button>
         <button class="matches-refresh" aria-label="Refresh matches">↻</button>
@@ -95,8 +95,8 @@
       </header>
       <main class="welcome-card">
         <section class="welcome-options">
-          <h2>LET'S PLAY</h2>
-          <p>Choose how you want to continue</p>
+          <h2>Reveal. Guess. Win.</h2>
+          <p>Picture battles with friends</p>
           <div class="welcome-auth-buttons">
             <button class="welcome-auth welcome-guest" type="button" data-auth="guest">
               <span class="welcome-auth-icon" aria-hidden="true">▶</span>
