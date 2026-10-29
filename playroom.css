@@ -59,3 +59,13 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 @media(max-width:350px){.matches-header{padding:18px 12px;gap:8px}.playroom-kicker{font-size:23px}.matches-header .matches-balance{padding:9px 7px;font-size:10px}.matches-header-actions{gap:3px}.matches-header .matches-settings,.matches-header .matches-refresh{width:29px}.match-card{grid-template-columns:35px minmax(0,1fr) 64px;gap:7px}.match-card-avatar{width:34px;height:34px}.matches-tabs button{font-size:10px}.welcome-card{padding-inline:17px}}
 @media(max-height:650px){.welcome-hero{padding-top:15px}.welcome-hero h1{font-size:39px}.welcome-picture-mark{grid-template-columns:repeat(3,35px);grid-template-rows:repeat(3,25px)}.welcome-card h2{font-size:24px}.welcome-card{padding-top:8px}.welcome-auth{min-height:42px}.welcome-auth-buttons{gap:8px}.welcome-card section>p{margin-bottom:10px}.board{width:56%;left:22%;top:25%}.round-summary{padding-top:12px}.round-summary h2:after{font-size:38px;margin:6px 0}.round-rows{min-height:198px;margin:4px 0}.summary-row{min-height:62px}.round-summary .result-actions button{min-height:40px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* Final visual checks: load the rounded face locally and override legacy inline tile art. */
+@font-face{font-family:Playroom;src:url('assets/fonts/nunito-extra-bold.ttf') format('truetype');font-style:normal;font-weight:600 900;font-display:swap}
+:root{--round:Playroom,'Arial Rounded MT Bold',Arial,sans-serif}
+.tile{background:linear-gradient(145deg,#55c5ff,#149de9)!important}
+.welcome-picture-mark{background:#fff8 url('assets/images/categories/food/orange-generated-v1.webp') center/cover no-repeat;grid-template-columns:repeat(4,43px);grid-template-rows:repeat(2,48px)}
+.welcome-picture-mark i:nth-child(9){display:none}.welcome-picture-mark i:nth-child(3),.welcome-picture-mark i:nth-child(6){visibility:hidden}.welcome-picture-mark i:nth-child(5),.welcome-picture-mark i:nth-child(8){visibility:visible}
+.category-chooser{padding-top:64px}.category-chooser h2{font:bold 27px var(--round)}
+.round-summary .result-actions{grid-template-columns:1fr!important}
+.welcome-hero h1{font-size:53px;font-weight:900}.welcome-card h2{font-weight:900}.welcome-auth strong{font-size:15px}.welcome-guest strong{font-size:19px}
+@media(max-height:650px){.welcome-hero h1{font-size:40px}.welcome-picture-mark{grid-template-columns:repeat(4,34px);grid-template-rows:repeat(2,36px)}}
