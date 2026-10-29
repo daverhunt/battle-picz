@@ -69,3 +69,9 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .round-summary .result-actions{grid-template-columns:1fr!important}
 .welcome-hero h1{font-size:53px;font-weight:900}.welcome-card h2{font-weight:900}.welcome-auth strong{font-size:15px}.welcome-guest strong{font-size:19px}
 @media(max-height:650px){.welcome-hero h1{font-size:40px}.welcome-picture-mark{grid-template-columns:repeat(4,34px);grid-template-rows:repeat(2,36px)}}
+/* Keep rows slim and conceal the picture until a tile is revealed. */
+.grid{gap:0}.tile{border-radius:5px}
+.match-card-main{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:9px;align-items:center}
+.match-card-top,.match-card-meta{grid-column:1}.match-card-top strong{max-width:100%;font-size:15px}.match-card-status{display:none}.result-won .match-card-status,.result-lost .match-card-status,.result-draw .match-card-status{display:block;grid-column:1/-1}
+.match-card-score{grid-column:2;grid-row:1/3;margin:0;gap:4px;font-size:0}.match-card-score>span{font-size:0}.match-card-score b{font-size:17px}.match-card-score .match-card-score-separator{font-size:14px;color:var(--ink)}.match-card-links{grid-column:1/-1;margin-top:7px}.match-card{padding:17px 0}
+.revlabel{font-size:0;left:29%;width:34%;display:block}.revlabel br{display:none}.revlabel:after{content:'Tiles used:';font:12px/20px var(--round)}.revbox{left:59%}
