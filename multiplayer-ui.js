@@ -31,7 +31,6 @@
       <div class="matches-brand"><span class="playroom-kicker">BATTLE<span>PICZ</span></span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
       <div class="matches-header-actions">
         <button class="matches-settings" aria-label="Settings">⚙</button>
-        <button class="matches-refresh" aria-label="Refresh matches">↻</button>
       </div>
     </header>
     <section class="weekly-strip" aria-label="This week's tournament record">
@@ -50,7 +49,8 @@
       <button data-tab="completed">Completed <b>0</b></button>
     </nav>
     <div class="matches-state" role="status">Loading battles…</div>
-    <div class="matches-list"></div>
+    <div class="matches-pull" role="status" aria-live="polite"></div>
+    <div class="matches-list" tabindex="0" aria-label="Games. Pull down and release to refresh, or press R." aria-keyshortcuts="R"></div>
     <footer class="matches-footer">
       <button class="matches-new">+ CHALLENGE A FRIEND</button>
       <button class="matches-code">ENTER CODE</button>
@@ -295,7 +295,7 @@
   const list = panel.querySelector('.matches-list');
   const state = panel.querySelector('.matches-state');
   const tabs = [...panel.querySelectorAll('.matches-tabs button')];
-  const refreshButton = panel.querySelector('.matches-refresh');
+  const pullStatus = panel.querySelector('.matches-pull');
   const inviteBanner = panel.querySelector('.invite-banner');
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
@@ -483,7 +483,7 @@
   function setBusy(value, message) {
     busy = value;
     panel.classList.toggle('is-busy', value);
-    refreshButton.disabled = value;
+    list.setAttribute('aria-busy', String(value));
     resetButton.disabled = value;
     if (message) {
       state.hidden = false;
@@ -495,7 +495,7 @@
   function showError(error) {
     state.hidden = false;
     state.className = 'matches-state error';
-    state.textContent = (error?.message || 'Connection lost. Your player has been kept.') + ' Use Refresh to retry, or Settings to sign in.';
+    state.textContent = (error?.message || 'Connection lost. Your player has been kept.') + ' Pull down and release to retry, or use Settings to sign in.';
   }
 
   async function loadMatches(message = 'Loading battles…') {
@@ -542,7 +542,52 @@
   }
 
   trigger.onclick = () => open();
-  refreshButton.onclick = () => loadMatches('Refreshing battles…');
+  // Only claim a downward gesture that began at the top of the games list.
+  let pullStart = null;
+  let pullDistance = 0;
+  const pullThreshold = 65;
+  function resetPull() {
+    pullStart = null;
+    pullDistance = 0;
+    panel.style.removeProperty('--pull-distance');
+    pullStatus.textContent = '';
+  }
+  async function refreshGames() {
+    if (busy) return;
+    pullStatus.textContent = 'Refreshing games…';
+    await loadMatches('Refreshing games…');
+    resetPull();
+  }
+  list.addEventListener('touchstart', event => {
+    resetPull();
+    if (!busy && list.scrollTop <= 0 && event.touches.length === 1) {
+      pullStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    }
+  }, { passive: true });
+  list.addEventListener('touchmove', event => {
+    if (!pullStart) return;
+    if (event.touches.length !== 1) { resetPull(); return; }
+    const dx = event.touches[0].clientX - pullStart.x;
+    const dy = event.touches[0].clientY - pullStart.y;
+    if (dy < 0 || Math.abs(dx) > Math.max(12, dy)) { resetPull(); return; }
+    if (dy <= 8) return;
+    if (event.cancelable) event.preventDefault();
+    pullDistance = Math.min(dy, 110);
+    panel.style.setProperty('--pull-distance', `${Math.min(pullDistance * .55, 50)}px`);
+    pullStatus.textContent = pullDistance >= pullThreshold ? 'Release to refresh' : 'Pull down to refresh';
+  }, { passive: false });
+  list.addEventListener('touchend', () => {
+    const shouldRefresh = pullDistance >= pullThreshold;
+    resetPull();
+    if (shouldRefresh) void refreshGames();
+  });
+  list.addEventListener('touchcancel', resetPull);
+  list.addEventListener('keydown', event => {
+    if (event.target === list && event.key.toLowerCase() === 'r' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      event.preventDefault();
+      void refreshGames();
+    }
+  });
   window.addEventListener('battle-picz:profile-updated', () => loadMatches('Updating your profile…'));
   window.addEventListener('battle-picz:settings-changed', event => {
     if (event.detail?.notificationsEnabled) notifyAboutNudges();

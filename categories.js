@@ -16,9 +16,9 @@
       if (version !== rendering || !container.isConnected) return;
       container.replaceChildren(status);
       status.textContent=`${Number(data.coins).toLocaleString()} coins · Unlocks are permanent`;
-      for (const category of data.categories) {
+      for (const category of [...data.categories].sort((a,b) => Number(b.owned) - Number(a.owned))) {
         const ready = category.pictureCount >= 3;
-        const button = document.createElement('button');button.type='button';button.className='category-card';
+        const button = document.createElement('button');button.type='button';button.className='category-card' + (category.owned ? '' : ' is-locked');
         const label=document.createElement('strong');label.textContent=category.name;
         const detail=document.createElement('small');
         detail.textContent=!ready ? 'Coming soon' : category.owned ? `${category.price===0?'FREE':'UNLOCKED'} · ${category.pictureCount} pictures` : `🔒 ${category.price} coins · ${category.pictureCount} pictures`;

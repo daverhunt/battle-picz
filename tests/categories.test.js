@@ -34,3 +34,9 @@ test('purchase sends only the category identifier and reloads server prices',asy
  await s.container.children[1].onclick();
  assert.equal(s.calls[1][0],'purchase_category');assert.equal(JSON.stringify(s.calls[1][1]),'{"p_category":"SPORT"}');assert.equal(s.calls[2][0],'list_categories');
 });
+test('purchased and free categories precede locked categories while retaining catalogue order',async()=>{
+ const s=setup({coins:20,categories:[{id:'SPACE',name:'Space',price:15,owned:false,pictureCount:10},{id:'FOOD',name:'Food',price:0,owned:true,pictureCount:10},{id:'SPORT',name:'Sport',price:15,owned:true,pictureCount:10}]});
+ await s.window.BattlePiczCategories.render(s.container);
+ assert.deepEqual(s.container.children.slice(1).map(x=>x.dataset.category),['FOOD','SPORT','SPACE']);
+ assert.match(s.container.children[3].children[1].textContent,/🔒 15 coins/);
+});

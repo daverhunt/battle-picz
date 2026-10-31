@@ -1019,15 +1019,7 @@
       </div>
       <div class="feedback" id="feedback"></div>
       <div class="retry" id="retry"></div>
-      <div class="intro" id="intro">
-        <div class="intro-round">
-          <img id="introRoundText" /><img id="introRoundNum" />
-        </div>
-        <img class="intro-cat" id="introCat" /><img
-          class="intro-rsg"
-          id="introRsg"
-        />
-      </div>
+      <div class="intro" id="intro"></div>
       <div class="header">
         <div class="hl"></div>
         <div class="hr"></div>
@@ -1590,6 +1582,17 @@
         }
       }
 
+      function showPictureIndicator(dot, question, correct) {
+        const content = dot.querySelector("span");
+        content.replaceChildren();
+        const image = document.createElement("img");
+        image.src = question.image || "";
+        image.alt = question.a || question.answer || "Completed picture";
+        image.onerror = () => { content.textContent = correct ? "✓" : "×"; };
+        content.append(image);
+        dot.setAttribute("aria-label", `${image.alt}: ${correct ? "correct" : "not solved"}`);
+      }
+
       function finish(ok, pass) {
         award();
         if (!currentResult)
@@ -1625,7 +1628,7 @@
         dot.classList.remove("active");
         dot.classList.add("done", ok ? "correct" : "wrong");
         dot.style.background = "";
-        dot.querySelector("span").textContent = q().pic;
+        showPictureIndicator(dot, q(), ok);
         if (pass) {
           streak = 0;
           $("msg").textContent = "PASS · " + q().a;
@@ -1874,10 +1877,11 @@
           roundResults = [];
           my = 0;
           opp = 0;
-          document.querySelectorAll(".qt").forEach((x) => {
+          document.querySelectorAll(".qt").forEach((x, i) => {
             x.className = "qt";
             x.style.background = "";
-            x.querySelector("span").textContent = "?";
+            x.querySelector("span").textContent = i === qi ? String(Math.ceil(ROUND_MS / 1000)) : String(i + 1);
+            x.setAttribute("aria-label", `Picture ${i + 1}${i === qi ? ": current" : ": upcoming"}`);
           });
         }
         // Render the restored or freshly reset totals before the intro begins.
@@ -1967,68 +1971,32 @@
         chooserIndex = 1 - chooserIndex;
         showCategoryChooser();
       }
+      let introTimers = [];
       function runIntro() {
+        introTimers.forEach(clearTimeout);
+        introTimers = [];
         intro = true;
-        let layer = $("intro"),
-          cat = $("introCat"),
-          rsg = $("introRsg"),
-          digit = $("introRoundNum"),
-          digitNames = [
-            "zero",
-            "one",
-            "two",
-            "three",
-            "four",
-            "five",
-            "six",
-            "seven",
-            "eight",
-            "nine",
-          ];
-        digit.parentElement
-          .querySelectorAll("[data-round-digit]")
-          .forEach((img) => img.remove());
-        String(roundNo)
-          .split("")
-          .forEach((value, index) => {
-            let img = index === 0 ? digit : digit.cloneNode();
-            if (index > 0) {
-              img.removeAttribute("id");
-              img.dataset.roundDigit = "";
-            }
-            img.src = ROUND_DIGITS[digitNames[Number(value)]];
-            img.style.width = "20px";
-            img.style.height = "36px";
-            img.style.objectFit = "contain";
-            if (index > 0) digit.parentElement.appendChild(img);
-          });
-        $("introRoundText").src = INTRO_ASSETS.round_text;
-        cat.src = INTRO_ASSETS[q().cat.toLowerCase() + "_text"];
-        layer.classList.remove("show");
-        cat.classList.remove("pop");
-        rsg.classList.remove("fly");
-        void layer.offsetWidth;
+        const layer = $("intro");
+        layer.replaceChildren();
+        const label = document.createElement("div");
+        label.className = "intro-label";
+        label.textContent = "Round " + roundNo + " · " + q().cat.replaceAll("_", " ");
+        const countdown = document.createElement("div");
+        countdown.className = "intro-countdown";
+        countdown.setAttribute("role", "status");
+        countdown.setAttribute("aria-live", "polite");
+        countdown.textContent = "3";
+        layer.append(label, countdown);
         layer.classList.add("show");
-        cat.classList.add("pop");
-        const steps = ["ready_text", "set_text", "go_text"];
-        steps.forEach((name, n) =>
-          setTimeout(
-            () => {
-              rsg.src = INTRO_ASSETS[name];
-              rsg.style.width = [112, 84, 76][n] + "px";
-              rsg.classList.remove("fly");
-              void rsg.offsetWidth;
-              rsg.classList.add("fly");
-            },
-            1650 + n * 1000,
-          ),
-        );
-        setTimeout(() => {
+        [2, 1].forEach((value, index) => {
+          introTimers.push(setTimeout(() => { countdown.textContent = String(value); }, (index + 1) * 1000));
+        });
+        introTimers.push(setTimeout(() => {
           layer.classList.remove("show");
           intro = false;
           start = performance.now();
           saveProgress();
-        }, 4650);
+        }, 3000));
       }
       function storedBreak(answer) {
         let breakdown = answer?.breakdown || {};
@@ -2165,10 +2133,11 @@
           if (i < roundResults.length) {
             let result = roundResults[i];
             x.classList.add("done", result.correct ? "correct" : "wrong");
-            x.querySelector("span").textContent = result.pic;
+            showPictureIndicator(x, qs[i] || result, result.correct);
           } else {
             x.classList.toggle("active", i === qi);
-            x.querySelector("span").textContent = "?";
+            x.querySelector("span").textContent = i === qi ? String(Math.ceil(ROUND_MS / 1000)) : String(i + 1);
+            x.setAttribute("aria-label", `Picture ${i + 1}${i === qi ? ": current" : ": upcoming"}`);
             if (i === qi)
               x.style.background = "conic-gradient(#ff8300 360deg,#aeb8c4 0)";
           }
@@ -2331,7 +2300,8 @@
         let elapsed = performance.now() - start,
           remain = Math.max(0, 1 - elapsed / ROUND_MS),
           dot = document.querySelectorAll(".qt")[qi];
-        dot.style.background = `conic-gradient(#ff8300 ${remain * 360}deg,#aeb8c4 0)`;
+        dot.style.background = `conic-gradient(#ff971e ${remain * 360}deg,#e5dfd1 0)`;
+        dot.querySelector("span").textContent = String(Math.ceil(Math.max(0, ROUND_MS - elapsed) / 1000));
         if (!ghost && elapsed >= q().gt) {
           award();
           if (q().gs)
