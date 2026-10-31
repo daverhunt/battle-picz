@@ -7,7 +7,7 @@ function gestureHarness() {
   const handlers = {}, calls = [];
   const context = {
     busy:false, list:{scrollTop:0,addEventListener:(name,fn)=>handlers[name]=fn},
-    panel:{style:{setProperty(){},removeProperty(){}}},pullStatus:{textContent:''},
+    panel:{classList:{add(){},remove(){}},style:{setProperty(){},removeProperty(){}}},pullStatus:{textContent:''},
     loadMatches:async message=>calls.push(message)
   };
   vm.runInNewContext(source.slice(source.indexOf('  let pullStart = null;'),source.indexOf("  window.addEventListener('battle-picz:profile-updated'")),context);

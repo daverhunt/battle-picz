@@ -550,15 +550,22 @@
     pullStart = null;
     pullDistance = 0;
     panel.style.removeProperty('--pull-distance');
+    panel.style.removeProperty('--pull-rotation');
+    panel.classList.remove('is-pulling', 'is-pull-refreshing');
     pullStatus.textContent = '';
   }
   async function refreshGames() {
     if (busy) return;
+    pullStart = null;
+    pullDistance = 0;
+    panel.classList.remove('is-pulling');
+    panel.classList.add('is-pull-refreshing');
+    panel.style.setProperty('--pull-distance', '46px');
     pullStatus.textContent = 'Refreshing games…';
-    await loadMatches('Refreshing games…');
-    resetPull();
+    try { await loadMatches(''); } finally { resetPull(); }
   }
   list.addEventListener('touchstart', event => {
+    if (busy) return;
     resetPull();
     if (!busy && list.scrollTop <= 0 && event.touches.length === 1) {
       pullStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
@@ -572,16 +579,19 @@
     if (dy < 0 || Math.abs(dx) > Math.max(12, dy)) { resetPull(); return; }
     if (dy <= 8) return;
     if (event.cancelable) event.preventDefault();
+    panel.classList.add('is-pulling');
     pullDistance = Math.min(dy, 110);
+    panel.style.setProperty('--pull-rotation', `${pullDistance * 3}deg`);
     panel.style.setProperty('--pull-distance', `${Math.min(pullDistance * .55, 50)}px`);
     pullStatus.textContent = pullDistance >= pullThreshold ? 'Release to refresh' : 'Pull down to refresh';
   }, { passive: false });
   list.addEventListener('touchend', () => {
     const shouldRefresh = pullDistance >= pullThreshold;
-    resetPull();
+    if (busy) return;
     if (shouldRefresh) void refreshGames();
+    else resetPull();
   });
-  list.addEventListener('touchcancel', resetPull);
+  list.addEventListener('touchcancel', () => { if (!busy) resetPull(); });
   list.addEventListener('keydown', event => {
     if (event.target === list && event.key.toLowerCase() === 'r' && !event.ctrlKey && !event.metaKey && !event.altKey) {
       event.preventDefault();

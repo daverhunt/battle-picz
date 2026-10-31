@@ -76,8 +76,14 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .match-card-score{grid-column:2;grid-row:1/3;margin:0;gap:4px;font-size:0}.match-card-score>span{font-size:0}.match-card-score b{font-size:17px}.match-card-score .match-card-score-separator{font-size:14px;color:var(--ink)}.match-card-links{grid-column:1/-1;margin-top:7px}.match-card{padding:17px 0}
 .revlabel{font-size:0;left:29%;width:34%;display:block}.revlabel br{display:none}.revlabel:after{content:'Tiles used:';font:12px/20px var(--round)}.revbox{left:59%}
 /* Pull-to-refresh keeps the lobby header free of a redundant action. */
-.matches-pull{flex:none;min-height:0;height:var(--pull-distance,0px);overflow:hidden;text-align:center;color:var(--muted);font:12px/32px var(--round)}
-.matches-pull:not(:empty){min-height:32px}.matches-list{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}.matches-list:focus-visible{outline:2px solid #159ae9;outline-offset:-2px}
+.matches-pull{position:relative;display:grid;place-items:center;flex:none;min-height:0;height:var(--pull-distance,0px);overflow:hidden;color:var(--muted);font-size:0;transition:height .22s ease}
+.matches-pull:after{content:'';position:absolute;width:22px;height:22px;border:2.5px solid #d7d5ce;border-top-color:#668098;border-right-color:#668098;border-radius:50%;opacity:0;transform:rotate(var(--pull-rotation,0deg));transition:opacity .15s ease}
+.is-pulling .matches-pull{transition:none}.is-pulling .matches-pull:after,.is-pull-refreshing .matches-pull:after{opacity:1}
+.is-pull-refreshing .matches-pull:after{animation:pullSpinner .7s linear infinite}
+.match-panel.is-pull-refreshing .matches-list,.match-panel.is-pull-refreshing .matches-footer{opacity:1}
+@keyframes pullSpinner{to{transform:rotate(calc(var(--pull-rotation,0deg) + 360deg))}}
+@media(prefers-reduced-motion:reduce){.is-pull-refreshing .matches-pull:after{animation:none!important;border-color:#668098;border-left-color:transparent}}
+.matches-list{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}.matches-list:focus-visible{outline:2px solid #159ae9;outline-offset:-2px}
 /* One category per row, with ownership ordering supplied by the catalogue. */
 .category-options{grid-template-columns:minmax(0,1fr);width:94%;gap:10px}
 .category-options .category-card{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding:13px 16px;text-align:left;font:800 16px var(--round)}
