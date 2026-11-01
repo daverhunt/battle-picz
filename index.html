@@ -1037,7 +1037,7 @@
         <div class="qt"><span>?</span></div>
       </div>
       <div class="cat" id="cat">ANIMALS</div>
-      <button class="pause"></button>
+      <button class="pause" aria-label="Pause game"></button>
       <div class="revlabel" aria-label="Tiles used">TILES<br />USED</div>
       <div class="revbox" id="reveals">0</div>
       <div class="powers">
@@ -1370,7 +1370,7 @@
           roundResults,
           currentResult: advanced ? null : currentResult,
           elapsedMs:
-            advanced || intro ? 0 : Math.max(0, performance.now() - start),
+            advanced ? 0 : pauseStarted !== null ? Math.max(0, pauseStarted - start) : intro ? 0 : Math.max(0, performance.now() - start),
         };
       }
       function saveProgress() {
@@ -1924,6 +1924,56 @@
             .filter((event) => event.score > 0),
         };
       }
+      let pauseStarted = null;
+      const pauseDialog = document.createElement("dialog");
+      pauseDialog.className = "pause-dialog";
+      pauseDialog.setAttribute("aria-labelledby", "pauseTitle");
+      pauseDialog.innerHTML = `<h2 id="pauseTitle">Paused</h2><div class="pause-menu"><button data-pause="resume">Resume</button><button data-pause="lobby">Lobby</button><button data-pause="shop">Shop</button><button data-pause="help">How to Play</button></div><div class="pause-detail" hidden></div><button data-pause="back" hidden>Back</button>`;
+      document.getElementById("game").append(pauseDialog);
+      function resumePausedGame() {
+        if (pauseStarted === null) return;
+        start += performance.now() - pauseStarted;
+        pauseStarted = null;
+        intro = false;
+        pauseDialog.close();
+        saveProgress();
+      }
+      function showPauseMenu() {
+        pauseDialog.querySelector(".pause-menu").hidden = false;
+        pauseDialog.querySelector(".pause-detail").hidden = true;
+        pauseDialog.querySelector('[data-pause="back"]').hidden = true;
+        pauseDialog.querySelector("h2").textContent = "Paused";
+      }
+      document.querySelector(".pause").onclick = () => {
+        if (intro || ended || pauseStarted !== null) return;
+        pauseStarted = performance.now();
+        intro = true;
+        saveProgress();
+        showPauseMenu();
+        pauseDialog.showModal();
+      };
+      pauseDialog.addEventListener("cancel", event => { event.preventDefault(); resumePausedGame(); });
+      pauseDialog.addEventListener("click", event => {
+        if (event.target === pauseDialog) {
+          const bounds = pauseDialog.getBoundingClientRect();
+          if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) resumePausedGame();
+          return;
+        }
+        const action = event.target.closest("[data-pause]")?.dataset.pause;
+        if (action === "resume") resumePausedGame();
+        else if (action === "lobby") { saveProgress(); returnToLobby(); }
+        else if (action === "back") showPauseMenu();
+        else if (action === "shop" || action === "help") {
+          pauseDialog.querySelector(".pause-menu").hidden = true;
+          const detail = pauseDialog.querySelector(".pause-detail");
+          detail.hidden = false;
+          pauseDialog.querySelector('[data-pause="back"]').hidden = false;
+          pauseDialog.querySelector("h2").textContent = action === "shop" ? "Power-ups" : "How to Play";
+          detail.textContent = action === "help"
+            ? "Tap tiles to uncover the picture, then use the letters to spell the answer. Fewer reveals and faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures."
+            : "Your power-ups: " + [...document.querySelectorAll('.powers [data-power]')].map(button => button.dataset.power + ": " + button.querySelector('b').textContent).join(" · ") + ". Buying more power-ups is not available yet.";
+        }
+      });
       function returnToLobby() {
         let url = new URL(location.href);
         url.searchParams.delete("challenge");
