@@ -105,3 +105,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 /* Round setup retains navigation; gameplay and results have no Matches overlay. */
 #game:has(#categoryChooser.hidden) > .match-button{display:none}
 .pause-dialog{box-sizing:border-box;width:min(340px,88vw);padding:24px;border:2px solid #fff;border-radius:22px;background:var(--cream);color:var(--ink);box-shadow:0 15px 50px #10265055;font:15px/1.5 var(--round);text-align:center}.pause-dialog::backdrop{background:#10265077;backdrop-filter:blur(4px)}.pause-dialog h2{margin:0 0 18px;font:900 28px var(--round)}.pause-menu{display:grid;gap:12px}.pause-dialog button{width:100%;min-height:46px;border:1px solid #fff;border-radius:13px;background:var(--pale);color:var(--ink);font:800 17px var(--round);box-shadow:0 3px #a9cde5}.pause-dialog [data-pause=resume]{background:var(--orange);border-color:#ffb756;box-shadow:0 3px #ce560b;color:var(--ink)}.pause-dialog [hidden]{display:none}.pause-detail{margin-bottom:20px;text-align:left}
+/* Side-mounted power-ups leave the keyboard clear. */
+.board,#intro{left:8%;width:66%}.powers{left:auto;right:3%;top:28%;bottom:auto;flex-direction:column;gap:14px;justify-content:flex-start}.pu{width:46px;height:56px}.pu:before{font-size:23px;line-height:31px}.pu:after{font-size:10px}.pause{left:3%;top:19%}.credit{left:8%;width:66%}
+@media(max-width:350px){.board,#intro{left:6%;width:66%}.powers{right:3%}.pu{width:42px}}
+@media(max-height:650px){.board,#intro{left:13%;width:56%}.powers{top:25%;gap:10px}.pu{height:49px}.credit{left:13%;width:56%}}
