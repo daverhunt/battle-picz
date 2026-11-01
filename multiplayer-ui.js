@@ -739,8 +739,8 @@
       const opponentNameValue = matchContext.opponent?.profiles?.display_name || 'OPPONENT';
       const ownLabel = document.querySelector('.pname.me');
       const opponentLabel = document.querySelector('.pname.opp');
-      if (ownLabel) ownLabel.textContent = ownNameValue;
-      if (opponentLabel) opponentLabel.textContent = opponentNameValue;
+      if (ownLabel) { ownLabel.textContent = ownNameValue; ownLabel.title = ownNameValue; ownLabel.setAttribute("aria-label", ownNameValue); }
+      if (opponentLabel) { opponentLabel.textContent = opponentNameValue; opponentLabel.title = opponentNameValue; opponentLabel.setAttribute("aria-label", opponentNameValue); }
       const summaryOwnLabel = document.querySelector('.summary-players > span:first-child');
       const summaryOpponentLabel = document.querySelector('.summary-players > span:last-child');
       if (summaryOwnLabel) summaryOwnLabel.textContent = ownNameValue;
