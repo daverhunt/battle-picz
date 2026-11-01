@@ -109,3 +109,28 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .board,#intro{left:8%;width:66%}.powers{left:auto;right:3%;top:28%;bottom:auto;flex-direction:column;gap:14px;justify-content:flex-start}.pu{width:46px;height:56px}.pu:before{font-size:23px;line-height:31px}.pu:after{font-size:10px}.pause{left:3%;top:19%}.credit{left:8%;width:66%}
 @media(max-width:350px){.board,#intro{left:6%;width:66%}.powers{right:3%}.pu{width:42px}}
 @media(max-height:650px){.board,#intro{left:13%;width:56%}.powers{top:25%;gap:10px}.pu{height:49px}.credit{left:13%;width:56%}}
+/* Approved Cream Playroom: quiet embossed tiles and a colourful versus header. */
+#game{background:var(--cream) url('assets/ui/cream-playroom.svg') repeat}
+#game>.header{top:2.5%;left:3%;width:94%;height:62px}
+.header .hl,.header .hr{box-sizing:border-box;width:50%;height:62px;border:2px solid #ffffffa8;box-shadow:inset 0 3px 2px #ffffff55,0 4px 0 #0976b9,0 6px 8px #594a2726}
+.header .hl{background:linear-gradient(#37bdff,#078de6)!important;border-radius:22px 28px 28px 22px}
+.header .hr{background:linear-gradient(#ffa329,#ff6c0d)!important;border-radius:28px 22px 22px 28px;box-shadow:inset 0 3px 2px #ffffff55,0 4px 0 #cf590e,0 6px 8px #594a2726}
+.header .vs{top:7px;width:48px;height:48px;background:linear-gradient(#ffe99c,#ffc43a)!important;border:2px solid #fff2b2!important;box-shadow:inset 0 0 0 3px #f1b131,0 3px 0 #d59216,0 4px 5px #72511d30!important;color:#74430c!important}
+.header .vs:after{font:900 18px var(--round)}
+.header .avatar{top:10px;width:38px;height:38px;border:2px solid #ffffffb3;box-shadow:0 2px 4px #153f6c33}
+.header .meav{left:7px;background-color:#d3edff}.header .opav{right:7px;background-color:#ffe7bc}
+.header .pname{top:12px;font:800 12px/1 var(--round);max-width:calc(50% - 83px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff!important;text-shadow:0 1px #20476833!important}
+.header .score{top:31px;font:900 21px/1 var(--round);color:#fff!important;text-shadow:0 2px #20476833!important;max-width:calc(50% - 80px)}
+.header .me{left:55px}.header .opp{right:55px}
+.qtimers{top:14.5%}
+/* The power-up toolbar replaces the category strip; the intro still names the category. */
+#game>.cat{display:none}
+.powers{top:22%;bottom:auto;left:20%;right:20%;flex-direction:row;justify-content:center;gap:12px}
+.powers .pu{display:flex;align-items:center;justify-content:center;gap:4px;width:70px;height:40px;flex:none}
+.powers .pu:before{font-size:21px;line-height:1}.powers .pu:after{font-size:9px}.powers .pu b{right:-4px;top:-7px}
+.pause{left:4%;top:22%;width:34px;height:34px}
+.board,#intro{left:17%;top:30%;width:66%}
+.credit{left:17%;top:68%;width:66%}.revlabel,.revbox{top:70%}
+.answer{top:74%}.msg{top:81%}.letters{bottom:3%}
+@media(max-height:650px){.board,#intro{left:22%;width:56%}.credit{left:22%;top:69.5%;width:56%}.revlabel,.revbox{top:71%}.powers{top:22%;gap:8px}.powers .pu{width:65px;height:38px}}
+@media(max-width:350px){.header .avatar{width:30px;height:30px;top:13px}.header .me{left:43px}.header .opp{right:43px}.header .pname{max-width:calc(50% - 65px);font-size:10px}.header .score{font-size:17px}.powers{left:21%;right:8%;gap:8px}.powers .pu{width:60px}.powers .pu:after{font-size:8px}}
