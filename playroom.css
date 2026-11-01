@@ -175,3 +175,22 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .header .avatar:after{content:'';position:absolute;width:70%;height:47%;left:15%;bottom:-3%;border-radius:50% 50% 15% 15%;background:currentColor}
 @media(max-width:350px){.header .avatar{width:33px;height:33px;top:18px}.letters .ctrl:after{width:20px;height:20px}}
 @media(max-height:650px){.header .avatar{top:11px}}
+/* Approved balanced layout: matching side cards, three timers and centred grid. */
+#game{--side-width:12%;--side-height:56px;--side-gap:14px;--side-top:31%;--side-edge:1%;--board-top:26%;--board-width:66%;--board-left:17%}
+.board,#intro{top:var(--board-top);left:var(--board-left);width:var(--board-width)}
+.qtimers{top:16%;gap:24px}
+.powers{top:var(--side-top);left:auto;right:var(--side-edge);bottom:auto;width:var(--side-width);gap:var(--side-gap);flex-direction:column}
+.powers .pu,.pause,.revbox{box-sizing:border-box;width:var(--side-width);height:var(--side-height);border:1px solid #fffdf5;border-radius:13px;background:linear-gradient(#fffef9,#f3e9d4);box-shadow:inset 0 2px #fff,0 3px 0 #cfbfa0,0 5px 6px #715b352b;color:var(--ink);text-shadow:none}
+.powers .pu{width:100%;gap:0}
+.powers .pu:before{width:38px;height:48px}
+.powers .pu:after{display:none}
+.pause{top:var(--side-top);left:var(--side-edge);display:grid;place-items:center;padding:0}
+.pause:after{content:'Ⅱ';color:var(--ink);font:bold 26px/1 Arial}
+.revlabel{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+.revbox{top:calc(var(--side-top) + var(--side-height) + var(--side-gap));left:var(--side-edge);display:flex;align-items:center;justify-content:center;padding-top:16px;font:900 26px/1 var(--round)}
+.revbox:before{content:'TILES';position:absolute;top:8px;left:0;width:100%;text-align:center;font:800 10px/1 var(--round)}
+.credit{top:65%;left:17%;width:66%}
+.answer{top:71%;height:40px}
+.msg{top:79%;font-size:10px}
+@media(max-width:350px){#game{--side-height:49px;--side-gap:12px}.powers .pu:before{width:31px;height:42px}.pause:after{font-size:23px}.revbox{font-size:23px}.revbox:before{font-size:9px}}
+@media(max-height:650px){#game{--board-width:56%;--board-left:22%;--side-height:46px;--side-gap:10px;--side-top:31%}.powers .pu:before{width:31px;height:39px}.credit{top:66%}.answer{top:71%;height:33px}.revbox{font-size:22px}.revbox:before{top:6px;font-size:9px}}
