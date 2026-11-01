@@ -134,3 +134,10 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .answer{top:74%}.msg{top:81%}.letters{bottom:3%}
 @media(max-height:650px){.board,#intro{left:22%;width:56%}.credit{left:22%;top:69.5%;width:56%}.revlabel,.revbox{top:71%}.powers{top:22%;gap:8px}.powers .pu{width:65px;height:38px}}
 @media(max-width:350px){.header .avatar{width:30px;height:30px;top:13px}.header .me{left:43px}.header .opp{right:43px}.header .pname{max-width:calc(50% - 65px);font-size:10px}.header .score{font-size:17px}.powers{left:21%;right:8%;gap:8px}.powers .pu{width:60px}.powers .pu:after{font-size:8px}}
+/* Side power-ups with the picture kept on the screen's centre line. */
+.board,#intro{left:17%;width:66%}
+.powers{top:32%;bottom:auto;left:auto;right:1%;flex-direction:column;gap:14px;justify-content:flex-start}
+.powers .pu{width:46px;height:56px;flex-direction:column;gap:2px}
+.powers .pu:before{font-size:23px}.powers .pu:after{font-size:9px}
+@media(max-width:350px){.powers{right:1%;gap:10px}.powers .pu{width:40px;height:52px}}
+@media(max-height:650px){.board,#intro{left:22%;width:56%}.powers{top:31%;right:3%;gap:10px}.powers .pu{width:46px;height:49px}}
