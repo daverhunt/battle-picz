@@ -1327,6 +1327,7 @@
             localStorage.setItem(POWER_UP_STORAGE, JSON.stringify(powerUps));
           }
           if (!intro && !ended) start += performance.now() - waitStarted;
+          window.battlePiczSound?.play(type);
           effect();
           saveProgress();
         } catch (error) {
@@ -1417,6 +1418,7 @@
           b.onclick = () => {
             if (intro || ended || b.classList.contains("open")) return;
             b.classList.add("open");
+            window.battlePiczSound?.play("tile");
             rev++;
             $("reveals").textContent = rev;
             saveProgress();
@@ -1477,7 +1479,7 @@
         s.className = "ctrl skip";
         s.setAttribute("aria-label", "Pass picture");
         s.onclick = () => {
-          if (!intro && !ended) finish(false, true);
+          if (!intro && !ended) { window.battlePiczSound?.play("skip"); finish(false, true); }
         };
         $("letters").appendChild(s);
       }
@@ -1497,6 +1499,7 @@
           $("reveals").classList.add("empty");
           return;
         }
+        window.battlePiczSound?.play("letter");
         b.classList.add("used");
         setTimeout(() => {
           picked.push({ l, b });
@@ -1529,6 +1532,7 @@
               saveProgress();
               countScore("myscore", old, my);
               $("msg").textContent = "CORRECT! +" + sc.toLocaleString();
+              window.battlePiczSound?.play("correct");
               flashAnswer(true);
               showFeedback(true);
               ended = true;
@@ -1538,6 +1542,7 @@
               tries--;
               streak = 0;
               saveProgress();
+              window.battlePiczSound?.play("wrong");
               flashAnswer(false);
               $("msg").textContent = tries
                 ? "WRONG · " + tries + " TRIES LEFT"
@@ -1559,11 +1564,13 @@
       function del() {
         if (intro || ended) return;
         let x = picked.pop();
-        if (x) x.b.classList.remove("used");
+        if (x) { x.b.classList.remove("used"); window.battlePiczSound?.play("delete"); }
         ans();
         saveProgress();
       }
       function clearLetters() {
+        if (intro || ended) return;
+        if (picked.length) window.battlePiczSound?.play("delete");
         picked.forEach((x) => x.b.classList.remove("used"));
         picked = [];
         ans();
@@ -1771,6 +1778,7 @@
                 ? "YOU WIN!"
                 : "YOU LOSE!",
           coins = result === "draw" ? 2 : result === "won" ? 3 : 1;
+        window.battlePiczSound?.play(result);
         showCoinReward(coins, title);
       }
       function showCategoryChooser() {
@@ -1928,7 +1936,7 @@
       const pauseDialog = document.createElement("dialog");
       pauseDialog.className = "pause-dialog";
       pauseDialog.setAttribute("aria-labelledby", "pauseTitle");
-      pauseDialog.innerHTML = `<h2 id="pauseTitle">Paused</h2><div class="pause-menu"><button data-pause="resume">Resume</button><button data-pause="lobby">Lobby</button><button data-pause="shop">Shop</button><button data-pause="help">How to Play</button></div><div class="pause-detail" hidden></div><button data-pause="back" hidden>Back</button>`;
+      pauseDialog.innerHTML = `<h2 id="pauseTitle">Paused</h2><div class="pause-menu"><button data-pause="resume">Resume</button><button data-pause="lobby">Lobby</button><button data-pause="shop">Shop</button><button data-pause="help">How to Play</button><button data-pause="sound" role="switch" aria-checked="true">Sound: On</button></div><div class="pause-detail" hidden></div><button data-pause="back" hidden>Back</button>`;
       document.getElementById("game").append(pauseDialog);
       function resumePausedGame() {
         if (pauseStarted === null) return;
@@ -1936,9 +1944,14 @@
         pauseStarted = null;
         intro = false;
         pauseDialog.close();
+        window.battlePiczSound?.setPaused(false);
         saveProgress();
       }
       function showPauseMenu() {
+        const sound = pauseDialog.querySelector('[data-pause="sound"]');
+        const on = window.battlePiczPreferences?.soundEnabled !== false;
+        sound.textContent = "Sound: " + (on ? "On" : "Off");
+        sound.setAttribute("aria-checked", String(on));
         pauseDialog.querySelector(".pause-menu").hidden = false;
         pauseDialog.querySelector(".pause-detail").hidden = true;
         pauseDialog.querySelector('[data-pause="back"]').hidden = true;
@@ -1947,6 +1960,7 @@
       document.querySelector(".pause").onclick = () => {
         if (intro || ended || pauseStarted !== null) return;
         pauseStarted = performance.now();
+        window.battlePiczSound?.setPaused(true);
         intro = true;
         saveProgress();
         showPauseMenu();
@@ -1963,6 +1977,12 @@
         if (action === "resume") resumePausedGame();
         else if (action === "lobby") { saveProgress(); returnToLobby(); }
         else if (action === "back") showPauseMenu();
+        else if (action === "sound") {
+          const prefs = window.battlePiczPreferences;
+          prefs.soundEnabled = !prefs.soundEnabled;
+          window.dispatchEvent(new CustomEvent("battle-picz:settings-changed"));
+          showPauseMenu();
+        }
         else if (action === "shop" || action === "help") {
           pauseDialog.querySelector(".pause-menu").hidden = true;
           const detail = pauseDialog.querySelector(".pause-detail");
@@ -2036,13 +2056,15 @@
         countdown.setAttribute("role", "status");
         countdown.setAttribute("aria-live", "polite");
         countdown.textContent = "3";
+        window.battlePiczSound?.play("tick");
         layer.append(label, countdown);
         layer.classList.add("show");
         [2, 1].forEach((value, index) => {
-          introTimers.push(setTimeout(() => { countdown.textContent = String(value); }, (index + 1) * 1000));
+          introTimers.push(setTimeout(() => { countdown.textContent = String(value); window.battlePiczSound?.play("tick"); }, (index + 1) * 1000));
         });
         introTimers.push(setTimeout(() => {
           layer.classList.remove("show");
+          window.battlePiczSound?.play("start");
           intro = false;
           start = performance.now();
           saveProgress();
@@ -2352,6 +2374,8 @@
           dot = document.querySelectorAll(".qt")[qi];
         dot.style.background = `conic-gradient(#ff971e ${remain * 360}deg,#e5dfd1 0)`;
         dot.querySelector("span").textContent = String(Math.ceil(Math.max(0, ROUND_MS - elapsed) / 1000));
+        const secondsLeft = Math.ceil(Math.max(0, ROUND_MS - elapsed) / 1000);
+        if (secondsLeft > 0 && secondsLeft <= 5) window.battlePiczSound?.play("warning");
         if (!ghost && elapsed >= q().gt) {
           award();
           if (q().gs)
@@ -2376,6 +2400,7 @@
       if (!MATCH_ID) loadPowerUps().finally(showCategoryChooser);
     </script>
     <script src="preferences.js"></script>
+    <script src="sounds.js"></script>
     <script src="multiplayer-ui.js"></script>
     <script src="push.js"></script>
     <script src="settings-ui.js"></script>

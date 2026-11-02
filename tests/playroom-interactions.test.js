@@ -30,7 +30,7 @@ test('short, horizontal, cancelled, busy and scrolled gestures never refresh',()
 test('countdown holds gameplay until all three seconds have elapsed',()=>{
  const source=fs.readFileSync('index.html','utf8'),timers=[],elements=[];
  const layer={replaceChildren(){},append(...children){elements.push(...children)},classList:{add(){},remove(){}}};
- const context={intro:false,roundNo:2,q:()=>({cat:'FOOD'}),$:()=>layer,document:{createElement:()=>({setAttribute(){}})},setTimeout:(fn,delay)=>{timers.push({fn,delay});return timers.length;},clearTimeout(){},performance:{now:()=>5000},saveProgress(){}};
+ const context={window:{},intro:false,roundNo:2,q:()=>({cat:'FOOD'}),$:()=>layer,document:{createElement:()=>({setAttribute(){}})},setTimeout:(fn,delay)=>{timers.push({fn,delay});return timers.length;},clearTimeout(){},performance:{now:()=>5000},saveProgress(){}};
  vm.runInNewContext(source.slice(source.indexOf('      let introTimers = [];'),source.indexOf('      function storedBreak')),context);
  context.runIntro();assert.equal(context.intro,true);assert.equal(elements[1].textContent,'3');
  timers.find(x=>x.delay===1000).fn();assert.equal(elements[1].textContent,'2');assert.equal(context.intro,true);
