@@ -1162,11 +1162,12 @@
           },
         },
         POWER_UP_STORAGE = "battle-picz.power-ups",
-        POWER_UP_DEFAULTS = { bomb: 2, remove: 10, reveal: 5 };
+        POWER_UP_DEFAULTS = { bomb: 5, remove: 5, reveal: 5 };
       let qi = 0,
         picked = [],
         letterPool = [],
         rev = 0,
+        freeBombReveals = 0,
         tries = 3,
         my = 0,
         opp = 0,
@@ -1242,7 +1243,13 @@
         return Math.round(1750 * Math.max(0, 1 - elapsed / ROUND_MS));
       }
       function revealBonusFor(used, target) {
-        return Math.round(2000 * Math.exp(-used / (target * 1.5)));
+        return Math.max(0, 2000 - Math.max(0, used - target) * 250);
+      }
+      function renderRevealAllowance() {
+        const left = Math.max(0, difficulty.reveals - (rev - freeBombReveals));
+        $("reveals").textContent = left;
+        $("reveals").setAttribute("aria-label", `${left} free reveals left. Extra reveals reduce the reveal bonus by 250 points each.`);
+        if (!left) $("msg").textContent = "EXTRA REVEALS COST 250 BONUS POINTS";
       }
       function formatSeconds(ms) {
         return (Math.max(0, Math.min(ROUND_MS, ms)) / 1000).toFixed(1) + "s";
@@ -1363,6 +1370,7 @@
             ? []
             : picked.map((item) => Number(item.b.dataset.poolIndex)),
           revealsUsed: advanced ? 0 : rev,
+          freeBombReveals: advanced ? 0 : freeBombReveals,
           tries: advanced ? 3 : tries,
           myScore: my,
           opponentScore: opp,
@@ -1420,7 +1428,7 @@
             b.classList.add("open");
             window.battlePiczSound?.play("tile");
             rev++;
-            $("reveals").textContent = rev;
+            renderRevealAllowance();
             saveProgress();
           };
           g.appendChild(b);
@@ -1509,7 +1517,7 @@
             let g = picked.map((x) => x.l).join("");
             if (g === q().a) {
               let t = performance.now() - start,
-                revealBonus = revealBonusFor(rev, difficulty.reveals),
+                revealBonus = revealBonusFor(rev - freeBombReveals, difficulty.reveals),
                 timeBonus = timeBonusFor(t),
                 answerBonus = 500 + tries * 250,
                 sc = answerBonus + revealBonus + timeBonus,
@@ -1990,7 +1998,7 @@
           pauseDialog.querySelector('[data-pause="back"]').hidden = false;
           pauseDialog.querySelector("h2").textContent = action === "shop" ? "Power-ups" : "How to Play";
           detail.textContent = action === "help"
-            ? "Tap tiles to uncover the picture, then use the letters to spell the answer. Fewer reveals and faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures."
+            ? "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. Each extra reveal costs 250 reveal-bonus points, down to zero. Bomb reveals three tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures."
             : "Your power-ups: " + [...document.querySelectorAll('.powers [data-power]')].map(button => button.dataset.power + ": " + button.querySelector('b').textContent).join(" · ") + ". Buying more power-ups is not available yet.";
         }
       });
@@ -2188,11 +2196,12 @@
             ? saved.letterPool
             : makePool();
         rev = Number(saved?.revealsUsed) || 0;
+        freeBombReveals = Math.min(rev, Math.max(0, Number(saved?.freeBombReveals) || 0));
         tries = Math.max(0, Number(saved?.tries ?? 3));
         ghost = Boolean(saved?.ghost);
         ended = false;
         start = performance.now() - Math.max(0, Number(saved?.elapsedMs) || 0);
-        $("reveals").textContent = rev;
+        renderRevealAllowance();
         $("reveals").classList.remove("empty");
         $("cat").textContent = q().cat + " · " + difficulty.label;
         const pictureReady = positionPicture();
@@ -2296,7 +2305,14 @@
         }
         tiles = tiles.slice(0, 3);
         if (tiles.length)
-          consumePowerUp("bomb", () => tiles.forEach((x) => x.click()));
+          consumePowerUp("bomb", () => {
+            if (intro || ended) return;
+            tiles.forEach(tile => {
+              if (tile.classList.contains("open")) return;
+              tile.classList.add("open"); rev++; freeBombReveals++;
+            });
+            renderRevealAllowance();
+          });
       };
       document.querySelector("[data-power=remove]").onclick = () => {
         let letters = [...document.querySelectorAll(".letter")]

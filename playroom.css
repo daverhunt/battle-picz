@@ -194,3 +194,6 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .msg{top:79%;font-size:10px}
 @media(max-width:350px){#game{--side-height:49px;--side-gap:12px}.powers .pu:before{width:31px;height:42px}.pause:after{font-size:23px}.revbox{font-size:23px}.revbox:before{font-size:9px}}
 @media(max-height:650px){#game{--board-width:56%;--board-left:22%;--side-height:46px;--side-gap:10px;--side-top:31%}.powers .pu:before{width:31px;height:39px}.credit{top:66%}.answer{top:71%;height:33px}.revbox{font-size:22px}.revbox:before{top:6px;font-size:9px}}
+
+/* Soft reveal allowance; total tiles remain in round score details. */
+.revbox:before{content:'LEFT'}
