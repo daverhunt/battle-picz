@@ -1,12 +1,11 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const html=fs.readFileSync('index.html','utf8');
-const ctx={};vm.runInNewContext(html.slice(html.indexOf('      function revealBonusFor'),html.indexOf('      function renderRevealAllowance')),ctx);
-test('soft allowance is free up to difficulty target and penalties never go negative',()=>{
- for(const target of [7,9,11]){
-  assert.equal(ctx.revealBonusFor(0,target),2000);
-  assert.equal(ctx.revealBonusFor(target,target),2000);
-  assert.equal(ctx.revealBonusFor(target+1,target),1750);
-  assert.equal(ctx.revealBonusFor(target+100,target),0);
-  assert.equal(ctx.revealBonusFor(target+3-3,target),2000);
+test('hard limit blocks tile opening and prompts power-ups; Bomb credit does not consume allowance',()=>{
+ const code=html.slice(html.indexOf('          b.onclick = () => {',html.indexOf('      function grid()')),html.indexOf('          g.appendChild(b)',html.indexOf('      function grid()')));
+ for(const [used,free,blocked] of [[7,0,true],[6,0,false],[10,3,true],[9,3,false]]){
+  let opened=0,hints=0,saves=0;
+  const c={b:{classList:{contains:()=>false,add:()=>opened++}},intro:false,ended:false,rev:used,freeBombReveals:free,difficulty:{reveals:7},highlightPowerUps:()=>hints++,window:{},renderRevealAllowance(){},saveProgress:()=>saves++};
+  vm.runInNewContext(code,c);c.b.onclick();
+  assert.equal(opened,blocked?0:1);assert.equal(hints,blocked?1:0);assert.equal(saves,blocked?0:1);assert.equal(c.rev,used+(blocked?0:1));
  }
 });

@@ -7,7 +7,7 @@ test('next round restores the board and keeps inputs/timer paused until the pict
   let ready, introRuns=0, removed=[];
   const loaded=new Promise(r=>ready=r);
   const node={classList:{remove:()=>{}},style:{},textContent:''};
-  const context={renderRevealAllowance(){},pictureLoadVersion:0, intro:false, performance:{now:()=>10000},
+  const context={clearTimeout(){},powerHintTimer:null,renderRevealAllowance(){},pictureLoadVersion:0, intro:false, performance:{now:()=>10000},
     document:{querySelector:()=>({classList:{remove:(...v)=>removed.push(...v)}}),querySelectorAll:()=>[]},
     $:()=>node, makePool:()=>[], q:()=>({cat:'FOOD'}), difficulty:{label:'Easy'},qi:0,roundResults:[],
     positionPicture:()=>loaded,grid:()=>{},letters:()=>{},ans:()=>{},saveProgress:()=>{},

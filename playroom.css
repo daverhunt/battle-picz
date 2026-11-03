@@ -197,3 +197,8 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 
 /* Soft reveal allowance; total tiles remain in round score details. */
 .revbox:before{content:'LEFT'}
+
+/* Guide blocked tile taps toward usable power-ups without moving the layout. */
+.powers.reveal-limit-hint .pu:not(:disabled){border-color:#ff840c;outline:2px solid #ff840c;outline-offset:2px;animation:powerHint 600ms ease-in-out 3}
+@keyframes powerHint{50%{box-shadow:0 0 0 5px #ffae3940,0 0 15px #ff910099}}
+@media(prefers-reduced-motion:reduce){.powers.reveal-limit-hint .pu:not(:disabled){animation:none}}

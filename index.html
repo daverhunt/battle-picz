@@ -1243,13 +1243,23 @@
         return Math.round(1750 * Math.max(0, 1 - elapsed / ROUND_MS));
       }
       function revealBonusFor(used, target) {
-        return Math.max(0, 2000 - Math.max(0, used - target) * 250);
+        return Math.round(2000 * Math.exp(-used / (target * 1.5)));
       }
       function renderRevealAllowance() {
         const left = Math.max(0, difficulty.reveals - (rev - freeBombReveals));
         $("reveals").textContent = left;
-        $("reveals").setAttribute("aria-label", `${left} free reveals left. Extra reveals reduce the reveal bonus by 250 points each.`);
-        if (!left) $("msg").textContent = "EXTRA REVEALS COST 250 BONUS POINTS";
+        $("reveals").setAttribute("aria-label", `${left} reveals left. Use a power-up or guess when none remain.`);
+        if (!left) $("msg").textContent = "NO REVEALS LEFT · GUESS, USE A POWER-UP OR SKIP";
+      }
+      let powerHintTimer;
+      function highlightPowerUps() {
+        const powers = document.querySelector(".powers");
+        clearTimeout(powerHintTimer);
+        powers.classList.remove("reveal-limit-hint");
+        void powers.offsetWidth;
+        powers.classList.add("reveal-limit-hint");
+        powerHintTimer = setTimeout(() => powers.classList.remove("reveal-limit-hint"), 1800);
+        $("msg").textContent = "NO REVEALS LEFT · GUESS, USE A POWER-UP OR SKIP";
       }
       function formatSeconds(ms) {
         return (Math.max(0, Math.min(ROUND_MS, ms)) / 1000).toFixed(1) + "s";
@@ -1425,6 +1435,10 @@
           b.setAttribute("aria-label", `Reveal tile ${i + 1}`);
           b.onclick = () => {
             if (intro || ended || b.classList.contains("open")) return;
+            if (rev - freeBombReveals >= difficulty.reveals) {
+              highlightPowerUps();
+              return;
+            }
             b.classList.add("open");
             window.battlePiczSound?.play("tile");
             rev++;
@@ -1998,7 +2012,7 @@
           pauseDialog.querySelector('[data-pause="back"]').hidden = false;
           pauseDialog.querySelector("h2").textContent = action === "shop" ? "Power-ups" : "How to Play";
           detail.textContent = action === "help"
-            ? "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. Each extra reveal costs 250 reveal-bonus points, down to zero. Bomb reveals three tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures."
+            ? "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. You cannot tap more tiles once the allowance runs out. Use a power-up, guess or skip. Fewer reveals earn a larger bonus. Bomb reveals three tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures."
             : "Your power-ups: " + [...document.querySelectorAll('.powers [data-power]')].map(button => button.dataset.power + ": " + button.querySelector('b').textContent).join(" · ") + ". Buying more power-ups is not available yet.";
         }
       });
@@ -2187,6 +2201,8 @@
       let pictureLoadVersion = 0;
       async function startQ(saved) {
         const loadVersion = ++pictureLoadVersion;
+        clearTimeout(powerHintTimer);
+        document.querySelector(".powers").classList.remove("reveal-limit-hint");
         document.querySelector(".board").classList.remove("slide-out", "slide-in");
         intro = true;
         picked = [];
