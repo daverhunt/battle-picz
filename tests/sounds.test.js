@@ -30,3 +30,11 @@ test('pause and background stop scheduled sounds; rapid tile bursts are bounded'
  h.document.hidden=true;h.events.visibilitychange();h.advance();h.api.play('won');assert.equal(h.voices.length,4);
  h.document.hidden=false;h.events.visibilitychange();h.api.play('letter');assert.equal(h.voices.length,5);
 });
+test('coin clinks and ghost score cues are distinct and respect mute',()=>{
+ const h=harness();h.api.unlock();h.api.play('coin');
+ assert.equal(h.voices.length,2);assert.ok(h.voices.every(v=>v.type==='sine'));
+ h.advance();h.api.play('ghost-score');assert.equal(h.voices.length,4);
+ assert.ok(h.voices.slice(2).every(v=>v.type==='triangle'));
+ h.window.battlePiczPreferences.soundEnabled=false;h.advance();h.api.play('coin');h.api.play('ghost-score');
+ assert.equal(h.voices.length,4);
+});

@@ -466,6 +466,7 @@
     panel.querySelector('[data-weekly="coins"]').textContent = `+${summary.coins} COINS`;
     weeklyPreviewNote.hidden = !isPreview;
     weeklySummary.hidden = false;
+    if (!isPreview) window.picRivalsCelebrateCoins?.(panel.querySelector(".weekly-coins"), summary.coins);
   }
 
   function maybeShowPreviousWeek() {

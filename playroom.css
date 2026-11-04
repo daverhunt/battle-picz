@@ -211,3 +211,10 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .shop-item p{margin:0 0 8px;font-weight:800}
 .pause-dialog .shop-item button{background:var(--orange);box-shadow:0 3px #ce560b;font-size:15px}
 .pause-dialog .shop-item button:disabled{opacity:.5;box-shadow:none;cursor:not-allowed}
+
+/* Gold coins tumble into the reward panel without blocking controls. */
+.weekly-coins{position:relative}
+.reward-coin-burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:5}
+.reward-flying-coin{position:absolute;display:grid;place-items:center;width:25px;height:25px;border:2px solid #e99b16;border-radius:50%;background:linear-gradient(135deg,#fff2a0,#ffc336 65%,#f0a20d);color:#bc720a;box-shadow:inset 0 0 0 2px #ffe582,0 3px 0 #b97813;font:bold 15px Arial;opacity:0;animation:rewardCoinFlight 900ms cubic-bezier(.2,.7,.35,1) forwards}
+@keyframes rewardCoinFlight{0%{opacity:0;transform:translate(calc(var(--coin-x) * 1.8),-95px) rotate(-100deg) scale(.5)}20%{opacity:1}55%{opacity:1;transform:translate(var(--coin-x),5px) rotate(15deg) scale(1.1)}75%{opacity:1;transform:translate(var(--coin-x),-8px) rotate(0deg) scale(1)}100%{opacity:0;transform:translate(var(--coin-x),10px) scale(.7)}}
+@media(prefers-reduced-motion:reduce){.reward-coin-burst{display:none}.coin-row img{animation:none;opacity:1}.coin-reward.show{animation:none}}

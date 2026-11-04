@@ -43,6 +43,9 @@
     if (voices.size > 10) return;
     try {
       switch (name) {
+        // Two inharmonic partials make a short metallic coin clink.
+        case 'coin': tone(2350,0,.13,'sine',1900); tone(3570,.014,.09,'sine',3100); break;
+        case 'ghost-score': [740,1110].forEach((n,i) => tone(n,i*.085,.13,'triangle')); break;
         case 'tile': tone(420 + Math.random() * 65, 0, .07, 'sine', 160); break;
         case 'letter': tone(650, 0, .045, 'sine', 480); break;
         case 'delete': tone(360, 0, .055, 'sine', 220); break;

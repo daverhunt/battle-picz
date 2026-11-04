@@ -1714,6 +1714,7 @@
         reward.classList.remove("show");
         void reward.offsetWidth;
         reward.classList.add("show");
+        window.picRivalsCelebrateCoins?.(reward, amount);
         for (let i = 1; i <= amount; i++)
           setTimeout(
             () => {
@@ -2479,8 +2480,10 @@
         if (secondsLeft > 0 && secondsLeft <= 5) window.battlePiczSound?.play("warning");
         if (!ghost && elapsed >= q().gt) {
           award();
-          if (q().gs)
+          if (q().gs) {
+            window.battlePiczSound?.play("ghost-score");
             $("msg").textContent = "OPPONENT SCORED " + q().gs.toLocaleString();
+          }
         }
         if (elapsed >= ROUND_MS) {
           $("msg").textContent = "TIME UP · " + q().a;
@@ -2502,6 +2505,7 @@
     </script>
     <script src="preferences.js"></script>
     <script src="sounds.js"></script>
+    <script src="rewards.js"></script>
     <script src="multiplayer-ui.js"></script>
     <script src="push.js"></script>
     <script src="settings-ui.js"></script>
