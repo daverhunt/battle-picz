@@ -28,7 +28,7 @@
   panel.innerHTML = `
     <header class="matches-header">
       <span class="playroom-mark" aria-hidden="true">▦</span>
-      <div class="matches-brand"><span class="playroom-kicker">BATTLE<span>PICZ</span></span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
+      <div class="matches-brand"><span class="playroom-kicker">PIC <span>RIVALS</span></span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
       <div class="matches-header-actions">
         <button class="matches-settings" aria-label="Settings">⚙</button>
       </div>
@@ -84,10 +84,10 @@
     welcome.className = 'welcome-screen';
     welcome.setAttribute('role', 'dialog');
     welcome.setAttribute('aria-modal', 'true');
-    welcome.setAttribute('aria-label', 'Choose how to play Battle Picz');
+    welcome.setAttribute('aria-label', 'Choose how to play Pic Rivals');
     welcome.innerHTML = `
       <header class="welcome-hero">
-        <h1>BATTLE <span>PICZ</span></h1>
+        <h1>PIC <span>RIVALS</span></h1>
         <p>Reveal it. Name it. Beat your friends.</p>
         <div class="welcome-picture-mark" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>

@@ -1,4 +1,4 @@
-# Battle Picz
+# Pic Rivals
 
 Animated web prototype recovered from the production Vercel deployment on 3 September 2026.
 
@@ -26,7 +26,7 @@ is decided by rounds won; the weekly reward is 10 participation coins plus 5 for
 battle won. Reward ledgers make both payouts safe to retry without duplicate coins.
 
 The lobby's `TEST: RESET GAME` control calls a protected current-player RPC. It removes
-that tester's battles and progression plus local Battle Picz save data, while preserving
+that tester's battles and progression plus local Pic Rivals save data, while preserving
 their guest identity and device registration. It never exposes a global database reset.
 
 The browser/mobile client must use only the Supabase publishable key. Secret or

@@ -189,7 +189,7 @@
       if (pending?.mode === 'link' && pending.expectedUserId && user?.id !== pending.expectedUserId) {
         this.clearPendingAuth();
         this.clearAuthRedirect();
-        throw new Error('That sign-in belongs to another Battle Picz account. Your guest progress was kept on this device.');
+        throw new Error('That sign-in belongs to another Pic Rivals account. Your guest progress was kept on this device.');
       }
       const expiresIn = Number(params.get('expires_in') || 3600);
       const session = {

@@ -153,7 +153,7 @@ test('rejects an identity callback for a different user and keeps guest progress
     fetchImpl: async () => response({ id: 'different-user', is_anonymous: false })
   });
 
-  await assert.rejects(() => backend.completeAuthRedirect(), /another Battle Picz account/);
+  await assert.rejects(() => backend.completeAuthRedirect(), /another Pic Rivals account/);
   assert.deepEqual(JSON.parse(storage.getItem(SESSION_KEY)), oldSession);
 });
 

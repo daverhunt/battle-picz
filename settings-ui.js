@@ -63,7 +63,7 @@
         </div>
       </section>
       <button type="button" class="settings-row settings-test-push">Send test alert</button>
-      <p class="settings-version">BATTLE PICZ · TEST BUILD</p>
+      <p class="settings-version">PIC RIVALS · TEST BUILD</p>
     </div>
     <div class="settings-modal" hidden>
       <form class="settings-modal-card">

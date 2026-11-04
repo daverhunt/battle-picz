@@ -4,8 +4,8 @@ self.addEventListener('activate', event => event.waitUntil(self.clients.claim())
 self.addEventListener('push', event => {
   let data = {};
   try { data = event.data?.json() || {}; } catch {}
-  event.waitUntil(self.registration.showNotification(data.title || 'Battle Picz', {
-    body: data.body || 'Open Battle Picz to see your latest battles.',
+  event.waitUntil(self.registration.showNotification((data.title || 'Pic Rivals').replace(/Battle Picz/gi, 'Pic Rivals'), {
+    body: (data.body || 'Open Pic Rivals to see your latest battles.').replace(/Battle Picz/gi, 'Pic Rivals'),
     icon: '/assets/app-icon-192.png', badge: '/assets/app-icon-192.png',
     tag: data.tag || 'battle-picz', data: { url: data.url || '/' }
   }));

@@ -10,7 +10,7 @@ test('push worker displays a generic notification for malformed payload and bloc
  vm.runInNewContext(fs.readFileSync('sw.js','utf8'), {self,URL});
  let promise;
  handlers.push({data:{json(){throw Error('bad')}},waitUntil:p=>promise=p}); await promise;
- assert.equal(shown[0][0],'Battle Picz');
+ assert.equal(shown[0][0],'Pic Rivals');
  handlers.notificationclick({notification:{close(){},data:{url:'https://evil.test/'}},waitUntil:p=>promise=p});await promise;
  assert.equal(opened[0],'https://game.test/');
 });
