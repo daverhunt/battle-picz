@@ -460,6 +460,11 @@
       };
     }
 
+    purchasePowerUp(powerUp) {
+      if (!['bomb', 'remove', 'reveal'].includes(powerUp)) throw new Error('Unknown power-up');
+      return this.rpc('purchase_power_up', { p_power_up: powerUp });
+    }
+
     finalizeWeeklyTournaments() {
       return this.rpc('finalize_weekly_tournaments');
     }

@@ -1300,10 +1300,11 @@
           let type = button.dataset.power,
             count = powerUps[type] || 0;
           button.querySelector("b").textContent = count;
-          button.disabled = powerUpBusy || count < 1;
+          button.disabled = powerUpBusy;
+          button.classList.toggle("empty", count < 1);
           button.setAttribute(
             "aria-label",
-            type + " power-up, " + count + " remaining",
+            type + " power-up, " + count + " remaining" + (count < 1 ? ", open shop" : ""),
           );
         });
       }
@@ -1960,7 +1961,70 @@
       pauseDialog.setAttribute("aria-labelledby", "pauseTitle");
       pauseDialog.innerHTML = `<h2 id="pauseTitle">Paused</h2><div class="pause-menu"><button data-pause="resume">Resume</button><button data-pause="lobby">Lobby</button><button data-pause="shop">Shop</button><button data-pause="help">How to Play</button><button data-pause="sound" role="switch" aria-checked="true">Sound: On</button></div><div class="pause-detail" hidden></div><button data-pause="back" hidden>Back</button>`;
       document.getElementById("game").append(pauseDialog);
+      const shopItems = { bomb: ["Scatter Bomb", 250], remove: ["Remove Letter", 50], reveal: ["Reveal Letter", 75] };
+      let shopBusy = false, shopVersion = 0;
+      function powerUpNeedsShop(type) {
+        if (intro || ended || powerUpBusy) return true;
+        if (powerUps[type] > 0) return false;
+        document.querySelector(".pause").click();
+        showPowerUpShop(type);
+        return true;
+      }
+      async function showPowerUpShop(selected, notice = "") {
+        const version = ++shopVersion;
+        pauseDialog.querySelector(".pause-menu").hidden = true;
+        pauseDialog.querySelector('[data-pause="back"]').hidden = false;
+        pauseDialog.querySelector("h2").textContent = "Power-up shop";
+        const detail = pauseDialog.querySelector(".pause-detail");
+        detail.hidden = false;
+        detail.textContent = "Loading coins…";
+        try {
+          if (!MATCH_ID || !window.battlePiczBackend) throw new Error("The coin shop is available in online games.");
+          const profile = await window.battlePiczBackend.getProfile();
+          if (version !== shopVersion || !pauseDialog.open) return;
+          powerUps = normalisePowerUps({bomb: profile.power_bomb, remove: profile.power_remove, reveal: profile.power_reveal});
+          renderPowerUps();
+          detail.replaceChildren();
+          const balance = document.createElement("p");
+          balance.className = "shop-balance";
+          balance.textContent = `${profile.coins} coins · game paused`;
+          detail.append(balance);
+          for (const [type, [name, price]] of Object.entries(shopItems)) {
+            const row = document.createElement("div");
+            row.className = "shop-item" + (selected === type ? " selected" : "");
+            const label = document.createElement("p");
+            label.textContent = `${name} · ${powerUps[type]} left`;
+            const buy = document.createElement("button");
+            buy.textContent = `Buy 1 · ${price} coins`;
+            buy.disabled = Number(profile.coins) < price;
+            buy.onclick = async () => {
+              if (shopBusy) return;
+              shopBusy = true;
+              detail.querySelectorAll("button").forEach(button => button.disabled = true);
+              status.textContent = "Buying…";
+              try {
+                const result = await window.battlePiczBackend.purchasePowerUp(type);
+                powerUps = normalisePowerUps(result);
+                renderPowerUps();
+                await showPowerUpShop(type, `${name} added. Tap Back, then Resume to use it.`);
+              } catch (error) {
+                await showPowerUpShop(type, "Purchase could not be confirmed. Check your updated balance and inventory before buying again.");
+              } finally { shopBusy = false; }
+            };
+            row.append(label, buy);
+            detail.append(row);
+          }
+          const status = document.createElement("p");
+          status.setAttribute("role", "status");
+          status.textContent = notice || (Number(profile.coins) < 50 ? "Earn more coins by playing battles." : "Choose a power-up to buy with coins.");
+          detail.append(status);
+        } catch (error) {
+          if (version === shopVersion) detail.textContent = error.message || "Shop unavailable. Please try again.";
+        }
+      }
       function resumePausedGame() {
+        if (shopBusy) return;
+        shopVersion++;
         if (pauseStarted === null) return;
         start += performance.now() - pauseStarted;
         pauseStarted = null;
@@ -1970,6 +2034,7 @@
         saveProgress();
       }
       function showPauseMenu() {
+        shopVersion++;
         const sound = pauseDialog.querySelector('[data-pause="sound"]');
         const on = window.battlePiczPreferences?.soundEnabled !== false;
         sound.textContent = "Sound: " + (on ? "On" : "Off");
@@ -1995,6 +2060,7 @@
           if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) resumePausedGame();
           return;
         }
+        if (shopBusy) return;
         const action = event.target.closest("[data-pause]")?.dataset.pause;
         if (action === "resume") resumePausedGame();
         else if (action === "lobby") { saveProgress(); returnToLobby(); }
@@ -2005,15 +2071,14 @@
           window.dispatchEvent(new CustomEvent("battle-picz:settings-changed"));
           showPauseMenu();
         }
-        else if (action === "shop" || action === "help") {
+        else if (action === "shop") showPowerUpShop();
+        else if (action === "help") {
           pauseDialog.querySelector(".pause-menu").hidden = true;
           const detail = pauseDialog.querySelector(".pause-detail");
           detail.hidden = false;
           pauseDialog.querySelector('[data-pause="back"]').hidden = false;
           pauseDialog.querySelector("h2").textContent = action === "shop" ? "Power-ups" : "How to Play";
-          detail.textContent = action === "help"
-            ? "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. You cannot tap more tiles once the allowance runs out. Use a power-up, guess or skip. Fewer reveals earn a larger bonus. Bomb reveals three tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures."
-            : "Your power-ups: " + [...document.querySelectorAll('.powers [data-power]')].map(button => button.dataset.power + ": " + button.querySelector('b').textContent).join(" · ") + ". Buying more power-ups is not available yet.";
+          detail.textContent = "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. You cannot tap more tiles once the allowance runs out. Use a power-up, guess or skip. Fewer reveals earn a larger bonus. Bomb reveals three tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures.";
         }
       });
       function returnToLobby() {
@@ -2314,6 +2379,7 @@
       });
       Object.assign($("coinRow").style, { minHeight: "28px", gap: "5px" });
       document.querySelector("[data-power=bomb]").onclick = () => {
+        if (powerUpNeedsShop("bomb")) return;
         let tiles = [...document.querySelectorAll(".tile:not(.open)")];
         for (let i = tiles.length - 1; i > 0; i--) {
           let j = Math.floor(Math.random() * (i + 1));
@@ -2331,6 +2397,7 @@
           });
       };
       document.querySelector("[data-power=remove]").onclick = () => {
+        if (powerUpNeedsShop("remove")) return;
         let letters = [...document.querySelectorAll(".letter")]
           .filter(
             (x) =>
@@ -2345,6 +2412,7 @@
           );
       };
       document.querySelector("[data-power=reveal]").onclick = () => {
+        if (powerUpNeedsShop("reveal")) return;
         let need = [...q().a].find((ch, i) => !picked[i] || picked[i].l !== ch),
           b = [...document.querySelectorAll(".letter")].find(
             (x) =>

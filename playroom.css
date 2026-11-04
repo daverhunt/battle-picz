@@ -199,6 +199,15 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .revbox:before{content:'LEFT'}
 
 /* Guide blocked tile taps toward usable power-ups without moving the layout. */
-.powers.reveal-limit-hint .pu:not(:disabled){border-color:#ff840c;outline:2px solid #ff840c;outline-offset:2px;animation:powerHint 600ms ease-in-out 3}
+.powers.reveal-limit-hint .pu{border-color:#ff840c;outline:2px solid #ff840c;outline-offset:2px;animation:powerHint 600ms ease-in-out 3}
 @keyframes powerHint{50%{box-shadow:0 0 0 5px #ffae3940,0 0 15px #ff910099}}
-@media(prefers-reduced-motion:reduce){.powers.reveal-limit-hint .pu:not(:disabled){animation:none}}
+@media(prefers-reduced-motion:reduce){.powers.reveal-limit-hint .pu{animation:none}}
+
+/* Empty power-ups stay interactive so players can open the coin shop. */
+.powers .pu.empty{cursor:pointer}
+.shop-balance{font-weight:900;text-align:center}
+.shop-item{padding:10px;margin:10px 0;border:2px solid transparent;border-radius:15px;background:#ffffff66}
+.shop-item.selected{border-color:#ff840c}
+.shop-item p{margin:0 0 8px;font-weight:800}
+.pause-dialog .shop-item button{background:var(--orange);box-shadow:0 3px #ce560b;font-size:15px}
+.pause-dialog .shop-item button:disabled{opacity:.5;box-shadow:none;cursor:not-allowed}
