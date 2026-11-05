@@ -72,7 +72,7 @@
           <div><dt>Opponents played</dt><dd data-weekly="opponents">0</dd></div>
           <div><dt>Rounds played</dt><dd data-weekly="rounds">0</dd></div>
         </dl>
-        <div class="weekly-coins">🪙 <strong data-weekly="coins">+0 COINS</strong><small>10 participation + 5 per battle won</small></div>
+        <div class="weekly-coins">🪙 <strong data-weekly="coins">+0 COINS</strong><small>10 for your first visit each week + 5 per battle won</small></div>
         <button class="weekly-continue">START NEW WEEK!</button>
         <small class="weekly-preview-note" hidden>Test preview only — no coins awarded and the real week is unchanged.</small>
       </section>
@@ -473,7 +473,7 @@
   }
 
   function maybeShowPreviousWeek() {
-    if (!previousWeek || (!previousWeek.matchesPlayed && !previousWeek.expired) || !weeklySummary.hidden) return;
+    if (!previousWeek || (!previousWeek.matchesPlayed && !previousWeek.expired && !previousWeek.coins) || !weeklySummary.hidden) return;
     const acknowledged = localStorage.getItem(`battle-picz.week-summary.${previousWeek.playerId}.${previousWeek.key}`);
     if (!acknowledged) showWeeklySummary(previousWeek);
   }
