@@ -790,3 +790,23 @@ for (const [name, google, expected] of [['Player', true, 'Google Dave'], ['Dave'
     if (writes.length) assert.match(writes[0].path, /display_name=eq.Player/);
   });
 }
+
+test('an unanswered challenge appears in the recap while the lobby stays clear', async () => {
+  const backend = Object.create(BattlePiczBackend.prototype);
+  backend.ensureSession = async () => ({user:{id:'creator'}});
+  backend.finalizeWeeklyTournaments = async () => {};
+  backend.listNudges = async () => [];
+  backend.listMatches = async () => ['2026-10-26','2026-10-19'].map(week_start => ({
+    matches:{status:'cancelled',week_start,created_by:'creator'}
+  }));
+  backend.getProfile = async () => ({id:'creator'});
+  backend.request = async path => {
+    assert.match(path,/weekly_rewards.*week_start=eq\.2026-10-26/);
+    return [];
+  };
+  const dashboard = await backend.getWeeklyDashboard(Date.parse('2026-11-05T09:00Z'));
+  assert.equal(dashboard.previous.expired,1);
+  assert.equal(dashboard.previous.matchesPlayed,0);
+  assert.equal(dashboard.previous.coins,0);
+  assert.deepEqual(dashboard.matches,[]);
+});

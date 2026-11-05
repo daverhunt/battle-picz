@@ -2080,7 +2080,7 @@
           detail.hidden = false;
           pauseDialog.querySelector('[data-pause="back"]').hidden = false;
           pauseDialog.querySelector("h2").textContent = action === "shop" ? "Power-ups" : "How to Play";
-          detail.textContent = "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. You cannot tap more tiles once the allowance runs out. Use a power-up, guess or skip. Fewer reveals earn a larger bonus. Bomb reveals three tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures.";
+          detail.textContent = "Tap tiles to uncover the picture, then use the letters to spell the answer. Your free reveal allowance is 7 on Easy, 9 on Medium and 11 on Hard. You cannot tap more tiles once the allowance runs out. Use a power-up, guess or skip. Fewer reveals earn a larger bonus. Scatter Bomb reveals up to five covered tiles without using the allowance. Faster answers earn more points. Bomb uncovers tiles, Remove clears spare letters, and Reveal supplies a letter. Pass skips the picture. Each round has three pictures.";
         }
       });
       function returnToLobby() {
@@ -2387,7 +2387,7 @@
           let j = Math.floor(Math.random() * (i + 1));
           [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
         }
-        tiles = tiles.slice(0, 3);
+        tiles = tiles.slice(0, 5);
         if (tiles.length)
           consumePowerUp("bomb", () => {
             if (intro || ended) return;

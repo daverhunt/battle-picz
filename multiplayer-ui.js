@@ -67,7 +67,8 @@
           <div><strong data-weekly="draws">0</strong><span>Draws</span></div>
         </div>
         <dl class="weekly-details">
-          <div><dt>Battles played</dt><dd data-weekly="matches">0</dd></div>
+          <div><dt>Completed battles</dt><dd data-weekly="matches">0</dd></div>
+          <div data-weekly-expired hidden><dt>Challenges expired before an opponent joined</dt><dd data-weekly="expired">0</dd></div>
           <div><dt>Opponents played</dt><dd data-weekly="opponents">0</dd></div>
           <div><dt>Rounds played</dt><dd data-weekly="rounds">0</dd></div>
         </dl>
@@ -456,7 +457,9 @@
   }
 
   function showWeeklySummary(summary, isPreview = false) {
-    shownSummaryKey = isPreview ? '' : summary.key;
+    shownSummaryKey = isPreview ? '' : summary.playerId + '.' + summary.key;
+    panel.querySelector('[data-weekly-expired]').hidden = !summary.expired;
+    panel.querySelector('[data-weekly="expired"]').textContent = summary.expired || 0;
     panel.querySelector('[data-weekly="wins"]').textContent = summary.wins;
     panel.querySelector('[data-weekly="losses"]').textContent = summary.losses;
     panel.querySelector('[data-weekly="draws"]').textContent = summary.draws;
@@ -470,8 +473,8 @@
   }
 
   function maybeShowPreviousWeek() {
-    if (!previousWeek?.matchesPlayed) return;
-    const acknowledged = localStorage.getItem(`battle-picz.week-summary.${previousWeek.key}`);
+    if (!previousWeek || (!previousWeek.matchesPlayed && !previousWeek.expired) || !weeklySummary.hidden) return;
+    const acknowledged = localStorage.getItem(`battle-picz.week-summary.${previousWeek.playerId}.${previousWeek.key}`);
     if (!acknowledged) showWeeklySummary(previousWeek);
   }
 

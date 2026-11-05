@@ -491,7 +491,7 @@
       return result;
     }
 
-    async getMatchesDashboard() {
+    async getMatchesDashboard(expiredWeek = null) {
       const session = await this.ensureSession();
       const userId = session.user?.id;
       const [memberships, nudges] = await Promise.all([
@@ -501,6 +501,10 @@
       const dashboard = await Promise.all((memberships || []).map(async membership => {
         const match = membership.matches;
         if (!match) return null;
+        if (match.status === 'cancelled') {
+          return expiredWeek && match.week_start === expiredWeek && match.created_by === userId
+            ? { match, expired: true } : null;
+        }
         const [players, turns] = await Promise.all([
           this.getMatchPlayers(match.id),
           this.getMatchTurns(match.id)
@@ -510,21 +514,30 @@
           (nudges || []).filter(nudge => nudge.match_id === match.id)
         );
       }));
-      return dashboard.filter(item => item && item.match.status !== 'cancelled')
+      return dashboard.filter(Boolean)
         .sort((a, b) => b.updatedAt - a.updatedAt);
     }
 
     async getWeeklyDashboard(referenceTime = this.now()) {
       await this.finalizeWeeklyTournaments();
-      const [matches, profile] = await Promise.all([
-        this.getMatchesDashboard(),
+      const week = BattlePiczBackend.utcWeekWindow(referenceTime, -1);
+      const [items, profile] = await Promise.all([
+        this.getMatchesDashboard(week.key),
         this.getProfile()
       ]);
+      const matches = items.filter(item => !item.expired);
+      const previous = BattlePiczBackend.weeklySummary(matches, referenceTime, -1);
+      previous.expired = items.length - matches.length;
+      previous.playerId = profile.id;
+      const rewards = await this.request(
+        `weekly_rewards?user_id=eq.${encodeURIComponent(profile.id)}&week_start=eq.${week.key}&select=coins`
+      );
+      previous.coins = Number(rewards?.[0]?.coins || 0);
       return {
         matches,
         profile,
         current: BattlePiczBackend.weeklySummary(matches, referenceTime),
-        previous: BattlePiczBackend.weeklySummary(matches, referenceTime, -1)
+        previous
       };
     }
 
