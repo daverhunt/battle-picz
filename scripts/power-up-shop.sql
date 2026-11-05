@@ -1,4 +1,4 @@
--- Original Lua unit prices. Debit and inventory credit happen atomically.
+-- Trial unit prices. Debit and inventory credit happen atomically.
 create or replace function public.purchase_power_up(p_power_up text)
 returns jsonb language plpgsql security definer set search_path = '' as $$
 declare
@@ -7,7 +7,7 @@ declare
   inventory jsonb;
 begin
   if caller is null then raise exception 'Authentication required'; end if;
-  price := case p_power_up when 'bomb' then 250 when 'remove' then 50 when 'reveal' then 75 end;
+  price := case p_power_up when 'bomb' then 9 when 'remove' then 3 when 'reveal' then 6 end;
   if price is null then raise exception 'Unknown power-up'; end if;
   update public.profiles
   set coins = coins - price,

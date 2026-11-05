@@ -1963,7 +1963,7 @@
       pauseDialog.setAttribute("aria-labelledby", "pauseTitle");
       pauseDialog.innerHTML = `<h2 id="pauseTitle">Paused</h2><div class="pause-menu"><button data-pause="resume">Resume</button><button data-pause="lobby">Lobby</button><button data-pause="shop">Shop</button><button data-pause="help">How to Play</button><button data-pause="sound" role="switch" aria-checked="true">Sound: On</button></div><div class="pause-detail" hidden></div><button data-pause="back" hidden>Back</button>`;
       document.getElementById("game").append(pauseDialog);
-      const shopItems = { bomb: ["Scatter Bomb", 250], remove: ["Remove Letter", 50], reveal: ["Reveal Letter", 75] };
+      const shopItems = { bomb: ["Scatter Bomb", 9], remove: ["Remove Letter", 3], reveal: ["Reveal Letter", 6] };
       let shopBusy = false, shopVersion = 0;
       function powerUpNeedsShop(type) {
         if (intro || ended || powerUpBusy) return true;
@@ -2018,7 +2018,7 @@
           }
           const status = document.createElement("p");
           status.setAttribute("role", "status");
-          status.textContent = notice || (Number(profile.coins) < 50 ? "Earn more coins by playing battles." : "Choose a power-up to buy with coins.");
+          status.textContent = notice || (Number(profile.coins) < Math.min(...Object.values(shopItems).map(item => item[1])) ? "Earn more coins by playing battles." : "Choose a power-up to buy with coins.");
           detail.append(status);
         } catch (error) {
           if (version === shopVersion) detail.textContent = error.message || "Shop unavailable. Please try again.";
