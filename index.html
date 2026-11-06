@@ -1964,7 +1964,13 @@
       pauseDialog.innerHTML = `<h2 id="pauseTitle">Paused</h2><div class="pause-menu"><button data-pause="resume">Resume</button><button data-pause="lobby">Lobby</button><button data-pause="shop">Shop</button><button data-pause="help">How to Play</button><button data-pause="sound" role="switch" aria-checked="true">Sound: On</button></div><div class="pause-detail" hidden></div><button data-pause="back" hidden>Back</button>`;
       document.getElementById("game").append(pauseDialog);
       const shopItems = { bomb: ["Scatter Bomb", 9], remove: ["Remove Letter", 3], reveal: ["Reveal Letter", 6] };
-      let shopBusy = false, shopVersion = 0;
+      let shopBusy = false, shopVersion = 0, lobbyShopOpen = false;
+      window.openPicRivalsShop = () => {
+        if (pauseDialog.open) return;
+        lobbyShopOpen = true;
+        pauseDialog.showModal();
+        showPowerUpShop();
+      };
       function powerUpNeedsShop(type) {
         if (intro || ended || powerUpBusy) return true;
         if (powerUps[type] > 0) return false;
@@ -1981,7 +1987,7 @@
         detail.hidden = false;
         detail.textContent = "Loading coins…";
         try {
-          if (!MATCH_ID || !window.battlePiczBackend) throw new Error("The coin shop is available in online games.");
+          if ((!MATCH_ID && !lobbyShopOpen) || !window.battlePiczBackend) throw new Error("The coin shop is available in online games.");
           const profile = await window.battlePiczBackend.getProfile();
           if (version !== shopVersion || !pauseDialog.open) return;
           powerUps = normalisePowerUps({bomb: profile.power_bomb, remove: profile.power_remove, reveal: profile.power_reveal});
@@ -1989,7 +1995,7 @@
           detail.replaceChildren();
           const balance = document.createElement("p");
           balance.className = "shop-balance";
-          balance.textContent = `${profile.coins} coins · game paused`;
+          balance.textContent = `${profile.coins} coins` + (lobbyShopOpen ? "" : " · game paused");
           detail.append(balance);
           for (const [type, [name, price]] of Object.entries(shopItems)) {
             const row = document.createElement("div");
@@ -2008,7 +2014,8 @@
                 const result = await window.battlePiczBackend.purchasePowerUp(type);
                 powerUps = normalisePowerUps(result);
                 renderPowerUps();
-                await showPowerUpShop(type, `${name} added. Tap Back, then Resume to use it.`);
+                if (lobbyShopOpen) window.dispatchEvent(new CustomEvent("battle-picz:profile-updated"));
+                await showPowerUpShop(type, lobbyShopOpen ? `${name} added.` : `${name} added. Tap Back, then Resume to use it.`);
               } catch (error) {
                 await showPowerUpShop(type, "Purchase could not be confirmed. Check your updated balance and inventory before buying again.");
               } finally { shopBusy = false; }
@@ -2027,6 +2034,12 @@
       function resumePausedGame() {
         if (shopBusy) return;
         shopVersion++;
+        if (lobbyShopOpen) {
+          lobbyShopOpen = false;
+          pauseDialog.close();
+          window.dispatchEvent(new CustomEvent("battle-picz:profile-updated"));
+          return;
+        }
         if (pauseStarted === null) return;
         start += performance.now() - pauseStarted;
         pauseStarted = null;
@@ -2066,7 +2079,7 @@
         const action = event.target.closest("[data-pause]")?.dataset.pause;
         if (action === "resume") resumePausedGame();
         else if (action === "lobby") { saveProgress(); returnToLobby(); }
-        else if (action === "back") showPauseMenu();
+        else if (action === "back") { if (lobbyShopOpen) resumePausedGame(); else showPauseMenu(); }
         else if (action === "sound") {
           const prefs = window.battlePiczPreferences;
           prefs.soundEnabled = !prefs.soundEnabled;

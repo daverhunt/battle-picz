@@ -30,6 +30,7 @@
       <span class="playroom-mark" aria-hidden="true">▦</span>
       <div class="matches-brand"><span class="playroom-kicker">PIC <span>RIVALS</span></span><h2>Your Battles</h2><p class="matches-balance">🪙 0 COINS</p></div>
       <div class="matches-header-actions">
+        <button class="matches-shop" type="button" aria-label="Power-up shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
         <button class="matches-settings" aria-label="Settings">⚙</button>
       </div>
     </header>
@@ -301,6 +302,7 @@
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
   const alertsButton = panel.querySelector('.matches-alerts');
+  panel.querySelector('.matches-shop').onclick = () => window.openPicRivalsShop?.();
   const weeklyRecord = panel.querySelector('.weekly-record');
   const weeklyCountdown = panel.querySelector('.weekly-countdown');
   const weeklySummary = panel.querySelector('.weekly-summary');
