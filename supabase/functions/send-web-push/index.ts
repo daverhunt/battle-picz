@@ -28,6 +28,17 @@ Deno.serve(async req => {
     for (const event of events) {
       event.event_id = event.id;
       try {
+        if (event.payload?.reminder) {
+          const pending = await db('rpc/turn_reminder_pending', 'POST', {
+            p_match_id: event.match_id, p_user_id: event.recipient_user_id, p_round_no: event.round_no
+          });
+          if (!pending) {
+            await db(`notification_outbox?id=eq.${event.event_id}&status=eq.processing`, 'PATCH',
+              { status: 'cancelled', locked_at: null, last_error: 'Turn no longer waiting' });
+            skipped++;
+            continue;
+          }
+        }
         const subscriptions = await db(`web_push_subscriptions?user_id=eq.${event.recipient_user_id}&enabled=eq.true&select=id,subscription,created_at`);
         const receipts = await db(`web_push_receipts?event_id=eq.${event.event_id}&select=subscription_id`);
         const done = new Set(receipts.map((r: any) => r.subscription_id));
@@ -43,7 +54,7 @@ Deno.serve(async req => {
           match_found: ['Opponent found', 'Your new battle is ready.'],
           weekly_summary: ['Weekly results', 'Your weekly Battle Picz results are ready.']
         };
-        const [title, body] = event.payload?.test ? ['Battle Picz test alert', 'Notifications are working on this device.'] : copy[event.event_type];
+        const [title, body] = event.payload?.test ? ['Battle Picz test alert', 'Notifications are working on this device.'] : event.payload?.reminder ? ['Your turn is waiting', 'It’s been over 48 hours. Jump back into Pic Rivals and take your turn!'] : copy[event.event_type];
         let url = '/';
         if (event.match_id) {
           const match = await db(`matches?id=eq.${event.match_id}&select=seed`);
