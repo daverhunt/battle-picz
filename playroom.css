@@ -154,7 +154,26 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .header .score{top:37px;font-size:24px;max-width:calc(50% - 85px)}.header .me{left:56px}.header .opp{right:56px}
 .qtimers{top:16%;gap:24px}.qt{width:44px;height:44px;box-shadow:0 3px 4px #8c714435,inset 0 1px #fff}.qt span{width:34px;height:34px}
 .pause{top:24%;border-radius:13px;background:linear-gradient(#f0fbff,#a9d8f7);box-shadow:inset 0 2px #fff,0 3px 0 #8cb6d1,0 4px 6px #58452825}
-.board,#intro{top:30%;left:17%;width:66%;border-radius:10px}.tile{border-radius:5px;border:1px solid #99e1ff;background:linear-gradient(135deg,#64d0ff,#29adfa 50%,#0786e9)!important;box-shadow:inset 0 2px 1px #d7f6ffcc,inset 0 -3px 2px #0077cd99,0 1px 1px #00578c66}
+.board,#intro{top:30%;left:17%;width:66%;border-radius:10px}
+/* The square button covers the entire cell. Only its decorative face is rounded. */
+.grid .tile {
+  position: relative;
+  appearance: none;
+  border: 0;
+  border-radius: 0;
+  background: #087fc7 !important;
+  box-shadow: none;
+}
+.grid .tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid #99e1ff;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #64d0ff, #29adfa 50%, #0786e9);
+  box-shadow: inset 0 2px 1px #d7f6ffcc, inset 0 -3px 2px #0077cd99;
+}
 .powers{top:32%;right:1%;gap:18px}.powers .pu{width:46px;height:62px;border:1px solid #fffdf5;border-radius:13px;background:linear-gradient(#fffef9,#f3e9d4);box-shadow:inset 0 2px #fff,0 3px 0 #cfbfa0,0 5px 6px #715b352b;gap:0}
 .powers .pu:before{content:'';display:block;width:38px;height:48px;background-image:url('assets/ui/playroom-sprites.png');background-size:500% 100%;background-repeat:no-repeat}.powers .bomb:before{background-position:50% 50%}.powers .remove:before{background-position:75% 50%}.powers .reveal:before{background-position:100% 50%}.powers .pu:after{font-size:8px;line-height:10px}.powers .pu b{box-shadow:0 2px 3px #a4511733}
 .answer{top:74%;height:40px;gap:4px}.slot{height:40px;flex-basis:32px;border:1px solid #e0cb9e;background:linear-gradient(#fffdf7,#f8efd9);box-shadow:inset 0 2px #fff,0 3px 2px #ad8d533b;font-size:25px;line-height:40px;border-radius:9px}
