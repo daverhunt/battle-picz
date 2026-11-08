@@ -76,5 +76,83 @@
     "generated": true,
     "approved": "2026-10-28",
     "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:grapes",
+    "a": "GRAPES",
+    "label": "GRAPES",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/grapes-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-11-08",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:kiwi",
+    "a": "KIWI",
+    "label": "KIWI",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/kiwi-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-11-08",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:broccoli",
+    "a": "BROCCOLI",
+    "label": "BROCCOLI",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/broccoli-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-11-08",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:pretzel",
+    "a": "PRETZEL",
+    "label": "PRETZEL",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/pretzel-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-11-08",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:popcorn",
+    "a": "POPCORN",
+    "label": "POPCORN",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/popcorn-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-11-08",
+    "modifications": "Resized and converted to WebP"
+  },
+  {
+    "id": "food:waffle",
+    "a": "WAFFLE",
+    "label": "WAFFLE",
+    "pic": "\ud83d\uddbc\ufe0f",
+    "image": "assets/images/categories/food/waffle-generated-v1.webp",
+    "gt": 7000,
+    "gs": 3800,
+    "source": "OpenAI image generation",
+    "generated": true,
+    "approved": "2026-11-08",
+    "modifications": "Resized and converted to WebP"
   }
 ]
