@@ -1,5 +1,6 @@
 (function () {
   let registration, subscribed = false, busy = false;
+  let registeredSubscription;
   const available = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
   const installed = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
   const ios = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -17,8 +18,14 @@
     return navigator.serviceWorker.ready;
   }
   async function save(subscription) {
-    if (!backend()?.readSession()?.user?.id) throw new Error('Sign in before enabling alerts');
-    await backend().rpc('register_web_push', { p_subscription: subscription.toJSON() });
+    const userId = backend()?.readSession()?.user?.id;
+    if (!userId) throw new Error('Sign in before enabling alerts');
+    const data = subscription.toJSON();
+    const key = JSON.stringify([userId, data]);
+    if (key !== registeredSubscription) {
+      await backend().rpc('register_web_push', { p_subscription: data });
+      registeredSubscription = key;
+    }
     subscribed = true;
     window.battlePiczPreferences.notificationsEnabled = true;
     changed();
@@ -32,9 +39,11 @@
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') throw new Error(status());
       const reg = await ready();
+      const existing = await reg.pushManager.getSubscription();
+      if (existing) { await save(existing); return; }
       const key = await backend().rpc('web_push_public_key');
       const bytes = Uint8Array.from(atob(key.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-      const sub = await reg.pushManager.getSubscription() || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes });
+      const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes });
       await save(sub);
     } finally { busy = false; changed(); }
   }
@@ -45,6 +54,7 @@
       await backend().rpc('unregister_web_push', { p_endpoint: sub.endpoint });
       await sub.unsubscribe();
     }
+    registeredSubscription = undefined;
     subscribed = false;
     window.battlePiczPreferences.notificationsEnabled = false;
     changed();

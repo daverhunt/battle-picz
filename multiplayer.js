@@ -339,15 +339,21 @@
 
     async getMatchContext(matchId, roundNo = null) {
       const session = await this.ensureSession();
-      const [match, players, turns] = await Promise.all([
-        this.getMatch(matchId),
-        this.getMatchPlayers(matchId),
-        this.getMatchTurns(matchId)
-      ]);
+      const select = 'id,mode,status,invite_code,seed,game_config,created_by,winner_id,week_start,created_at,started_at,completed_at,'
+        + 'players:match_players!match_players_match_id_fkey(user_id,player_no,total_score,accepted_at,profiles!match_players_user_id_fkey(display_name,power_bomb,power_remove,power_reveal)),'
+        + 'turns:match_turns!match_turns_match_id_fkey(user_id,round_no,score,answers,ghost_timeline,is_final,completed_at)';
+      const rows = await this.request(`matches?id=eq.${encodeURIComponent(matchId)}&select=${select}&turns.order=round_no&players.order=player_no`);
+      if (!rows?.[0]) throw new Error('Match not found');
+      const {players, turns, ...match} = rows[0];
       const userId = session.user?.id;
       const me = players.find(player => player.user_id === userId);
       if (!me) throw new Error('You are not part of this match');
       const opponent = players.find(player => player.user_id !== userId) || null;
+      return this.contextForRound({match, me, opponent, turns}, roundNo);
+    }
+
+    contextForRound({match, me, opponent, turns}, roundNo) {
+      const userId = me.user_id;
       const currentRound = BattlePiczBackend.currentRound(match, turns);
       const viewedRound = Number(roundNo) || currentRound;
       const ownTurn = turns.find(turn =>
@@ -403,6 +409,11 @@
         `profiles?id=eq.${encodeURIComponent(userId)}&select=id,display_name,xp,coins,skill_rating,games_played,games_won,power_bomb,power_remove,power_reveal`
       );
       const profile = rows?.[0] || null;
+      return this.syncGoogleName(profile, session);
+    }
+
+    async syncGoogleName(profile, session) {
+      const userId = session.user?.id;
       const google = session.user?.identities?.find(identity => identity.provider === 'google');
       const isGoogle = google || session.user?.app_metadata?.providers?.includes('google');
       const metadata = google?.identity_data || session.user?.user_metadata || {};
@@ -491,48 +502,40 @@
       return result;
     }
 
-    async getMatchesDashboard(expiredWeek = null) {
+    async readLobby(week = null) {
       const session = await this.ensureSession();
-      const userId = session.user?.id;
-      const [memberships, nudges] = await Promise.all([
-        this.listMatches(userId),
-        this.listNudges()
-      ]);
-      const dashboard = await Promise.all((memberships || []).map(async membership => {
-        const match = membership.matches;
-        if (!match) return null;
-        if (match.status === 'cancelled') {
-          return expiredWeek && match.week_start === expiredWeek && match.created_by === userId
-            ? { match, expired: true } : null;
+      const items = [];
+      let cursor = null, profile = null, coins = 0;
+      do {
+        const page = await this.rpc('lobby_page', {p_after: cursor, p_week: week});
+        if (!cursor && week) {
+          profile = await this.syncGoogleName(page.profile, session);
+          coins = Number(page.coins || 0);
         }
-        const [players, turns] = await Promise.all([
-          this.getMatchPlayers(match.id),
-          this.getMatchTurns(match.id)
-        ]);
-        return BattlePiczBackend.describeMatch(
-          match, players, turns, userId,
-          (nudges || []).filter(nudge => nudge.match_id === match.id)
-        );
-      }));
-      return dashboard.filter(Boolean)
-        .sort((a, b) => b.updatedAt - a.updatedAt);
+        for (const row of page.items) {
+          const item = row.expired ? row : BattlePiczBackend.describeMatch(
+            row.match, row.players, row.turns, session.user.id, row.nudges
+          );
+          if (item) items.push(item);
+        }
+        cursor = page.next;
+      } while (cursor);
+      items.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      return {items, profile, coins};
+    }
+
+    async getMatchesDashboard() {
+      return (await this.readLobby()).items;
     }
 
     async getWeeklyDashboard(referenceTime = this.now()) {
-      await this.finalizeWeeklyTournaments();
       const week = BattlePiczBackend.utcWeekWindow(referenceTime, -1);
-      const [items, profile] = await Promise.all([
-        this.getMatchesDashboard(week.key),
-        this.getProfile()
-      ]);
+      const {items, profile, coins} = await this.readLobby(week.key);
       const matches = items.filter(item => !item.expired);
       const previous = BattlePiczBackend.weeklySummary(matches, referenceTime, -1);
       previous.expired = items.length - matches.length;
       previous.playerId = profile.id;
-      const rewards = await this.request(
-        `weekly_rewards?user_id=eq.${encodeURIComponent(profile.id)}&week_start=eq.${week.key}&select=coins`
-      );
-      previous.coins = Number(rewards?.[0]?.coins || 0);
+      previous.coins = coins;
       return {
         matches,
         profile,

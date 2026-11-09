@@ -605,6 +605,9 @@
     }
   });
   window.addEventListener('battle-picz:profile-updated', () => loadMatches('Updating your profile…'));
+  window.addEventListener('battle-picz:balance', event => {
+    balanceLabel.textContent = `🪙 ${Number(event.detail).toLocaleString()} COINS`;
+  });
   window.addEventListener('battle-picz:settings-changed', event => {
     if (event.detail?.notificationsEnabled) notifyAboutNudges();
     updateAlertsButton();
@@ -758,7 +761,7 @@
       if (notificationParams.get('screen') === 'results' &&
           Number.isSafeInteger(requestedRound) && requestedRound > 0 &&
           requestedRound <= lastCompletedRound) {
-        const resultContext = await backend.getMatchContext(matchId, requestedRound);
+        const resultContext = backend.contextForRound(matchContext, requestedRound);
         if (resultContext.ownTurn && resultContext.opponentTurn) {
           window.BATTLE_PICZ_MATCH = resultContext;
           window.BATTLE_PICZ_NEXT_CONTEXT = matchContext;
@@ -775,12 +778,11 @@
         window.startBattlePicz?.(matchContext);
       } else if (lastCompletedRound > lastSeenRound) {
         const nextContext = matchContext;
-        const resultContext = await backend.getMatchContext(matchId, lastCompletedRound);
+        const resultContext = backend.contextForRound(matchContext, lastCompletedRound);
         window.BATTLE_PICZ_MATCH = resultContext;
         window.BATTLE_PICZ_NEXT_CONTEXT = nextContext;
         window.showBattlePiczMatchResult?.(resultContext);
       } else if (matchContext.match.status === 'complete') {
-        matchContext = await backend.getMatchContext(matchId, matchContext.currentRound);
         window.BATTLE_PICZ_MATCH = matchContext;
         window.showBattlePiczMatchResult?.(matchContext);
       } else if (matchContext.ownTurn) {
@@ -811,17 +813,16 @@
   window.battlePiczSaveRound = async payload => {
     if (!matchContext) throw new Error('Match is not ready');
     const matchId = matchContext.match.id;
+    let nextContext;
     try {
       await backend.submitTurn(matchId, payload.roundNo, payload.score,
         payload.answers, payload.ghostTimeline, false);
     } catch (error) {
-      const savedContext = await backend.getMatchContext(matchId, payload.roundNo).catch(() => null);
-      if (!savedContext?.ownTurn) throw error;
+      nextContext = await backend.getMatchContext(matchId).catch(() => null);
+      if (!nextContext || !backend.contextForRound(nextContext, payload.roundNo).ownTurn) throw error;
     }
-    const [resultContext, nextContext] = await Promise.all([
-      backend.getMatchContext(matchId, payload.roundNo),
-      backend.getMatchContext(matchId)
-    ]);
+    nextContext ||= await backend.getMatchContext(matchId);
+    const resultContext = backend.contextForRound(nextContext, payload.roundNo);
     matchContext = nextContext;
     window.BATTLE_PICZ_NEXT_CONTEXT = nextContext;
     window.BATTLE_PICZ_MATCH = matchContext;

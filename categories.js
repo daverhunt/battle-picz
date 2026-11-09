@@ -31,9 +31,9 @@
           if(!window.confirm(`Permanently unlock ${category.name} for ${category.price} coins? Your opponent can play it for free.`))return;
           button.disabled=true;
           try {
-            await backend.rpc('purchase_category',{p_category:category.id});
+            const result = await backend.rpc('purchase_category',{p_category:category.id});
             await render(container,onChoose);
-            window.dispatchEvent(new CustomEvent('battle-picz:profile-updated'));
+            window.dispatchEvent(new CustomEvent('battle-picz:balance',{detail:result.coins}));
           } catch(error){status.textContent=error.message||'Could not unlock. Try again.';button.disabled=false;}
         };
         container.append(button);

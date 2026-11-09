@@ -48,7 +48,7 @@ for(const [screen,round,canPlay,expected] of [['results',1,true,'result:1'],['ga
  test(`notification route ${screen} round ${round}, playable=${canPlay}`, async()=>{
   const calls=[];
   const current={me:{},opponent:{},match:{status:'active'},roundResults:[{},{}],currentRound:3,canPlay,roundConfig:{},ownTurn:null};
-  const context={URLSearchParams,location:{search:`?matchId=one&screen=${screen}&round=${round}`},backend:{finalizeWeeklyTournaments:async()=>{},getMatchContext:async(id,r)=>r?{...current,roundNo:r,ownTurn:{},opponentTurn:{}}:current},window:{showBattlePiczMatchResult:c=>calls.push('result:'+c.roundNo),startBattlePicz:()=>calls.push('game')},document:{querySelector:()=>null},localStorage:{getItem:()=> '0'},close:()=>{},open:()=>calls.push('lobby'),showError:e=>{throw e;}};
+  const context={URLSearchParams,location:{search:`?matchId=one&screen=${screen}&round=${round}`},backend:{finalizeWeeklyTournaments:async()=>{},getMatchContext:async()=>current,contextForRound:(ctx,r)=>({...ctx,roundNo:r,ownTurn:{},opponentTurn:{}})},window:{showBattlePiczMatchResult:c=>calls.push('result:'+c.roundNo),startBattlePicz:()=>calls.push('game')},document:{querySelector:()=>null},localStorage:{getItem:()=> '0'},close:()=>{},open:()=>calls.push('lobby'),showError:e=>{throw e;}};
   vm.createContext(context);vm.runInContext(`let matchContext; ${initialise}`,context);
   await vm.runInContext('initialiseMatch()',context);
   assert.deepEqual(calls,[expected]);

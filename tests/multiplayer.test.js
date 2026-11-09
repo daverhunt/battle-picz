@@ -330,7 +330,7 @@ test('builds a current-player context with the opponent turn', async () => {
   const calls = [];
   const backend = new BattlePiczBackend({
     url: 'https://example.supabase.co', publishableKey: 'public', storage,
-    fetchImpl: async url => { calls.push(url); return response(replies.shift()); }
+    fetchImpl: async url => { calls.push(url); return response([{...replies[0][0], players:replies[1], turns:replies[2]}]); }
   });
   const context = await backend.getMatchContext('match-3', 1);
   assert.equal(context.me.player_no, 2);
@@ -339,7 +339,8 @@ test('builds a current-player context with the opponent turn', async () => {
   assert.deepEqual(context.roundConfig, { category: 'FOOD', difficulty: 'hard' });
   assert.equal(context.canChoose, false);
   assert.equal(context.canPlay, true);
-  assert.match(calls[1], /profiles!match_players_user_id_fkey\(\*\)/);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /turns:match_turns/);
 });
 
 test('sorts dashboard matches into my turn, their turn, and completed', () => {
@@ -473,7 +474,7 @@ test('lets the creator configure round one before an opponent joins', async () =
   ];
   const backend = new BattlePiczBackend({
     url: 'https://example.supabase.co', publishableKey: 'public', storage,
-    fetchImpl: async () => response(replies.shift())
+    fetchImpl: async () => response([{...replies[0][0], players:replies[1], turns:replies[2]}])
   });
   const context = await backend.getMatchContext('waiting-match');
   assert.equal(context.canChoose, true);
@@ -526,11 +527,11 @@ test('dashboard query only requests the current player memberships', async () =>
   const calls = [];
   const backend = new BattlePiczBackend({
     url: 'https://example.supabase.co', publishableKey: 'public', storage,
-    fetchImpl: async url => { calls.push(url); return response([]); }
+    fetchImpl: async url => { calls.push(url); return response({items:[],next:null}); }
   });
   assert.deepEqual(await backend.getMatchesDashboard(), []);
-  assert.match(calls[0], /match_players\?user_id=eq\.player-123&select=/);
-  assert.match(calls[0], /matches!match_players_match_id_fkey\(/);
+  assert.equal(calls.length,1);
+  assert.match(calls[0], /rpc\/lobby_page$/);
 });
 
 test('only allows a waiting player to nudge once per cooldown', () => {
@@ -794,19 +795,42 @@ for (const [name, google, expected] of [['Player', true, 'Google Dave'], ['Dave'
 test('an unanswered challenge appears in the recap while the lobby stays clear', async () => {
   const backend = Object.create(BattlePiczBackend.prototype);
   backend.ensureSession = async () => ({user:{id:'creator'}});
-  backend.finalizeWeeklyTournaments = async () => {};
-  backend.listNudges = async () => [];
-  backend.listMatches = async () => ['2026-10-26','2026-10-19'].map(week_start => ({
-    matches:{status:'cancelled',week_start,created_by:'creator'}
-  }));
-  backend.getProfile = async () => ({id:'creator'});
-  backend.request = async path => {
-    assert.match(path,/weekly_rewards.*week_start=eq\.2026-10-26/);
-    return [];
+  const cursors = [];
+  backend.rpc = async (name, args) => {
+    assert.equal(name, 'lobby_page');
+    assert.equal(args.p_week, '2026-10-26');
+    cursors.push(args.p_after);
+    return args.p_after ? {items:[],next:null} : {
+      items:[{expired:true,match:{id:'one'}}],next:'one',profile:{id:'creator'},coins:10
+    };
   };
   const dashboard = await backend.getWeeklyDashboard(Date.parse('2026-11-05T09:00Z'));
   assert.equal(dashboard.previous.expired,1);
   assert.equal(dashboard.previous.matchesPlayed,0);
-  assert.equal(dashboard.previous.coins,0);
+  assert.equal(dashboard.previous.coins,10);
+  assert.deepEqual(cursors,[null,'one']);
   assert.deepEqual(dashboard.matches,[]);
+});
+
+test('twenty lobby cards and weekly totals use one API request', async () => {
+  const session = {access_token: 'fake', expires_at: 9999999999, user: {id: 'me'}};
+  const storage = memoryStorage({[SESSION_KEY]: JSON.stringify(session)});
+  const items = Array.from({length: 20}, (_, i) => ({
+    match: {id: String(i), status: 'active', week_start: '2026-11-09', game_config: {}},
+    players: [{user_id:'me',player_no:1,accepted_at:'2026-11-09'}, {user_id:'other',player_no:2}],
+    turns: [], nudges: []
+  }));
+  let requests = 0;
+  const backend = new BattlePiczBackend({url:'https://example.supabase.co',publishableKey:'public',storage,
+    fetchImpl:async url => {
+      requests++;
+      assert.match(url,/rpc\/lobby_page$/);
+      return response({items, next:null, profile:{id:'me'}, coins:10});
+    }
+  });
+  const dashboard = await backend.getWeeklyDashboard(Date.parse('2026-11-10'));
+  assert.equal(dashboard.matches.length,20);
+  assert.ok(dashboard.matches.every(item => item.action === 'choose'));
+  assert.equal(dashboard.previous.coins,10);
+  assert.equal(requests,1);
 });

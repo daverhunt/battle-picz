@@ -1978,7 +1978,7 @@
         showPowerUpShop(type);
         return true;
       }
-      async function showPowerUpShop(selected, notice = "") {
+      async function showPowerUpShop(selected, notice = "", purchase = null) {
         const version = ++shopVersion;
         pauseDialog.querySelector(".pause-menu").hidden = true;
         pauseDialog.querySelector('[data-pause="back"]').hidden = false;
@@ -1988,11 +1988,12 @@
         detail.textContent = "Loading coins…";
         try {
           if ((!MATCH_ID && !lobbyShopOpen) || !window.battlePiczBackend) throw new Error("The coin shop is available in online games.");
-          const profile = await window.battlePiczBackend.getProfile();
+          const profile = purchase || await window.battlePiczBackend.getProfile();
           if (version !== shopVersion || !pauseDialog.open) return;
-          powerUps = normalisePowerUps({bomb: profile.power_bomb, remove: profile.power_remove, reveal: profile.power_reveal});
+          powerUps = normalisePowerUps(purchase || {bomb: profile.power_bomb, remove: profile.power_remove, reveal: profile.power_reveal});
           renderPowerUps();
           detail.replaceChildren();
+          if (lobbyShopOpen) window.dispatchEvent(new CustomEvent("battle-picz:balance", {detail: profile.coins}));
           const balance = document.createElement("p");
           balance.className = "shop-balance";
           balance.textContent = `${profile.coins} coins` + (lobbyShopOpen ? "" : " · game paused");
@@ -2012,10 +2013,7 @@
               status.textContent = "Buying…";
               try {
                 const result = await window.battlePiczBackend.purchasePowerUp(type);
-                powerUps = normalisePowerUps(result);
-                renderPowerUps();
-                if (lobbyShopOpen) window.dispatchEvent(new CustomEvent("battle-picz:profile-updated"));
-                await showPowerUpShop(type, lobbyShopOpen ? `${name} added.` : `${name} added. Tap Back, then Resume to use it.`);
+                await showPowerUpShop(type, lobbyShopOpen ? `${name} added.` : `${name} added. Tap Back, then Resume to use it.`, result);
               } catch (error) {
                 await showPowerUpShop(type, "Purchase could not be confirmed. Check your updated balance and inventory before buying again.");
               } finally { shopBusy = false; }
@@ -2037,7 +2035,6 @@
         if (lobbyShopOpen) {
           lobbyShopOpen = false;
           pauseDialog.close();
-          window.dispatchEvent(new CustomEvent("battle-picz:profile-updated"));
           return;
         }
         if (pauseStarted === null) return;
@@ -2507,14 +2504,22 @@
         onlineContext = context;
         roundNo = context?.currentRound || 1;
         chooserIndex = (roundNo - 1) % 2;
-        await loadPowerUps();
+        const inventory = context?.me?.profiles;
+        if (inventory?.power_bomb != null) {
+          powerUps = normalisePowerUps({bomb: inventory.power_bomb, remove: inventory.power_remove, reveal: inventory.power_reveal});
+          renderPowerUps();
+        } else await loadPowerUps();
         if (context?.canPlay && context?.roundConfig) {
           roundCategory = context.roundConfig.category;
           chooseDifficulty(context.roundConfig.difficulty);
         } else if (context?.canChoose && !context?.roundConfig)
           showCategoryChooser();
       };
-      if (!MATCH_ID) loadPowerUps().finally(showCategoryChooser);
+      if (!MATCH_ID) {
+        window.addEventListener("DOMContentLoaded", () => {
+          if (!window.battlePiczBackend?.configured) loadPowerUps().finally(showCategoryChooser);
+        }, {once: true});
+      }
     </script>
     <script src="preferences.js"></script>
     <script src="sounds.js"></script>
