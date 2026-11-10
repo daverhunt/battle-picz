@@ -4,10 +4,10 @@ self.addEventListener('activate', event => event.waitUntil(self.clients.claim())
 self.addEventListener('push', event => {
   let data = {};
   try { data = event.data?.json() || {}; } catch {}
-  event.waitUntil(self.registration.showNotification((data.title || 'Pic Rivals').replace(/Battle Picz/gi, 'Pic Rivals'), {
-    body: (data.body || 'Open Pic Rivals to see your latest battles.').replace(/Battle Picz/gi, 'Pic Rivals'),
+  event.waitUntil(self.registration.showNotification((data.title || 'Pic Rivals').replace(/battle[\s_-]*picz/gi, 'Pic Rivals'), {
+    body: (data.body || 'Open Pic Rivals to see your latest battles.').replace(/battle[\s_-]*picz/gi, 'Pic Rivals'),
     icon: '/assets/app-icon-192.png', badge: '/assets/app-icon-192.png',
-    tag: data.tag || 'battle-picz', data: { url: data.url || '/' }
+    tag: data.tag || 'pic-rivals', data: { url: data.url || '/' }
   }));
 });
 self.addEventListener('notificationclick', event => {
@@ -15,6 +15,10 @@ self.addEventListener('notificationclick', event => {
   let url;
   try { url = new URL(event.notification.data?.url || '/', self.location.origin); }
   catch { url = new URL('/', self.location.origin); }
+  // Keep older push links on the installation that received them.
+  if (['https://battle-picz-game.vercel.app', 'https://pic-rivals.vercel.app'].includes(url.origin)) {
+    url = new URL(self.location.origin + url.pathname + url.search + url.hash);
+  }
   if (url.origin !== self.location.origin) url = new URL('/', self.location.origin);
   event.waitUntil((async () => {
     // Preserve the tap across iOS Home Screen launches that ignore openWindow's URL.
