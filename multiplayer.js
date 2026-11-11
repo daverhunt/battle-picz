@@ -55,13 +55,15 @@
           if (url.searchParams.has(key)) destination.set(key, url.searchParams.get(key));
         }
       }
+      const invite = this.inviteCodeFromLocation();
+      if (invite) destination.set('challenge', invite);
       url.search = destination.toString();
       url.hash = '';
       return url.toString();
     }
 
     savePendingAuth(value) {
-      this.storage?.setItem(AUTH_PENDING_KEY, JSON.stringify({ ...value, startedAt: this.now() }));
+      this.storage?.setItem(AUTH_PENDING_KEY, JSON.stringify({ ...value, inviteCode: this.inviteCodeFromLocation() || undefined, startedAt: this.now() }));
     }
 
     readPendingAuth() {
@@ -580,7 +582,7 @@
     buildShareUrl(inviteCode) {
       const origin = this.location?.origin || '';
       const pathname = this.location?.pathname || '/';
-      const url = new URL(pathname, origin || 'https://battle-picz-game.vercel.app');
+      const url = new URL(pathname, origin === 'https://battle-picz-game.vercel.app' || !origin ? 'https://pic-rivals.vercel.app' : origin);
       url.searchParams.set('challenge', BattlePiczBackend.normaliseInviteCode(inviteCode));
       return url.toString();
     }

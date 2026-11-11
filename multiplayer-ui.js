@@ -383,7 +383,7 @@
     if (item.action === 'accept') return 'NEW CHALLENGE';
     if (item.action === 'choose') return `CHOOSE ROUND ${item.currentRound}`;
     if (item.action === 'play') return 'READY TO PLAY';
-    if (!item.opponent) return 'INVITE SENT';
+    if (!item.opponent) return 'AWAITING FRIEND';
     return 'WAITING FOR THEIR TURN';
   }
 
@@ -401,7 +401,7 @@
     const avatar = opponentAvatar(item);
     const resultClass = item.bucket === 'completed' && !item.resultRound ? ` result-${item.result}` : '';
     const inviteAction = !item.opponent && item.match.invite_code
-      ? `<button class="match-card-link" data-action="share" data-id="${item.id}">COPY INVITE</button>` : '';
+      ? `<button class="match-card-link" data-action="share" data-id="${item.id}">SHARE INVITE</button>` : '';
     const rematchAction = item.bucket === 'completed'
       ? `<button class="match-card-link" data-action="rematch" data-id="${item.id}">REMATCH</button>` : '';
     const nudgeAction = item.bucket === 'waiting' && item.canNudge
@@ -536,16 +536,23 @@
     trigger.hidden = false;
   }
 
-  async function copyText(text, success = 'Invite link copied') {
+  async function shareChallenge(url) {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Pic Rivals', text: 'Can you beat my score on Pic Rivals?', url });
+        return;
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+      }
+    }
     try {
-      await navigator.clipboard.writeText(text);
-      state.hidden = false;
-      state.className = 'matches-state success';
-      state.textContent = success;
+      await navigator.clipboard.writeText(url);
+      window.alert('Invite link copied. Paste it into a chat to challenge your friend.');
     } catch {
-      window.prompt('Copy this challenge link:', text);
+      window.prompt('Copy your Pic Rivals invite link:', url);
     }
   }
+  window.sharePicRivalsChallenge = code => shareChallenge(backend.buildShareUrl(code));
 
   trigger.onclick = () => open();
   // Only claim a downward gesture that began at the top of the games list.
@@ -685,7 +692,7 @@
     const item = matches.find(candidate => candidate.id === button.dataset.id);
     if (!item) return;
     const action = button.dataset.action;
-    if (action === 'share') return copyText(shareUrl(item));
+    if (action === 'share') return shareChallenge(shareUrl(item));
     if (action === 'play' || action === 'choose' || action === 'result') return location.assign(matchUrl(item));
     setBusy(true, action === 'rematch' ? 'Creating rematch…' : 'Accepting challenge…');
     try {
@@ -714,12 +721,12 @@
     }
   };
 
-  const inviteCode = backend.inviteCodeFromLocation();
+  let inviteCode = backend.inviteCodeFromLocation();
   function prepareInvite() {
     panel.classList.add('show');
     trigger.hidden = true;
     inviteBanner.hidden = false;
-    inviteCodeLabel.textContent = inviteCode;
+    inviteCodeLabel.textContent = 'Accept to play your round.';
     joinButton.onclick = async () => {
       setBusy(true, 'Joining challenge…');
       try {
@@ -851,7 +858,9 @@
     let authResult = null;
     let authError = null;
     try {
+      const pendingInvite = backend.readPendingAuth?.()?.inviteCode;
       authResult = await backend.completeAuthRedirect();
+      if (authResult?.user && !inviteCode) inviteCode = pendingInvite;
       if (authResult?.user) localStorage.setItem(ONBOARDING_KEY, 'linked');
     } catch (error) {
       authError = error;

@@ -997,6 +997,7 @@
         </div>
       </div>
       <div class="result-actions" id="resultActions">
+        <button class="next-round" id="shareChallenge" hidden>SHARE INVITE</button>
         <button class="next-round" id="nextRound">PLAY AGAIN</button
         ><button class="lobby-button" id="lobbyButton">LOBBY</button>
       </div>
@@ -1698,8 +1699,12 @@
         next.textContent = MATCH_ID
           ? "PLAY ROUND " + action.roundNo
           : "PLAY AGAIN";
+        const share = $("shareChallenge");
+        const inviteCode = MATCH_ID && !context?.opponent && context?.match?.invite_code;
+        share.hidden = !inviteCode;
+        share.onclick = inviteCode ? () => window.sharePicRivalsChallenge(inviteCode) : null;
         lobby.hidden = false;
-        actions.style.gridTemplateColumns = showNext ? "1fr 1fr" : "1fr";
+        actions.style.gridTemplateColumns = inviteCode || showNext ? "1fr 1fr" : "1fr";
         actions.classList.add("show");
         actions.style.visibility = "visible";
       }
