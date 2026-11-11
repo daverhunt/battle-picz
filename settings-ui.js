@@ -254,15 +254,9 @@
   };
 
   window.addEventListener('battle-picz:auth-linked', async event => {
+    if (!event.detail?.error) return;
     await openSettings();
     const status = screen.querySelector('.settings-provider-status');
-    if (event.detail?.error) {
-      status.textContent = event.detail.error;
-      return;
-    }
-    const label = event.detail?.provider === 'google' ? 'Google' : event.detail?.provider === 'email' ? 'Email' : 'Account';
-    status.textContent = event.detail?.linked
-      ? `${label} connected. Your games, coins and XP are secured.`
-      : `Signed in with ${label}. Your player has been restored.`;
+    status.textContent = event.detail.error;
   });
 })();

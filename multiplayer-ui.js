@@ -837,6 +837,17 @@
   }
 
   async function bootstrap() {
+    // Auth may fall back to the original production domain. Return the fragment
+    // to the branded app before consuming it or starting a guest session here.
+    const callback = new URLSearchParams((location.hash || '').slice(1));
+    const isAuthReturn = ['access_token', 'error', 'error_description'].some(key => callback.has(key));
+    if (location.origin === 'https://battle-picz-game.vercel.app' && isAuthReturn) {
+      const pending = backend.readPendingAuth();
+      if (!pending || Date.now() - pending.startedAt > 60 * 60 * 1000) {
+        location.replace('https://pic-rivals.vercel.app/' + location.search + location.hash);
+        return;
+      }
+    }
     let authResult = null;
     let authError = null;
     try {
