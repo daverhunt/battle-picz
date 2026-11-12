@@ -380,3 +380,111 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   #game .category-chooser{padding-top:17px}
   #game .category-chooser .category-options .category-card{min-height:48px;padding:6px 4px}
 }
+
+/* Approved category design: same restrained cream/blue/orange language as lobby.
+   Both actions have IDENTICAL fixed dimensions and right alignment. */
+#game .category-chooser{
+  display:flex;flex-direction:column;align-items:stretch;
+  background:var(--cream);
+  padding:24px 17px 20px;
+}
+#game .category-chooser.hidden{display:none}
+#game .category-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:96px;gap:12px;margin-bottom:13px;
+}
+#game .category-logo{
+  display:flex;flex-direction:column;flex:none;
+  font:900 30px/.9 var(--round);letter-spacing:-.8px;
+  text-align:left;transform:rotate(-4deg);
+}
+#game .category-logo span:first-child{
+  color:#169ded;text-shadow:0 2px #0874b5,0 -1px #b6ecff;
+}
+#game .category-logo span:last-child{
+  color:#ff7b16;text-shadow:0 2px #c54c00,0 -1px #ffe3a1;
+}
+#game .category-topbalance{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  min-height:43px;padding:0 12px;
+  border:1px solid #eee9dd;border-radius:17px;
+  background:linear-gradient(#fffdf7,#f0ede3);
+  box-shadow:0 3px 4px #4c443025;
+  font:700 12px var(--round);color:var(--ink);white-space:nowrap;
+}
+.matches-header .matches-balance{
+  display:flex;align-items:center;gap:7px;
+}
+.matches-header .matches-balance .gold-coin,
+#game .category-topbalance .gold-coin{width:20px;height:20px}
+#game .category-chooser h2{
+  box-sizing:border-box;width:100%;
+  min-height:61px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 0 17px;padding:12px 15px;
+  border:1px solid #cce4f5;border-radius:17px;
+  background:var(--pale);
+  box-shadow:0 3px 3px #235b7e18;
+  font:900 20px/1.25 var(--round);
+  letter-spacing:0;text-align:center;color:var(--ink);
+}
+#game .category-chooser>p{display:none}
+#game .category-chooser .category-options{
+  display:grid;grid-template-columns:minmax(0,1fr);
+  width:100%;max-width:none;
+  gap:9px;padding:0 0 18px;margin:0;
+}
+#game .category-chooser .category-status[hidden]{display:none!important}
+#game .category-chooser .category-status:not([hidden]){
+  justify-self:stretch;width:100%;box-sizing:border-box;
+}
+#game .category-chooser .category-options .category-card{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;min-height:69px;
+  padding:10px 11px 10px 15px;
+  gap:8px;border:1px solid #eee9dd!important;
+  border-radius:17px!important;
+  background:#fffdf7!important;
+  box-shadow:0 3px 8px #554a3220!important;
+}
+#game .category-chooser .category-options .category-card:first-of-type{
+  border-top:1px solid #eee9dd;
+}
+#game .category-chooser .category-card strong{
+  font:700 15px/1.18 var(--round);
+  color:var(--ink);text-align:left;
+}
+#game .category-chooser .category-card .category-card-badge,
+#game .category-chooser .category-card.is-locked .category-card-badge{
+  box-sizing:border-box;
+  display:inline-flex;justify-content:center;align-items:center;
+  flex:0 0 112px;width:112px;min-width:112px;max-width:112px;
+  height:44px;min-height:44px;max-height:44px;
+  padding:0 6px;border-radius:12px;
+  white-space:nowrap;gap:3px;
+}
+#game .category-chooser .category-card:not(.is-locked) .category-card-badge{
+  border:1px solid #ffb756;
+  background:var(--orange);color:white;
+  box-shadow:inset 0 2px 1px #ffe9b98c,0 3px 0 #ce560b;
+  font:700 14px var(--round);text-shadow:0 1px #c24e00;
+}
+#game .category-chooser .category-card.is-locked .category-card-badge{
+  border:1px solid #e6e1d7;
+  background:#f0ede7;color:var(--ink);
+  box-shadow:0 3px 0 #ded8cc;
+  font:700 13px var(--round);
+}
+#game .category-chooser .category-card.is-locked strong{color:var(--ink)}
+#game .category-chooser .category-card .gold-coin{
+  width:16px;height:16px;margin-left:2px;
+}
+#game .category-chooser .category-card:disabled{opacity:.55}
+@media(max-width:355px){
+  #game .category-chooser{padding-left:12px;padding-right:12px}
+  #game .category-chooser .category-card strong{font-size:13px}
+  #game .category-chooser .category-card .category-card-badge,
+  #game .category-chooser .category-card.is-locked .category-card-badge{
+    flex-basis:104px;width:104px;min-width:104px;max-width:104px;
+  }
+}
