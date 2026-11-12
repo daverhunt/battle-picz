@@ -505,11 +505,12 @@
         !('Notification' in window) || Notification.permission !== 'default' ||
         push.enabled) return;
     const key = ALERT_PROMPT_PREFIX + userId;
-    if (localStorage.getItem(key)) return;
     const requiresInstall = /iPad|iPhone|iPod/.test(navigator.userAgent) &&
       !((window.matchMedia?.('(display-mode: standalone)').matches) || navigator.standalone === true);
-    // Only show once per player and browser: don't nag on every visit.
-    localStorage.setItem(key, 'seen');
+    const previousPrompt = localStorage.getItem(key);
+    if (previousPrompt === 'seen' || (previousPrompt === 'needs-install' && requiresInstall)) return;
+    // An install hint on Safari should not suppress the real opt-in after installation.
+    localStorage.setItem(key, requiresInstall ? 'needs-install' : 'seen');
     alertsPromptOpen = true;
     const dialog = document.createElement('div');
     dialog.className = 'pic-alert-intro';
