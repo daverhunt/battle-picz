@@ -106,6 +106,7 @@
   }
 
   function showWelcomeScreen(initialError = '') {
+    window.picRivalsRevealMatchScreen?.();
     trigger.hidden = true;
     const welcome = document.createElement('section');
     welcome.className = 'welcome-screen';
@@ -614,6 +615,7 @@
   function open(tab) {
     if (tab) activeTab = tab;
     panel.classList.add('show');
+    window.picRivalsRevealMatchScreen?.();
     trigger.hidden = true;
     loadMatches();
   }
@@ -959,6 +961,7 @@
       }
     } catch (error) {
       panel.classList.add('show');
+      window.picRivalsRevealMatchScreen?.();
       trigger.hidden = true;
       showError(error);
     }
