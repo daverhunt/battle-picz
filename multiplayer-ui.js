@@ -475,10 +475,26 @@
     if (!isPreview) window.picRivalsCelebrateCoins?.(panel.querySelector(".weekly-coins"), summary.coins);
   }
 
-  function maybeShowPreviousWeek() {
-    if (!previousWeek || (!previousWeek.matchesPlayed && !previousWeek.expired && !previousWeek.coins) || !weeklySummary.hidden) return;
-    const acknowledged = localStorage.getItem(`battle-picz.week-summary.${previousWeek.playerId}.${previousWeek.key}`);
-    if (!acknowledged) showWeeklySummary(previousWeek);
+  async function maybeShowPreviousWeek() {
+    const summary = previousWeek;
+    if (!summary || (!summary.matchesPlayed && !summary.expired && !summary.coins) || !weeklySummary.hidden) return;
+    const key = `battle-picz.week-summary.${summary.playerId}.${summary.key}`;
+    // Preserve acknowledgements already stored on this device, and sync them to the server.
+    if (localStorage.getItem(key)) {
+      backend.acknowledgeWeeklySummary(summary.key).catch(error =>
+        console.warn('Could not sync weekly summary acknowledgement', error));
+      return;
+    }
+    try {
+      if (await backend.hasAcknowledgedWeeklySummary(summary.key)) {
+        localStorage.setItem(key, 'shown');
+        return;
+      }
+      if (previousWeek?.key === summary.key && weeklySummary.hidden) showWeeklySummary(summary);
+    } catch (error) {
+      // Don't repeatedly interrupt the player if the server is unreachable.
+      console.warn('Weekly summary status unavailable', error);
+    }
   }
 
   function updateAlertsButton() {
@@ -683,12 +699,19 @@
       setBusy(false);
     }
   };
-  panel.querySelector('.weekly-continue').onclick = () => {
-    if (shownSummaryKey) {
-      localStorage.setItem(`battle-picz.week-summary.${shownSummaryKey}`, 'shown');
-    }
+  panel.querySelector('.weekly-continue').onclick = async () => {
+    const acknowledged = shownSummaryKey;
     weeklySummary.hidden = true;
     shownSummaryKey = '';
+    if (!acknowledged) return;
+    const key = `battle-picz.week-summary.${acknowledged}`;
+    localStorage.setItem(key, 'shown');
+    const weekStart = acknowledged.slice(-10);
+    try {
+      await backend.acknowledgeWeeklySummary(weekStart);
+    } catch (error) {
+      console.warn('Will retry syncing weekly summary acknowledgement', error);
+    }
   };
 
   panel.querySelector('.matches-new').onclick = async () => {
