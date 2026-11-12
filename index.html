@@ -980,6 +980,19 @@
   </head>
   <body>
     <div id="game">
+      <div id="matchLoading" hidden aria-live="polite" role="status" style="position:absolute;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:#faf7ee;color:#102650;font:700 17px Arial,sans-serif;">
+        <span style="color:#159be6;font:900 31px Arial,sans-serif;">PIC <span style="color:#ff7b16">RIVALS</span></span>
+        <span>Loading your battle…</span>
+      </div>
+      <script>
+        if (new URLSearchParams(location.search).has('matchId')) {
+          document.getElementById('matchLoading').hidden = false;
+        }
+        window.picRivalsRevealMatchScreen = () => {
+          const loading = document.getElementById('matchLoading');
+          if (loading) loading.hidden = true;
+        };
+      </script>
       <div class="category-chooser" id="categoryChooser">
         <div class="category-topbar">
           <span class="category-logo" aria-label="Pic Rivals"><span>PIC</span><span>RIVALS</span></span>
@@ -1829,6 +1842,7 @@
         $("categoryOptions").style.display = "grid";
         $("difficultyOptions").classList.add("hidden");
         $("categoryChooser").classList.remove("hidden");
+        window.picRivalsRevealMatchScreen?.();
         window.BattlePiczCategories.render($("categoryOptions"), chooseCategory);
       }
       function chooseCategory(cat) {
@@ -2237,6 +2251,7 @@
         intro = true;
         ended = true;
         showRoundSummary();
+        window.picRivalsRevealMatchScreen?.();
       };
       async function positionPicture() {
         let r = seededRandom(
@@ -2350,6 +2365,7 @@
         // Allow the grid and loaded picture (or emoji fallback) to paint first.
         await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         if (loadVersion !== pictureLoadVersion) return;
+        window.picRivalsRevealMatchScreen?.();
         $("msg").textContent = "REVEAL TILES THEN SPELL THE ANSWER · HOLD DEL TO CLEAR";
         start = performance.now() - Math.max(0, Number(saved?.elapsedMs) || 0);
         if (saved) {
