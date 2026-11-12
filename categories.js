@@ -15,13 +15,21 @@
       const data = signedIn ? await backend.rpc('list_categories') : {coins:0,categories:catalogue.map(([id,name,price])=>({id,name,price,owned:price===0,pictureCount:window.BATTLE_PICZ_QUESTIONS[id]?.length || 0}))};
       if (version !== rendering || !container.isConnected) return;
       container.replaceChildren(status);
-      status.textContent=`🪙 ${Number(data.coins).toLocaleString()} coins`;
+      status.innerHTML='';
+      const balanceCoin=document.createElement('span');balanceCoin.className='gold-coin';balanceCoin.setAttribute('aria-hidden','true');
+      status.append(balanceCoin,document.createTextNode(` ${Number(data.coins).toLocaleString()} coins`));
       for (const category of [...data.categories].sort((a,b) => Number(b.owned) - Number(a.owned))) {
         const ready = category.pictureCount >= 3;
         const button = document.createElement('button');button.type='button';button.className='category-card' + (category.owned ? '' : ' is-locked');
         const label=document.createElement('strong');label.textContent=category.name;
         const badge=document.createElement('span');badge.className='category-card-badge';
-        badge.textContent=!ready ? 'SOON' : category.owned ? '▶' : `🔒 ${category.price} 🪙`;
+        if (!ready) badge.textContent='SOON';
+        else if (category.owned) badge.textContent='▶';
+        else {
+          badge.textContent=`🔒 ${category.price} `;
+          const coin=document.createElement('span');coin.className='gold-coin';coin.setAttribute('aria-hidden','true');
+          badge.append(coin);
+        }
         badge.setAttribute('aria-hidden', 'true');
         button.setAttribute('aria-label', !ready ? `${category.name}, coming soon` : category.owned ? `Play ${category.name}` : `Unlock ${category.name} for ${category.price} coins`);
         button.append(label,badge);button.disabled=!ready;
