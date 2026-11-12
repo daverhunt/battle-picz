@@ -43,3 +43,18 @@
 .match-panel button:focus-visible{outline:3px solid #ef9f23;outline-offset:2px}
 .match-panel button:active:not(:disabled){transform:translateY(1px)}
 @media(max-width:350px){.matches-header{padding:14px 12px;gap:7px;grid-template-columns:34px minmax(0,1fr) 72px}.playroom-mark{width:32px;height:32px;font-size:27px}.matches-header h2{font-size:21px}.match-card{grid-template-columns:30px minmax(0,1fr) 55px;gap:7px}.match-card-avatar{width:29px;height:29px}.match-card-top{flex-wrap:wrap}.matches-header-actions{gap:3px}}
+
+/* First-login notification education, before the browser permission prompt. */
+.matches-footer{grid-template-columns:1fr 1fr}
+.matches-footer .matches-random{grid-column:1/-1;background:linear-gradient(#3cbde0,#137cae);font-size:12px}
+.pic-alert-intro{position:absolute;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(3,12,39,.85)}
+.pic-alert-intro-card{width:100%;max-width:340px;max-height:95%;overflow:auto;text-align:center;background:linear-gradient(155deg,#1b65ae,#0a326e);border:2px solid #ffb340;border-radius:20px;padding:25px 20px;box-shadow:0 18px 55px #0008;color:#fff;font-family:Arial,sans-serif}
+.pic-alert-intro-icon{display:block;font-size:45px;margin-bottom:7px}
+.pic-alert-intro-card h2{font-size:23px;margin:10px 0}
+.pic-alert-intro-card p{font-size:14px;line-height:1.55;margin:12px 0 22px}
+.pic-alert-intro-card .pic-alert-install-note{padding:10px;border-radius:9px;background:#ffffff18;font-size:12px}
+.pic-alert-intro-card .pic-alert-intro-status{color:#ffe1a2;font-size:12px}
+.pic-alert-intro-card button{width:100%;min-height:46px;border:0;border-radius:11px;font-weight:800;cursor:pointer}
+.pic-alert-intro-allow{background:#ffa62c;color:#192546;font-size:15px}
+.pic-alert-intro-later{background:transparent;color:#d5e7ff;font-size:12px;margin-top:8px}
+.pic-alert-intro-allow:disabled{opacity:.55}
