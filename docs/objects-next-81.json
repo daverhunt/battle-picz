@@ -1,0 +1,656 @@
+{
+  "category": "OBJECTS",
+  "batch": "remaining-81",
+  "total": 81,
+  "purpose": "Approved 10 November 2026 answer catalogue. This file does not activate image-less questions.",
+  "items": [
+    {
+      "group": "Kitchen",
+      "answer": "Grater",
+      "slug": "grater",
+      "id": "objects:grater",
+      "image": "assets/images/categories/objects/grater.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Colander",
+      "slug": "colander",
+      "id": "objects:colander",
+      "image": "assets/images/categories/objects/colander.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Sieve",
+      "slug": "sieve",
+      "id": "objects:sieve",
+      "image": "assets/images/categories/objects/sieve.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Ladle",
+      "slug": "ladle",
+      "id": "objects:ladle",
+      "image": "assets/images/categories/objects/ladle.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Tongs",
+      "slug": "tongs",
+      "id": "objects:tongs",
+      "image": "assets/images/categories/objects/tongs.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Peeler",
+      "slug": "peeler",
+      "id": "objects:peeler",
+      "image": "assets/images/categories/objects/peeler.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Funnel",
+      "slug": "funnel",
+      "id": "objects:funnel",
+      "image": "assets/images/categories/objects/funnel.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Rolling pin",
+      "slug": "rolling-pin",
+      "id": "objects:rolling-pin",
+      "image": "assets/images/categories/objects/rolling-pin.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Corkscrew",
+      "slug": "corkscrew",
+      "id": "objects:corkscrew",
+      "image": "assets/images/categories/objects/corkscrew.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Teapot",
+      "slug": "teapot",
+      "id": "objects:teapot",
+      "image": "assets/images/categories/objects/teapot.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Mug",
+      "slug": "mug",
+      "id": "objects:mug",
+      "image": "assets/images/categories/objects/mug.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Jug",
+      "slug": "jug",
+      "id": "objects:jug",
+      "image": "assets/images/categories/objects/jug.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Bowl",
+      "slug": "bowl",
+      "id": "objects:bowl",
+      "image": "assets/images/categories/objects/bowl.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Plate",
+      "slug": "plate",
+      "id": "objects:plate",
+      "image": "assets/images/categories/objects/plate.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Kitchen",
+      "answer": "Egg cup",
+      "slug": "egg-cup",
+      "id": "objects:egg-cup",
+      "image": "assets/images/categories/objects/egg-cup.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Chair",
+      "slug": "chair",
+      "id": "objects:chair",
+      "image": "assets/images/categories/objects/chair.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Sofa",
+      "slug": "sofa",
+      "id": "objects:sofa",
+      "image": "assets/images/categories/objects/sofa.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Stool",
+      "slug": "stool",
+      "id": "objects:stool",
+      "image": "assets/images/categories/objects/stool.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Bed",
+      "slug": "bed",
+      "id": "objects:bed",
+      "image": "assets/images/categories/objects/bed.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Pillow",
+      "slug": "pillow",
+      "id": "objects:pillow",
+      "image": "assets/images/categories/objects/pillow.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Lamp",
+      "slug": "lamp",
+      "id": "objects:lamp",
+      "image": "assets/images/categories/objects/lamp.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Mirror",
+      "slug": "mirror",
+      "id": "objects:mirror",
+      "image": "assets/images/categories/objects/mirror.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Vase",
+      "slug": "vase",
+      "id": "objects:vase",
+      "image": "assets/images/categories/objects/vase.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Rug",
+      "slug": "rug",
+      "id": "objects:rug",
+      "image": "assets/images/categories/objects/rug.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Curtain",
+      "slug": "curtain",
+      "id": "objects:curtain",
+      "image": "assets/images/categories/objects/curtain.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Cushion",
+      "slug": "cushion",
+      "id": "objects:cushion",
+      "image": "assets/images/categories/objects/cushion.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Hanger",
+      "slug": "hanger",
+      "id": "objects:hanger",
+      "image": "assets/images/categories/objects/hanger.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Around the home",
+      "answer": "Doormat",
+      "slug": "doormat",
+      "id": "objects:doormat",
+      "image": "assets/images/categories/objects/doormat.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Broom",
+      "slug": "broom",
+      "id": "objects:broom",
+      "image": "assets/images/categories/objects/broom.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Mop",
+      "slug": "mop",
+      "id": "objects:mop",
+      "image": "assets/images/categories/objects/mop.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Bucket",
+      "slug": "bucket",
+      "id": "objects:bucket",
+      "image": "assets/images/categories/objects/bucket.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Dustpan",
+      "slug": "dustpan",
+      "id": "objects:dustpan",
+      "image": "assets/images/categories/objects/dustpan.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Sponge",
+      "slug": "sponge",
+      "id": "objects:sponge",
+      "image": "assets/images/categories/objects/sponge.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Iron",
+      "slug": "iron",
+      "id": "objects:iron",
+      "image": "assets/images/categories/objects/iron.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Peg",
+      "slug": "peg",
+      "id": "objects:peg",
+      "image": "assets/images/categories/objects/peg.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Plunger",
+      "slug": "plunger",
+      "id": "objects:plunger",
+      "image": "assets/images/categories/objects/plunger.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Duster",
+      "slug": "duster",
+      "id": "objects:duster",
+      "image": "assets/images/categories/objects/duster.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Cleaning and laundry",
+      "answer": "Washing machine",
+      "slug": "washing-machine",
+      "id": "objects:washing-machine",
+      "image": "assets/images/categories/objects/washing-machine.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Pen",
+      "slug": "pen",
+      "id": "objects:pen",
+      "image": "assets/images/categories/objects/pen.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Crayon",
+      "slug": "crayon",
+      "id": "objects:crayon",
+      "image": "assets/images/categories/objects/crayon.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Ruler",
+      "slug": "ruler",
+      "id": "objects:ruler",
+      "image": "assets/images/categories/objects/ruler.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Sharpener",
+      "slug": "sharpener",
+      "id": "objects:sharpener",
+      "image": "assets/images/categories/objects/sharpener.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Envelope",
+      "slug": "envelope",
+      "id": "objects:envelope",
+      "image": "assets/images/categories/objects/envelope.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Stamp",
+      "slug": "stamp",
+      "id": "objects:stamp",
+      "image": "assets/images/categories/objects/stamp.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Clipboard",
+      "slug": "clipboard",
+      "id": "objects:clipboard",
+      "image": "assets/images/categories/objects/clipboard.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Calculator",
+      "slug": "calculator",
+      "id": "objects:calculator",
+      "image": "assets/images/categories/objects/calculator.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Calendar",
+      "slug": "calendar",
+      "id": "objects:calendar",
+      "image": "assets/images/categories/objects/calendar.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Paintbrush",
+      "slug": "paintbrush",
+      "id": "objects:paintbrush",
+      "image": "assets/images/categories/objects/paintbrush.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Glue stick",
+      "slug": "glue-stick",
+      "id": "objects:glue-stick",
+      "image": "assets/images/categories/objects/glue-stick.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Desk and school",
+      "answer": "Rubber band",
+      "slug": "rubber-band",
+      "id": "objects:rubber-band",
+      "image": "assets/images/categories/objects/rubber-band.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Soap",
+      "slug": "soap",
+      "id": "objects:soap",
+      "image": "assets/images/categories/objects/soap.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Towel",
+      "slug": "towel",
+      "id": "objects:towel",
+      "image": "assets/images/categories/objects/towel.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Razor",
+      "slug": "razor",
+      "id": "objects:razor",
+      "image": "assets/images/categories/objects/razor.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Tweezers",
+      "slug": "tweezers",
+      "id": "objects:tweezers",
+      "image": "assets/images/categories/objects/tweezers.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Hairdryer",
+      "slug": "hairdryer",
+      "id": "objects:hairdryer",
+      "image": "assets/images/categories/objects/hairdryer.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Toothpaste",
+      "slug": "toothpaste",
+      "id": "objects:toothpaste",
+      "image": "assets/images/categories/objects/toothpaste.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Toilet roll",
+      "slug": "toilet-roll",
+      "id": "objects:toilet-roll",
+      "image": "assets/images/categories/objects/toilet-roll.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Bathroom",
+      "answer": "Nail clippers",
+      "slug": "nail-clippers",
+      "id": "objects:nail-clippers",
+      "image": "assets/images/categories/objects/nail-clippers.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Keyboard",
+      "slug": "keyboard",
+      "id": "objects:keyboard",
+      "image": "assets/images/categories/objects/keyboard.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Mouse",
+      "slug": "mouse",
+      "id": "objects:mouse",
+      "image": "assets/images/categories/objects/mouse.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Laptop",
+      "slug": "laptop",
+      "id": "objects:laptop",
+      "image": "assets/images/categories/objects/laptop.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Tablet",
+      "slug": "tablet",
+      "id": "objects:tablet",
+      "image": "assets/images/categories/objects/tablet.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Camera",
+      "slug": "camera",
+      "id": "objects:camera",
+      "image": "assets/images/categories/objects/camera.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Headphones",
+      "slug": "headphones",
+      "id": "objects:headphones",
+      "image": "assets/images/categories/objects/headphones.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Radio",
+      "slug": "radio",
+      "id": "objects:radio",
+      "image": "assets/images/categories/objects/radio.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Electronics",
+      "answer": "Microphone",
+      "slug": "microphone",
+      "id": "objects:microphone",
+      "image": "assets/images/categories/objects/microphone.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Dice",
+      "slug": "dice",
+      "id": "objects:dice",
+      "image": "assets/images/categories/objects/dice.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Domino",
+      "slug": "domino",
+      "id": "objects:domino",
+      "image": "assets/images/categories/objects/domino.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Kite",
+      "slug": "kite",
+      "id": "objects:kite",
+      "image": "assets/images/categories/objects/kite.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Yo-yo",
+      "slug": "yo-yo",
+      "id": "objects:yo-yo",
+      "image": "assets/images/categories/objects/yo-yo.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Teddy bear",
+      "slug": "teddy-bear",
+      "id": "objects:teddy-bear",
+      "image": "assets/images/categories/objects/teddy-bear.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Balloon",
+      "slug": "balloon",
+      "id": "objects:balloon",
+      "image": "assets/images/categories/objects/balloon.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Spinning top",
+      "slug": "spinning-top",
+      "id": "objects:spinning-top",
+      "image": "assets/images/categories/objects/spinning-top.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Toys and games",
+      "answer": "Jigsaw",
+      "slug": "jigsaw",
+      "id": "objects:jigsaw",
+      "image": "assets/images/categories/objects/jigsaw.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Binoculars",
+      "slug": "binoculars",
+      "id": "objects:binoculars",
+      "image": "assets/images/categories/objects/binoculars.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Compass",
+      "slug": "compass",
+      "id": "objects:compass",
+      "image": "assets/images/categories/objects/compass.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Tent",
+      "slug": "tent",
+      "id": "objects:tent",
+      "image": "assets/images/categories/objects/tent.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Hammock",
+      "slug": "hammock",
+      "id": "objects:hammock",
+      "image": "assets/images/categories/objects/hammock.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Picnic basket",
+      "slug": "picnic-basket",
+      "id": "objects:picnic-basket",
+      "image": "assets/images/categories/objects/picnic-basket.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Watering can",
+      "slug": "watering-can",
+      "id": "objects:watering-can",
+      "image": "assets/images/categories/objects/watering-can.webp",
+      "status": "needs-photo-review"
+    },
+    {
+      "group": "Out and about",
+      "answer": "Plant pot",
+      "slug": "plant-pot",
+      "id": "objects:plant-pot",
+      "image": "assets/images/categories/objects/plant-pot.webp",
+      "status": "needs-photo-review"
+    }
+  ]
+}
