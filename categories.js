@@ -25,7 +25,7 @@
         const label=document.createElement('strong');label.textContent=category.name;
         const badge=document.createElement('span');badge.className='category-card-badge';
         if (!ready) badge.textContent='SOON';
-        else if (category.owned) badge.textContent='▶';
+        else if (category.owned) badge.textContent='PLAY';
         else {
           badge.textContent=`🔒 ${category.price} `;
           const coin=document.createElement('span');coin.className='gold-coin';coin.setAttribute('aria-hidden','true');
