@@ -302,6 +302,14 @@
       return { ...challenge, share_url: this.buildShareUrl(challenge.invite_code) };
     }
 
+    async findRandomChallenge() {
+      const rows = await this.rpc('find_random_challenge');
+      const result = Array.isArray(rows) ? rows[0] : rows;
+      if (!result?.match_id) throw new Error('Unable to find or create a random match');
+      this.storage?.setItem(MATCH_KEY, result.match_id);
+      return result;
+    }
+
     async joinChallenge(inviteCode) {
       const code = BattlePiczBackend.normaliseInviteCode(inviteCode);
       if (!code) throw new Error('Enter a valid six-character challenge code');
