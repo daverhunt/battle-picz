@@ -53,10 +53,19 @@
     <div class="matches-pull" role="status" aria-live="polite"></div>
     <div class="matches-list" tabindex="0" aria-label="Games. Pull down and release to refresh, or press R." aria-keyshortcuts="R"></div>
     <footer class="matches-footer">
-      <button class="matches-new">+ CHALLENGE A FRIEND</button>
-      <button class="matches-random">🎲 RANDOM OPPONENT</button>
-      <button class="matches-code">ENTER CODE</button>
+      <button class="matches-start" type="button" aria-haspopup="dialog" aria-controls="start-game-menu">▶ START GAME</button>
     </footer>
+    <div id="start-game-menu" class="start-game-menu" hidden>
+      <section class="start-game-card" role="dialog" aria-modal="true" aria-labelledby="start-game-title">
+        <button class="start-game-close" type="button" aria-label="Close">×</button>
+        <div class="start-game-symbol" aria-hidden="true">🎮</div>
+        <h2 id="start-game-title">START A GAME</h2>
+        <p>Who are you playing?</p>
+        <button class="matches-new" type="button"><span aria-hidden="true">👥</span><span><strong>CHALLENGE A FRIEND</strong><small>Invite someone with a link</small></span><b aria-hidden="true">›</b></button>
+        <button class="matches-random" type="button"><span aria-hidden="true">🎲</span><span><strong>RANDOM OPPONENT</strong><small>Find someone new to play</small></span><b aria-hidden="true">›</b></button>
+        <button class="matches-code" type="button"><span aria-hidden="true">⌗</span><span><strong>ENTER CODE</strong><small>Join a friend's challenge</small></span><b aria-hidden="true">›</b></button>
+      </section>
+    </div>
     <div class="weekly-summary" hidden>
       <section class="weekly-summary-card" role="dialog" aria-modal="true" aria-labelledby="weekly-summary-title">
         <span class="weekly-cup">🏆</span>
@@ -748,6 +757,24 @@
     }
   };
 
+  const startGameMenu = panel.querySelector('.start-game-menu');
+  const closeStartGameMenu = () => {
+    startGameMenu.hidden = true;
+    panel.querySelector('.matches-start').focus({ preventScroll: true });
+  };
+  panel.querySelector('.matches-start').onclick = () => {
+    if (busy) return;
+    startGameMenu.hidden = false;
+    startGameMenu.querySelector('.matches-new').focus({ preventScroll: true });
+  };
+  startGameMenu.querySelector('.start-game-close').onclick = closeStartGameMenu;
+  startGameMenu.addEventListener('click', event => {
+    if (event.target === startGameMenu) closeStartGameMenu();
+  });
+  startGameMenu.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeStartGameMenu();
+  });
+
   panel.querySelector('.matches-new').onclick = async () => {
     if (busy) return;
     setBusy(true, 'Creating your challenge…');
@@ -779,6 +806,7 @@
   panel.querySelector('.matches-code').onclick = async () => {
     const code = window.prompt('Enter the six-character challenge code:');
     if (code == null) return;
+    startGameMenu.hidden = true;
     setBusy(true, 'Joining challenge…');
     try {
       const match = await backend.joinChallenge(code);
