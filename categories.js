@@ -4,6 +4,11 @@
     ['SPORT','Sport',20],['LANDMARKS','Famous Landmarks',30],['MUSIC','Musical Instruments',20],['PLANTS','Plants & Flowers',20],
     ['TOOLS','Tools & DIY',20],['JOBS','Jobs & Professions',25],['SPACE','Space',30],['CLOTHING','Clothing & Accessories',20]
   ];
+  const categoryIcons = {
+    ANIMALS:'🐾', FOOD:'🍕', OBJECTS:'🧩', TRANSPORT:'🚗',
+    SPORT:'⚽', LANDMARKS:'🏛️', MUSIC:'🎸', PLANTS:'🌸',
+    TOOLS:'🛠️', JOBS:'👩‍🚀', SPACE:'🪐', CLOTHING:'👕'
+  };
   let rendering = 0;
   async function render(container, onChoose) {
     const version = ++rendering;
@@ -15,14 +20,19 @@
       const data = signedIn ? await backend.rpc('list_categories') : {coins:0,categories:catalogue.map(([id,name,price])=>({id,name,price,owned:price===0,pictureCount:window.BATTLE_PICZ_QUESTIONS[id]?.length || 0}))};
       if (version !== rendering || !container.isConnected) return;
       container.replaceChildren(status);
-      status.textContent=`${Number(data.coins).toLocaleString()} coins · Unlocks are permanent`;
+      status.textContent=`🪙 ${Number(data.coins).toLocaleString()} coins available · Unlocks are yours to keep`;
       for (const category of [...data.categories].sort((a,b) => Number(b.owned) - Number(a.owned))) {
         const ready = category.pictureCount >= 3;
         const button = document.createElement('button');button.type='button';button.className='category-card' + (category.owned ? '' : ' is-locked');
+        const icon=document.createElement('span');icon.className='category-icon';icon.textContent=categoryIcons[category.id] || '🧩';
+        const content=document.createElement('span');content.className='category-card-content';
         const label=document.createElement('strong');label.textContent=category.name;
         const detail=document.createElement('small');
-        detail.textContent=!ready ? 'Coming soon' : category.owned ? `${category.price===0?'FREE':'UNLOCKED'} · ${category.pictureCount} pictures` : `🔒 ${category.price} coins · ${category.pictureCount} pictures`;
-        button.append(label,detail);button.disabled=!ready;
+        detail.textContent=!ready ? 'Coming soon' : category.owned ? `${category.pictureCount} picture puzzles · ${category.price===0?'Free to play':'Unlocked'}` : `${category.pictureCount} picture puzzles · Permanent unlock`;
+        content.append(label,detail);
+        const badge=document.createElement('span');badge.className='category-card-badge';
+        badge.textContent=!ready ? 'SOON' : category.owned ? 'PLAY ›' : `🔒 ${category.price} 🪙`;
+        button.append(icon,content,badge);button.disabled=!ready;
         button.dataset.category=category.id;
         button.onclick=async()=>{
           if(category.owned){ if(onChoose)onChoose(category.id);return; }
