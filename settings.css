@@ -7,3 +7,7 @@
   border-radius: 10px; color: #17445b; background: #eaf7fc;
   font: inherit; font-weight: 700; cursor: pointer;
 }
+
+.settings-logout{display:block;width:calc(100% - 20px);margin:18px 10px 4px;padding:14px;border:1px solid #e7adad;border-radius:12px;background:#fff4f4;color:#b12c37;font:800 13px Arial;cursor:pointer}
+.settings-logout:disabled{opacity:.55}
+.settings-logout-status{min-height:14px;margin:5px 12px;text-align:center;color:#b12c37;font:12px Arial}
