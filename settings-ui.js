@@ -63,6 +63,8 @@
         </div>
       </section>
       <button type="button" class="settings-row settings-test-push">Send test alert</button>
+      <button type="button" class="settings-logout">↪ LOG OUT</button>
+      <p class="settings-logout-status" role="status" aria-live="polite"></p>
       <p class="settings-version">PIC RIVALS · TEST BUILD</p>
     </div>
     <div class="settings-modal" hidden>
@@ -153,6 +155,37 @@
       screen.querySelector('.settings-account-status').textContent = error?.message || 'Could not load profile';
     }
   }
+
+  const logoutButton = screen.querySelector('.settings-logout');
+  logoutButton.onclick = async () => {
+    const session = backend.readSession();
+    const user = session?.user || {};
+    const providers = (user.identities || []).map(identity => identity.provider);
+    const linked = Boolean(user.email_confirmed_at) || providers.some(provider => provider !== 'anonymous');
+    const message = linked
+      ? 'Log out of Pic Rivals on this device? Your account, matches, coins and XP will be saved. Sign in again to restore them.'
+      : 'Log out of your guest player? Guest progress may be inaccessible afterwards unless you linked a sign-in. Consider linking Google first. Continue anyway?';
+    if (!window.confirm(message)) return;
+    logoutButton.disabled = true;
+    const status = screen.querySelector('.settings-logout-status');
+    status.textContent = 'Logging out…';
+    try {
+      // Unregister this device's alerts for the outgoing account, if possible.
+      if (window.BattlePiczPush?.enabled) {
+        try { await window.BattlePiczPush.disable(); }
+        catch (error) { console.warn('Could not remove push subscription before logout', error); }
+      }
+      await backend.signOut();
+      // Display the welcome/login screen instead of silently creating a guest.
+      localStorage.removeItem('battle-picz.onboarding-complete');
+      sessionStorage.removeItem('battle-picz.pending-share-url');
+      sessionStorage.removeItem('battle-picz.pending-share-code');
+      location.replace(new URL('/', location.origin).toString());
+    } catch (error) {
+      status.textContent = error?.message || 'Could not log out. Please try again.';
+      logoutButton.disabled = false;
+    }
+  };
 
   settingsButton.onclick = openSettings;
   screen.querySelector('.settings-back').onclick = () => { screen.hidden = true; };
