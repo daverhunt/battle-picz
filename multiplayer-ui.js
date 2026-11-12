@@ -54,6 +54,7 @@
     <div class="matches-list" tabindex="0" aria-label="Games. Pull down and release to refresh, or press R." aria-keyshortcuts="R"></div>
     <footer class="matches-footer">
       <button class="matches-new">+ CHALLENGE A FRIEND</button>
+      <button class="matches-random">🎲 RANDOM OPPONENT</button>
       <button class="matches-code">ENTER CODE</button>
       <button class="matches-alerts">🔔 ALERTS</button>
     </footer>
@@ -553,6 +554,39 @@
     }
   }
   window.sharePicRivalsChallenge = code => shareChallenge(backend.buildShareUrl(code));
+  // Show once after the challenger's first completed round; sharing requires a user tap.
+  window.showPicRivalsInvitePopup = (context, onClose) => {
+    const match = context?.match || {};
+    const code = match.invite_code || sessionStorage.getItem('battle-picz.pending-share-code');
+    if (match.mode !== 'challenge' || match.status !== 'waiting' ||
+        !code || context?.opponent || context?.currentRound !== 1) return false;
+    const key = 'pic-rivals.share-prompt.' + match.id;
+    if (sessionStorage.getItem(key)) return false;
+    sessionStorage.setItem(key, 'shown');
+    const overlay = document.createElement('div');
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Invite your friend');
+    Object.assign(overlay.style, {position:'absolute',inset:'0',zIndex:'9999',display:'grid',
+      placeItems:'center',background:'rgba(4,12,44,.84)',padding:'22px'});
+    overlay.innerHTML = '<div style="width:100%;max-width:340px;border:2px solid #ff9b26;border-radius:20px;background:#103a83;color:white;padding:26px 20px;text-align:center;box-shadow:0 18px 60px #0008">' +
+      '<div style="font-size:44px">🏆</div><h2 style="margin:10px 0">Round 1 complete!</h2>' +
+      '<p style="line-height:1.5">Now challenge a friend to beat your score.</p>' +
+      '<button data-invite-share style="width:100%;padding:15px;border:0;border-radius:12px;background:#ff9419;color:#192047;font-weight:900;font-size:17px">SHARE CHALLENGE</button>' +
+      '<button data-invite-copy style="width:100%;margin-top:10px;padding:12px;border:1px solid #a4cfff;border-radius:12px;background:transparent;color:white;font-weight:700">COPY LINK</button>' +
+      '<button data-invite-later style="margin-top:14px;padding:9px;border:0;background:transparent;color:#c9dcff">NOT NOW</button></div>';
+    const dismiss = () => {overlay.remove(); onClose?.();};
+    overlay.querySelector('[data-invite-share]').onclick = () => shareChallenge(backend.buildShareUrl(code));
+    overlay.querySelector('[data-invite-copy]').onclick = async () => {
+      const url = backend.buildShareUrl(code);
+      try {await navigator.clipboard.writeText(url); overlay.querySelector('[data-invite-copy]').textContent='✓ LINK COPIED';}
+      catch {window.prompt('Copy invite link:',url);}
+    };
+    overlay.querySelector('[data-invite-later]').onclick = dismiss;
+    game.appendChild(overlay);
+    return true;
+  };
+
 
   trigger.onclick = () => open();
   // Only claim a downward gesture that began at the top of the games list.
@@ -671,6 +705,18 @@
     } finally {
       setBusy(false);
     }
+  };
+
+  panel.querySelector('.matches-random').onclick = async () => {
+    if (busy) return;
+    setBusy(true, 'Finding a random opponent…');
+    try {
+      const result = await backend.findRandomChallenge();
+      const match = await backend.getMatch(result.match_id);
+      location.assign(matchUrl({id:result.match_id, match}));
+    } catch (error) {
+      showError(error);
+    } finally {setBusy(false);}
   };
 
   panel.querySelector('.matches-code').onclick = async () => {
