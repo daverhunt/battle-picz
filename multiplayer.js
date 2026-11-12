@@ -538,6 +538,14 @@
       return (await this.readLobby()).items;
     }
 
+    hasAcknowledgedWeeklySummary(weekStart) {
+      return this.rpc('has_acknowledged_weekly_summary', { p_week_start: weekStart });
+    }
+
+    acknowledgeWeeklySummary(weekStart) {
+      return this.rpc('acknowledge_weekly_summary', { p_week_start: weekStart });
+    }
+
     async getWeeklyDashboard(referenceTime = this.now()) {
       const week = BattlePiczBackend.utcWeekWindow(referenceTime, -1);
       const {items, profile, coins} = await this.readLobby(week.key);
