@@ -58,3 +58,23 @@
 .pic-alert-intro-allow{background:#ffa62c;color:#192546;font-size:15px}
 .pic-alert-intro-later{background:transparent;color:#d5e7ff;font-size:12px;margin-top:8px}
 .pic-alert-intro-allow:disabled{opacity:.55}
+
+/* Single lobby start action and accessible three-choice sheet */
+.matches-footer{display:block;padding:12px 14px 18px}
+.matches-footer .matches-start{display:block;width:100%;min-height:52px;border:0;border-radius:13px;background:linear-gradient(180deg,#ffd87e,#ffb53b);color:#553817;box-shadow:0 3px 0 #cf9235;font:800 16px Arial,sans-serif;letter-spacing:.4px;text-shadow:none}
+.start-game-menu[hidden]{display:none}
+.start-game-menu{position:absolute;inset:0;z-index:135;display:grid;align-items:center;justify-items:center;padding:18px;background:rgba(5,18,52,.81);backdrop-filter:blur(3px)}
+.start-game-card{position:relative;width:100%;max-width:345px;padding:22px 17px 20px;background:linear-gradient(170deg,#ffffff,#e8f4fc);border:2px solid #fff;border-radius:21px;box-shadow:0 15px 45px #00172e9c;text-align:center;color:#153f64}
+.start-game-close{position:absolute;right:12px;top:10px;border:0;background:transparent;color:#6388a3;font:30px Arial;min-width:34px;min-height:34px}
+.start-game-symbol{font-size:38px;line-height:1.1}
+.start-game-card h2{font:900 22px Arial,sans-serif;margin:10px 0 4px}
+.start-game-card p{font:13px Arial,sans-serif;color:#607a91;margin:0 0 19px}
+.start-game-card button:not(.start-game-close){display:flex;align-items:center;gap:13px;width:100%;min-height:70px;text-align:left;padding:13px 14px;margin:9px 0;border:1px solid #cfdfea;border-radius:13px;background:#fff;color:#173d60;box-shadow:0 2px 4px #11335112;cursor:pointer}
+.start-game-card .matches-new{border-color:#f4c675!important;background:#fff7e5!important}
+.start-game-card button>span:first-child{display:grid;place-items:center;flex:none;width:41px;height:41px;border-radius:11px;background:#e5f2fc;font-size:24px}
+.start-game-card .matches-new>span:first-child{background:#ffe9b9}
+.start-game-card button>span:nth-child(2){flex:1;min-width:0}
+.start-game-card button strong{display:block;font:800 13px Arial,sans-serif}
+.start-game-card button small{display:block;margin-top:5px;font:11px Arial,sans-serif;color:#708399}
+.start-game-card button b{font:24px Arial,sans-serif;color:#84a1b8}
+.start-game-card button:focus-visible{outline:3px solid #ef9f23;outline-offset:2px}
