@@ -15,9 +15,10 @@
       const data = signedIn ? await backend.rpc('list_categories') : {coins:0,categories:catalogue.map(([id,name,price])=>({id,name,price,owned:price===0,pictureCount:window.BATTLE_PICZ_QUESTIONS[id]?.length || 0}))};
       if (version !== rendering || !container.isConnected) return;
       container.replaceChildren(status);
-      status.innerHTML='';
-      const balanceCoin=document.createElement('span');balanceCoin.className='gold-coin';balanceCoin.setAttribute('aria-hidden','true');
-      status.append(balanceCoin,document.createTextNode(` ${Number(data.coins).toLocaleString()} coins`));
+      const topCoins=document.getElementById('categoryTopCoins');
+      if (topCoins) topCoins.textContent=`${Number(data.coins).toLocaleString()} COINS`;
+      // Keep this area for real errors only; the coin balance is already in the header.
+      status.hidden=true;
       for (const category of [...data.categories].sort((a,b) => Number(b.owned) - Number(a.owned))) {
         const ready = category.pictureCount >= 3;
         const button = document.createElement('button');button.type='button';button.className='category-card' + (category.owned ? '' : ' is-locked');
@@ -36,19 +37,19 @@
         button.dataset.category=category.id;
         button.onclick=async()=>{
           if(category.owned){ if(onChoose)onChoose(category.id);return; }
-          if(!signedIn){status.textContent='Sign in to earn coins and unlock categories.';return;}
-          if(data.coins<category.price){status.textContent=`You need ${category.price-data.coins} more coins to unlock ${category.name}.`;return;}
+          if(!signedIn){status.hidden=false;status.textContent='Sign in to earn coins and unlock categories.';return;}
+          if(data.coins<category.price){status.hidden=false;status.textContent=`You need ${category.price-data.coins} more coins to unlock ${category.name}.`;return;}
           if(!window.confirm(`Permanently unlock ${category.name} for ${category.price} coins? Your opponent can play it for free.`))return;
           button.disabled=true;
           try {
             const result = await backend.rpc('purchase_category',{p_category:category.id});
             await render(container,onChoose);
             window.dispatchEvent(new CustomEvent('battle-picz:balance',{detail:result.coins}));
-          } catch(error){status.textContent=error.message||'Could not unlock. Try again.';button.disabled=false;}
+          } catch(error){status.hidden=false;status.textContent=error.message||'Could not unlock. Try again.';button.disabled=false;}
         };
         container.append(button);
       }
-    } catch(error){status.textContent=error.message||'Could not load categories.';const retry=document.createElement('button');retry.textContent='Retry';retry.onclick=()=>render(container,onChoose);container.append(retry);}
+    } catch(error){status.hidden=false;status.textContent=error.message||'Could not load categories.';const retry=document.createElement('button');retry.textContent='Retry';retry.onclick=()=>render(container,onChoose);container.append(retry);}
   }
   function openShop() {
     let panel=document.getElementById('categoryShop');
