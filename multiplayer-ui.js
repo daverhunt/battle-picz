@@ -88,6 +88,22 @@
       </section>
     </div>`;
   game.append(trigger, panel);
+  // Category/difficulty setup is a focused flow: no floating Matches shortcut.
+  const categoryChooser = document.getElementById('categoryChooser');
+  function syncCategoryNavigation() {
+    if (!categoryChooser) return;
+    if (!categoryChooser.classList.contains('hidden')) {
+      trigger.hidden = true;
+    } else if (applicationStarted && !panel.classList.contains('show')) {
+      trigger.hidden = false;
+    }
+  }
+  if (categoryChooser) {
+    new MutationObserver(syncCategoryNavigation).observe(categoryChooser, {
+      attributes: true, attributeFilter: ['class']
+    });
+    syncCategoryNavigation();
+  }
 
   function showWelcomeScreen(initialError = '') {
     trigger.hidden = true;
