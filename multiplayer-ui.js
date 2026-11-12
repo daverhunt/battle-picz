@@ -56,7 +56,6 @@
       <button class="matches-new">+ CHALLENGE A FRIEND</button>
       <button class="matches-random">🎲 RANDOM OPPONENT</button>
       <button class="matches-code">ENTER CODE</button>
-      <button class="matches-alerts">🔔 ALERTS</button>
     </footer>
     <div class="weekly-summary" hidden>
       <section class="weekly-summary-card" role="dialog" aria-modal="true" aria-labelledby="weekly-summary-title">
@@ -302,7 +301,6 @@
   const inviteBanner = panel.querySelector('.invite-banner');
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
-  const alertsButton = panel.querySelector('.matches-alerts');
   panel.querySelector('.matches-shop').onclick = () => window.openPicRivalsShop?.();
   const weeklyRecord = panel.querySelector('.weekly-record');
   const weeklyCountdown = panel.querySelector('.weekly-countdown');
@@ -497,10 +495,56 @@
     }
   }
 
-  function updateAlertsButton() {
-    alertsButton.textContent = window.BattlePiczPush?.enabled ? '🔔 ALERTS ON' : '🔔 ENABLE ALERTS';
-    alertsButton.disabled = false;
+  const ALERT_PROMPT_PREFIX = 'pic-rivals.alerts-onboarding.';
+  let alertsPromptOpen = false;
+
+  function offerAlertsAfterLogin() {
+    const push = window.BattlePiczPush;
+    const userId = backend.readSession()?.user?.id;
+    if (!userId || !push || alertsPromptOpen || !push.available() ||
+        !('Notification' in window) || Notification.permission !== 'default' ||
+        push.enabled) return;
+    const key = ALERT_PROMPT_PREFIX + userId;
+    if (localStorage.getItem(key)) return;
+    const requiresInstall = /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !((window.matchMedia?.('(display-mode: standalone)').matches) || navigator.standalone === true);
+    // Only show once per player and browser: don't nag on every visit.
+    localStorage.setItem(key, 'seen');
+    alertsPromptOpen = true;
+    const dialog = document.createElement('div');
+    dialog.className = 'pic-alert-intro';
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-labelledby', 'pic-alert-intro-title');
+    dialog.innerHTML = `
+      <section class="pic-alert-intro-card">
+        <span class="pic-alert-intro-icon" aria-hidden="true">🔔</span>
+        <h2 id="pic-alert-intro-title">Never miss your turn!</h2>
+        <p>Enable alerts to get updates when a friend plays, when it's your turn and when a result is ready.</p>
+        ${requiresInstall ? '<p class="pic-alert-install-note">On iPhone, first add Pic Rivals to your Home Screen using Safari’s Share menu, then open it from there to enable notifications.</p>' : ''}
+        <p class="pic-alert-intro-status" role="status" aria-live="polite" hidden></p>
+        <button class="pic-alert-intro-allow" type="button">${requiresInstall ? 'GOT IT' : 'OK, ENABLE ALERTS'}</button>
+        <button class="pic-alert-intro-later" type="button">NOT NOW</button>
+      </section>`;
+    const done = () => { dialog.remove(); alertsPromptOpen = false; };
+    dialog.querySelector('.pic-alert-intro-later').onclick = done;
+    dialog.querySelector('.pic-alert-intro-allow').onclick = () => {
+      if (requiresInstall) { done(); return; }
+      const allow = dialog.querySelector('.pic-alert-intro-allow');
+      // The permission request must start synchronously from this tap on iOS.
+      const result = push.enable();
+      allow.disabled = true;
+      const status = dialog.querySelector('.pic-alert-intro-status');
+      Promise.resolve(result).then(done).catch(error => {
+        status.hidden = false;
+        status.textContent = error?.message || push.status();
+        allow.disabled = false;
+        if (Notification.permission === 'denied') allow.hidden = true;
+      });
+    };
+    game.appendChild(dialog);
   }
+
   function notifyAboutNudges() { /* Background push handles delivery. */ }
 
   function setBusy(value, message) {
@@ -667,19 +711,8 @@
   });
   window.addEventListener('battle-picz:settings-changed', event => {
     if (event.detail?.notificationsEnabled) notifyAboutNudges();
-    updateAlertsButton();
   });
   tabs.forEach(tab => tab.onclick = () => { activeTab = tab.dataset.tab; render(); });
-  window.addEventListener('battle-picz:push-changed', updateAlertsButton);
-  alertsButton.onclick = async () => {
-    try {
-      if (!window.BattlePiczPush.enabled) await window.BattlePiczPush.enable();
-      state.hidden = false;
-      state.textContent = window.BattlePiczPush.status();
-    } catch (error) { showError(error); }
-    updateAlertsButton();
-  };
-  updateAlertsButton();
   setInterval(updateCountdown, 30_000);
 
   panel.querySelector('.matches-test-week').onclick = () => {
@@ -910,7 +943,12 @@
     applicationStarted = true;
     if (inviteCode) prepareInvite();
     else initialiseMatch();
+    setTimeout(offerAlertsAfterLogin, 600);
   }
+
+  window.addEventListener('battle-picz:auth-linked', event => {
+    if (!event.detail?.error) setTimeout(offerAlertsAfterLogin, 300);
+  });
 
   async function bootstrap() {
     // Auth may fall back to the original production domain. Return the fragment
