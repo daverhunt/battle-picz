@@ -239,3 +239,144 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 @media(prefers-reduced-motion:reduce){.reward-coin-burst{display:none}.coin-row img{animation:none;opacity:1}.coin-reward.show{animation:none}}
 
 .matches-shop{display:grid;place-items:center;padding:6px;flex-shrink:0}.matches-shop svg{width:21px;height:21px}
+
+/* Category setup: deliberately reuse the current Playroom lobby visual system.
+   Cream canvas, restrained navy type, pale blue dividers, orange/blue actions. */
+#game .category-chooser{
+  background:var(--cream);
+  color:var(--ink);
+  padding:27px 18px 18px;
+  align-items:stretch;
+  justify-content:flex-start;
+  text-align:left;
+  scrollbar-width:thin;
+}
+#game .category-chooser h2{
+  color:var(--ink);
+  font:900 26px/1.1 var(--round);
+  letter-spacing:-.5px;
+  margin:4px 0 7px;
+  text-shadow:none;
+  text-align:left;
+}
+#game .category-chooser>p{
+  color:var(--muted);
+  font:12px/1.3 Arial,sans-serif;
+  margin:0 0 13px;
+  text-align:left;
+}
+#game .category-chooser .category-options{
+  width:100%;
+  max-width:none;
+  grid-template-columns:minmax(0,1fr);
+  gap:0;
+  padding:0 0 16px;
+  margin:0;
+}
+#game .category-chooser .category-status{
+  grid-column:1;
+  justify-self:end;
+  width:auto;
+  min-width:96px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:7px 10px;
+  margin:0 0 8px!important;
+  border:1px solid #eee9dd;
+  border-radius:14px;
+  background:linear-gradient(#fffdf7,#f0ede3);
+  box-shadow:0 2px 3px #4c44301a;
+  color:var(--ink);
+  font:700 12px var(--round)!important;
+  text-align:right;
+}
+#game .category-chooser .category-options .category-card{
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  min-height:55px;
+  gap:10px;
+  padding:9px 4px;
+  margin:0;
+  border:0;
+  border-bottom:1px solid var(--line);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  text-align:left;
+  text-shadow:none;
+  color:var(--ink);
+}
+#game .category-chooser .category-options .category-card:first-of-type{
+  border-top:1px solid var(--line);
+}
+#game .category-chooser .category-card strong{
+  color:var(--ink);
+  font:700 16px/1.2 var(--round);
+  letter-spacing:0;
+}
+#game .category-chooser .category-card .category-card-badge{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  flex:none;
+  min-width:40px;
+  min-height:34px;
+  padding:6px 10px;
+  border:1px solid #e1f1ff;
+  border-radius:11px;
+  background:var(--pale);
+  box-shadow:inset 0 2px #fff8,0 2px 0 #a9cde5;
+  color:#1269ac;
+  font:800 16px/1 var(--round);
+}
+#game .category-chooser .category-options .category-card.is-locked{
+  background:transparent;
+  border-bottom-color:var(--line);
+  opacity:1;
+}
+#game .category-chooser .category-card.is-locked strong{
+  color:#778497;
+}
+#game .category-chooser .category-card.is-locked .category-card-badge{
+  min-width:91px;
+  background:#f1eee7;
+  border-color:#e9e4d9;
+  box-shadow:none;
+  color:#63748a;
+  font:700 12px/1 Arial,sans-serif;
+}
+#game .category-chooser .category-card.is-locked .gold-coin{
+  margin-left:4px;
+}
+#game .category-chooser .category-options .category-card:disabled{opacity:.48}
+#game .category-chooser .difficulty-options{
+  width:100%;max-width:none;margin:8px 0 0;gap:11px;
+}
+#game .category-chooser .difficulty-options button{
+  min-height:64px;
+  padding:10px 14px;
+  border:1px solid #e1f1ff;
+  border-radius:13px;
+  background:var(--pale);
+  box-shadow:inset 0 2px #fff8,0 3px 0 #a9cde5;
+  color:#17538e;
+  text-shadow:none;
+  font:700 17px var(--round);
+}
+#game .category-chooser .difficulty-options button[data-difficulty="medium"]{
+  background:linear-gradient(#ffd57c,#ffae37);
+  border-color:#f4c96e;box-shadow:0 3px 0 #d49a39;color:#62400d;
+}
+#game .category-chooser .difficulty-options button[data-difficulty="hard"]{
+  background:var(--orange);
+  border-color:#ffb756;box-shadow:0 3px 0 #ce560b;color:white;
+}
+#game .category-chooser .difficulty-options small{color:inherit;opacity:.8;text-shadow:none}
+@media(max-height:620px){
+  #game .category-chooser{padding-top:17px}
+  #game .category-chooser .category-options .category-card{min-height:48px;padding:6px 4px}
+}
