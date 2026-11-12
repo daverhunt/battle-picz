@@ -116,3 +116,30 @@
   .category-chooser{padding-top:17px}
   .category-chooser .category-options .category-card{min-height:58px}
 }
+
+/* Clean category rows: name and a single action indicator. */
+.category-chooser .category-options .category-card{
+  justify-content:space-between;
+  min-height:58px;
+  gap:12px;
+  padding:11px 16px;
+}
+.category-chooser .category-card strong{
+  flex:1;
+  min-width:0;
+  font:800 16px/1.25 Arial,sans-serif;
+}
+.category-chooser .category-card .category-card-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:33px;
+  min-height:32px;
+  padding:5px 8px;
+  font:800 13px Arial,sans-serif;
+}
+.category-chooser .category-card:not(.is-locked) .category-card-badge{
+  background:#e5f5ff;
+  color:#027cca;
+  font-size:15px;
+}
