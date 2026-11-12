@@ -2136,6 +2136,9 @@
             window.showBattlePiczMatchResult(context);
             return;
           }
+          if (roundNo === 1 && window.showPicRivalsInvitePopup?.(
+            { ...context, currentRound: 1 }, returnToLobby
+          )) return;
           returnToLobby();
         });
       }
