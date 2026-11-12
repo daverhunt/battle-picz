@@ -35,6 +35,26 @@
       return session;
     }
 
+    async signOut() {
+      const session = this.readSession();
+      // Revoke the session at Supabase, then remove only device auth state.
+      // Do not delete profiles, game progress, or user data.
+      if (session?.access_token) {
+        try {
+          await this.fetch(`${this.url}/auth/v1/logout`, {
+            method: 'POST',
+            headers: { apikey: this.publishableKey, Authorization: `Bearer ${session.access_token}` }
+          });
+        } catch (error) {
+          // Offline sign-out must still protect the local account.
+          console.warn('Remote sign-out unavailable; clearing local session', error);
+        }
+      }
+      this.storage?.removeItem(SESSION_KEY);
+      this.storage?.removeItem(MATCH_KEY);
+      this.storage?.removeItem(AUTH_PENDING_KEY);
+    }
+
     async authRequest(path, body) {
       const response = await this.fetch(`${this.url}/auth/v1/${path}`, {
         method: 'POST',
