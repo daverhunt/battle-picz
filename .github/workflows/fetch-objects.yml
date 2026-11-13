@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'scripts/fetch-objects-commons.py'
+      - 'scripts/build-object-publish-sql.py'
       - 'docs/objects-next-81.json'
       - '.github/workflows/fetch-objects.yml'
   workflow_dispatch:
@@ -43,11 +44,13 @@ jobs:
           print("Picture metadata:",len(sources['items']))
           print("Needs follow-up:",list(sources.get('failures',{})))
           PY
+      - name: Prepare publish SQL for photo-backed entries
+        run: python scripts/build-object-publish-sql.py
       - name: Commit new pictures and source credits
         run: |
           git config user.name 'pic-rivals-artwork-bot'
           git config user.email 'pic-rivals-artwork-bot@users.noreply.github.com'
-          git add assets/images/categories/objects/ docs/objects-next-81-sources.json
+          git add assets/images/categories/objects/ docs/objects-next-81-sources.json docs/objects-next-81-publish.sql
           if ! git diff --cached --quiet; then
             git commit -m "Add openly licensed Objects photos with source credits"
             git push origin HEAD:main
