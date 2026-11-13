@@ -15,7 +15,7 @@ for item in catalog:
     if not source or not path.exists() or path.stat().st_size<1000: continue
     # Filename similarity alone can match roads, surnames and landmarks instead
     # of the actual object. Only activate concept-backed depictions automatically.
-    if source.get('quality') != 'wikidata-depicts': continue
+    if source.get('quality') not in ('wikidata-depicts','curated-photo'): continue
     if not source.get('license') or not source.get('source'): continue
     answer=item['answer'].upper()
     question={'id':item['id'],'a':answer,'label':answer,
