@@ -488,3 +488,9 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
     flex-basis:104px;width:104px;min-width:104px;max-width:104px;
   }
 }
+
+/* Multiword picture answers: visible gap, never a tappable letter slot. */
+.answer .slot.answer-gap{
+  flex:0 0 7px;min-width:7px;width:7px;
+  padding:0;border:0;background:transparent;box-shadow:none;
+}
