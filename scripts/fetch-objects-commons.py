@@ -62,12 +62,62 @@ def commons_search(answer, limit=24):
         time.sleep(.18)
     return results
 
+def wikidata_photos(answer):
+    """Use a Wikidata concept's P18 photo before ambiguous filename matches."""
+    search=request("https://www.wikidata.org/w/api.php",{
+        "action":"wbsearchentities","format":"json","language":"en",
+        "type":"item","search":answer,"limit":12,
+    })
+    ids=[]
+    for item in search.get("search",[]):
+        if item.get("label","").strip().lower()!=answer.lower(): continue
+        description=item.get("description","").lower()
+        if any(term in description for term in (
+            "film","album","song","surname","person","politician","writer",
+            "village","town","city","river","road","street","mountain","species",
+            "company","fictional","award","book by","video game","character",
+            "painting","artwork","building","theater","stadium",
+        )): continue
+        ids.append(item["id"])
+    if not ids: return []
+    entities=request("https://www.wikidata.org/w/api.php",{
+        "action":"wbgetentities","format":"json","ids":"|".join(ids[:7]),
+        "props":"claims",
+    }).get("entities",{})
+    results=[]
+    for qid in ids:
+        entity=entities.get(qid,{})
+        for claim in entity.get("claims",{}).get("P18",[])[:2]:
+            try: filename=claim["mainsnak"]["datavalue"]["value"]
+            except (KeyError,TypeError): continue
+            data=request(API,{
+                "action":"query","format":"json","titles":"File:"+filename,
+                "prop":"imageinfo","iiprop":"url|size|mime|extmetadata",
+                "iiurlwidth":640,
+                "iiextmetadatafilter":"LicenseShortName|LicenseUrl|Artist|Attribution|Credit"
+            })
+            for page in data.get("query",{}).get("pages",{}).values():
+                page["_wikidata"]=qid
+                results.append(page)
+        if results: break
+    return results
+
 def score(page, answer):
     name = page.get("title","").replace("File:","").lower()
     name = re.sub(r"[_-]+", " ", name)
     core = re.escape(answer.lower())
-    if not re.search(rf"(?<![a-z]){core}(?![a-z])", name): return -1000
+    trusted_depiction=bool(page.get("_wikidata"))
+    if not trusted_depiction and not re.search(rf"(?<![a-z]){core}(?![a-z])", name): return -1000
     if any(bad in name for bad in BANNED): return -1000
+    # Reject other meanings and places that match the word but not the item.
+    off_topic=("lane","road","street","river","town","park","village","bridge","railway",
+      "basalt","geology","kidney","cake","film","festival","tour","transport",
+      "building","station","garden","flower","phlox","animal","species","bird",
+      "mountain","rock","coast","ship","aircraft","car","train","trophy",
+      "surname","person","school","church","landscape","ruler kolchak",
+      "company","fighter","cricket","museum exterior","coffee shop","coffee roastery",
+      "cliff","plunger ssn","rug chapel","stool transport","cushion plant")
+    if not trusted_depiction and any(word in name for word in off_topic): return -1000
     ii = (page.get("imageinfo") or [{}])[0]
     if ii.get("mime") not in ("image/jpeg","image/png","image/webp"): return -1000
     if min(ii.get("width",0),ii.get("height",0)) < 320: return -1000
@@ -75,7 +125,7 @@ def score(page, answer):
     if not any(marker in lic for marker in LICENSES): return -1000
     if "NC" in lic or "ND" in lic: return -1000
     relevant = len(re.findall(r"[a-z]+", name))
-    result = 120 - min(relevant,25)*2
+    result = 1000 if trusted_depiction else 120 - min(relevant,25)*2
     if name.startswith(answer.lower()+" ") or name.startswith(answer.lower()+"."): result += 40
     if "white background" in name or "isolated" in name: result += 22
     if "photo" in name: result += 9
@@ -111,14 +161,17 @@ def main():
     for item in items:
         slug=item["slug"]
         path=ROOT/item["image"]
-        if path.exists() and slug in records:
-            print(f"KEEP {slug}",flush=True)
+        if path.exists() and slug in records and records[slug].get("quality") == "wikidata-depicts":
+            print(f"KEEP verified {slug}",flush=True)
             continue
         if args.limit and completed >= args.limit: break
         completed+=1
         print(f"FETCH {slug}",flush=True)
         try:
-            candidates=sorted(commons_search(item["answer"]),key=lambda p:score(p,item["answer"]),reverse=True)
+            candidates=wikidata_photos(item["answer"])
+            if not any(score(p,item["answer"])>=30 for p in candidates):
+                candidates+=commons_search(item["answer"])
+            candidates=sorted(candidates,key=lambda p:score(p,item["answer"]),reverse=True)
             found=False
             for page in candidates[:12]:
                 if score(page,item["answer"])<30: break
@@ -141,6 +194,8 @@ def main():
                     "original":info.get("url",""),
                     "modifications":"Resized and converted to WebP; letterboxed on cream background",
                     "reviewed":False,
+                    "quality":"wikidata-depicts" if page.get("_wikidata") else "title-match",
+                    "wikidata":page.get("_wikidata"),
                 }
                 print(f"  saved {page.get('title')} ({len(picture)} bytes)",flush=True)
                 found=True
