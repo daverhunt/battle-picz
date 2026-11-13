@@ -494,3 +494,152 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   flex:0 0 7px;min-width:7px;width:7px;
   padding:0;border:0;background:transparent;box-shadow:none;
 }
+
+/* =========================================================
+   PIC RIVALS — ARCADE THEME EXPERIMENT
+   PREVIEW BRANCH ONLY: arcade-ui-preview
+   Visual-only override. No game rules, identities, or data changed.
+   ========================================================= */
+:root{
+  --ink:#f7faff;
+  --muted:#a9bfdc;
+  --cream:#07182f;
+  --line:#36517a;
+  --orange:linear-gradient(180deg,#ffc62a 0%,#ff9517 36%,#f46b0b 78%,#c84205 100%);
+  --blue:linear-gradient(180deg,#46dcff 0%,#128ff7 42%,#0751c9 100%);
+  --pale:linear-gradient(160deg,#193962,#0b2243);
+}
+html,body{background:radial-gradient(ellipse at 14% 12%,#173865,#071429 55%,#060f25 100%);color:#f7faff}
+#game{
+  background:radial-gradient(ellipse at 50% 5%,#1a3964 0%,#0b2348 34%,#07142d 76%,#101039 100%);
+  color:#f7faff;
+  border-radius:22px;
+  box-shadow:inset 0 0 0 1px #63aff75e,0 0 34px #0b68ff20;
+}
+#game:before{display:block;opacity:.23;background:radial-gradient(circle at 8% 86%,#2564da60,transparent 33%),radial-gradient(circle at 100% 80%,#b620af40,transparent 33%);pointer-events:none}
+button:focus-visible,a:focus-visible{outline:3px solid #b9f523;outline-offset:3px}
+.match-panel,.welcome-screen{
+  background:radial-gradient(ellipse at 50% 0%,#163967,#0a2143 52%,#07142d 100%);
+  color:#f7faff
+}
+.matches-header{background:transparent;color:#f7faff}
+.playroom-kicker{color:#f3faff;text-shadow:0 2px 0 #1266c6,0 0 9px #4dd2ff;font-weight:900}
+.playroom-kicker span{color:#ffd53b;text-shadow:0 2px #e76b0a,0 0 12px #ffa319}
+.matches-header .matches-balance,#game .category-topbalance{
+  border:1px solid #71b5ff;
+  background:linear-gradient(#234776,#0b2145);
+  box-shadow:inset 0 1px 1px #ffffff45,0 3px 0 #041126,0 0 8px #2687ff45;
+  color:#fff
+}
+.matches-header .matches-shop,.matches-header .matches-settings,.matches-header .matches-refresh{
+  background:linear-gradient(#294b7d,#0a244b);color:#eaf7ff;border:1px solid #6eb9ff;
+  box-shadow:0 2px 0 #031331,0 0 6px #3eb9ff45
+}
+.weekly-strip{
+  background:linear-gradient(155deg,#163866,#0c2548);border:1px solid #438de7;
+  box-shadow:0 4px 0 #041832,0 0 13px #176dcb32;color:#fff
+}
+.weekly-strip span{color:#a3c5ee}.weekly-strip strong{color:#fff}
+.matches-tabs button{
+  background:linear-gradient(#234266,#152b4c);border:1px solid #46658b;color:#bfd8f7;
+  box-shadow:inset 0 1px #ffffff19
+}
+.matches-tabs button.active{background:var(--blue);border-color:#a6ecff;box-shadow:inset 0 2px #ffffff70,0 3px 0 #06326b,0 0 13px #099fff45;color:#fff}
+.matches-tabs button:not(.active) b{background:#284a75;color:#eef5ff}
+.matches-list{background:transparent}
+.match-card{padding:13px 9px;margin:5px 0 9px;border:1px solid #385d99;border-radius:16px;background:linear-gradient(145deg,#153761,#0c2445);box-shadow:0 4px 0 #04172b,0 5px 13px #0005}
+.match-card:first-child{border-top:1px solid #385d99}
+.match-card-avatar{background:linear-gradient(#416d9e,#183c66);border-color:#7ab8ff}
+.match-card-top strong,.match-card-score b{color:#fff}
+.match-card-meta,.match-card-score,.match-card-status{color:#a9c6ec}
+.match-card-primary,.matches-footer .matches-new,.welcome-guest,.welcome-start,.next-round,.see-result,.invite-join,.weekly-continue{
+  color:#fff;border:1px solid #ffd563;border-radius:13px;background:var(--orange);
+  box-shadow:inset 0 2px #fff8,0 3px 0 #a83a04,0 0 10px #fd931b44;text-shadow:0 1px #914100
+}
+.match-card-primary[data-action=result],.matches-footer .matches-code,.matches-footer .matches-alerts,.lobby-button{
+  background:var(--blue);border-color:#97e2ff;color:#fff;box-shadow:inset 0 2px #fff6,0 3px 0 #093b8b;text-shadow:0 1px #17488a
+}
+.matches-footer{background:linear-gradient(0deg,#06132d,#0c2445);border-top:1px solid #294e80}
+.matches-footer .matches-start{
+  border:1px solid #d8ff6a!important;background:linear-gradient(#d5ff39,#a4ec03 72%,#70b400)!important;
+  color:#09253a!important;text-shadow:none!important;
+  box-shadow:inset 0 2px #ffffff6b,0 4px 0 #477a02,0 0 17px #b9ff2144!important
+}
+.matches-empty strong{color:#fff}.matches-empty p{color:#a9c6ec}
+#game .category-chooser{
+  background:radial-gradient(ellipse at 50% 0%,#163866,#091e3d 60%,#06152f);
+  color:#fff;
+}
+#game .category-logo span:first-child{color:#f7fbff;text-shadow:0 3px #137dcb,0 0 10px #45ccff}
+#game .category-logo span:last-child{color:#ffd62d;text-shadow:0 3px #e86905,0 0 13px #fa9d12}
+#game .category-chooser h2{
+  background:linear-gradient(170deg,#20436b,#102947);color:#fff;
+  border:2px solid #b2ff30;border-radius:20px;
+  box-shadow:inset 0 1px #ffffff24,0 4px 0 #2f660a,0 0 15px #afff2550;
+  text-shadow:0 2px #07132c
+}
+#game .category-chooser .category-options .category-card{
+  background:linear-gradient(165deg,#183b68,#091f3e)!important;
+  border:1px solid #6e9dd6!important;
+  border-radius:18px!important;
+  box-shadow:inset 0 1px #ffffff1f,0 4px 0 #051328,0 7px 16px #0005!important
+}
+#game .category-chooser .category-options .category-card:first-of-type{border-top:1px solid #6e9dd6}
+#game .category-chooser .category-options .category-card:not(.is-locked){
+  border-color:#b4fb29!important;
+  box-shadow:inset 0 1px #ffffff27,0 4px 0 #3c6d0a,0 0 11px #9af62b37!important
+}
+#game .category-chooser .category-card strong,#game .category-chooser .category-card.is-locked strong{color:#fff}
+#game .category-chooser .category-card:not(.is-locked) .category-card-badge{
+  background:var(--orange);color:#fff;border:1px solid #ffda70;
+  box-shadow:inset 0 2px #fff7,0 3px 0 #9f3e04,0 0 8px #ff9a2766
+}
+#game .category-chooser .category-card.is-locked .category-card-badge{
+  background:linear-gradient(#314e72,#192b4a);color:#e8f4ff;border:1px solid #6480a5;
+  box-shadow:inset 0 1px #ffffff28,0 3px 0 #071a35
+}
+#game .category-chooser .difficulty-options button{
+  background:linear-gradient(#234e7d,#0b2c58);border:1px solid #77bdff;color:#fff;
+  box-shadow:inset 0 2px #ffffff32,0 3px 0 #052855
+}
+#game .category-chooser .difficulty-options button[data-difficulty="medium"]{background:linear-gradient(#ffe47c,#e9a122);color:#3b260a}
+#game .category-chooser .difficulty-options button[data-difficulty="hard"]{background:var(--orange);color:#fff}
+.cat{color:#d7f2ff!important;background:linear-gradient(90deg,transparent,#102d58 15% 85%,transparent)!important;
+  font-weight:900!important;text-shadow:0 1px #041b39!important;letter-spacing:.3px}
+.board{
+  border:2px solid #93dfff!important;border-radius:13px!important;
+  box-shadow:0 0 0 2px #0b77bb75,0 0 16px #00bcff52,0 8px 16px #0006!important;
+  background:#dcebf7!important
+}
+.qt{color:#fff!important;border:3px solid #4bdeff!important;box-shadow:0 0 12px #21c2ff44!important}
+.qt:nth-child(2){border-color:#9dff30!important}.qt:nth-child(3){border-color:#ffcf2c!important}
+.qt:before,.qt.done:before{background:#102548!important}
+.qt span{color:#fff!important}
+.pause,.pu,.revbox{
+  background:linear-gradient(155deg,#223e69,#091a38)!important;
+  border:2px solid #7aafff!important;
+  box-shadow:inset 0 1px #ffffff32,0 3px 0 #031024,0 0 10px #57a7fa40!important;
+  color:#fff!important
+}
+.pu{border-color:#d0ff3b!important;box-shadow:inset 0 1px #ffffff30,0 3px 0 #326900,0 0 10px #9bee3f4d!important}
+.revlabel{color:#e5f1ff!important;text-shadow:0 1px #071329!important}
+.answer .slot,.slot{
+  background:linear-gradient(#173459,#0a1a34)!important;
+  border:1px solid #8bc9ff!important;color:#fff!important;
+  box-shadow:inset 0 1px #ffffff29,0 3px 0 #06122b!important
+}
+.answer .slot.answer-gap{border:0!important;background:transparent!important;box-shadow:none!important}
+.letter{
+  background:var(--orange)!important;border:1px solid #ffd660!important;color:#fff!important;
+  box-shadow:inset 0 2px #ffffff7a,0 3px 0 #ae3f04!important;
+  text-shadow:0 2px #a64000!important
+}
+.ctrl{background:var(--blue)!important;border:1px solid #98e6ff!important;color:#fff!important;
+  box-shadow:inset 0 2px #ffffff66,0 3px 0 #063a8d!important;text-shadow:0 1px #164d9a!important}
+.msg{color:#bcdcff!important;text-shadow:0 1px #020918!important}
+.round-summary,.pause-dialog,.category-shop{background:linear-gradient(160deg,#173960,#081c38)!important;color:#fff!important;border-color:#5b9ff3!important}
+.round-summary h2,.pause-dialog h2,.category-shop h2{color:#fff!important}
+@media(max-width:360px){
+ .matches-header{padding-left:13px;padding-right:13px}
+ #game .category-chooser{padding-left:12px;padding-right:12px}
+}
