@@ -232,7 +232,7 @@
       "original": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Stool_for_harpsicord_%28part_of_a_set%29_%28IA_mma_stool_for_harpsicord_part_of_a_set_209095%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "title-match",
+      "quality": "curated-photo",
       "wikidata": null
     },
     "bed": {
@@ -791,7 +791,7 @@
       "original": "https://upload.wikimedia.org/wikipedia/commons/6/62/Laptop_%28292453254%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "title-match",
+      "quality": "curated-photo",
       "wikidata": null
     },
     "tablet": {
@@ -830,7 +830,7 @@
       "original": "https://upload.wikimedia.org/wikipedia/commons/8/81/Headphones_%2856330%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "title-match",
+      "quality": "curated-photo",
       "wikidata": null
     },
     "radio": {
@@ -869,7 +869,7 @@
       "original": "https://upload.wikimedia.org/wikipedia/commons/9/99/Dice_-_1-2-4-5-6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "title-match",
+      "quality": "curated-photo",
       "wikidata": null
     },
     "domino": {
@@ -882,7 +882,7 @@
       "original": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Domino_--_2021_--_6759.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "title-match",
+      "quality": "curated-photo",
       "wikidata": null
     },
     "kite": {
@@ -1038,7 +1038,7 @@
       "original": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Plant_Pot_-_%E0%B4%9A%E0%B5%86%E0%B4%9F%E0%B4%BF%E0%B4%9A%E0%B5%8D%E0%B4%9A%E0%B4%9F%E0%B5%8D%E0%B4%9F%E0%B4%BF_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "title-match",
+      "quality": "curated-photo",
       "wikidata": null
     },
     "yo-yo": {
