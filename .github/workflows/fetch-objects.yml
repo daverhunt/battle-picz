@@ -5,6 +5,7 @@ on:
       - 'scripts/fetch-objects-commons.py'
       - 'scripts/build-object-publish-sql.py'
       - 'docs/objects-next-81.json'
+      - 'docs/objects-photo-overrides.json'
       - '.github/workflows/fetch-objects.yml'
   workflow_dispatch:
 
