@@ -836,15 +836,15 @@
     "radio": {
       "answer": "Radio",
       "image": "assets/images/categories/objects/radio.webp",
-      "source": "https://commons.wikimedia.org/wiki/File:Biblis_RFE_RL_01.jpg",
-      "artist": "Kuebi",
-      "license": "CC BY-SA 3.0",
-      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-      "original": "https://upload.wikimedia.org/wikipedia/commons/5/54/Biblis_RFE_RL_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source": "https://commons.wikimedia.org/wiki/File:Analogue_AM_Radio.jpg",
+      "artist": "Amitbalani",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "original": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Analogue_AM_Radio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
       "modifications": "Resized and converted to WebP; letterboxed on cream background",
       "reviewed": false,
-      "quality": "wikidata-depicts",
-      "wikidata": "Q872"
+      "quality": "curated-photo",
+      "wikidata": null
     },
     "microphone": {
       "answer": "Microphone",
