@@ -1288,29 +1288,40 @@
       function formatSeconds(ms) {
         return (Math.max(0, Math.min(ROUND_MS, ms)) / 1000).toFixed(1) + "s";
       }
+      // Spaces and punctuation are word separators, never letter tiles.
+      const answerLetters = () => String(q().a || "").toUpperCase().replace(/[^A-Z]/g, "");
       function ans() {
         $("answer").innerHTML = "";
-        [...q().a].forEach((_, i) => {
+        let letterIndex = 0;
+        for (const character of String(q().a || "")) {
           let s = document.createElement("div");
           s.className = "slot";
-          s.textContent = picked[i]?.l || "";
-          if (picked[i]) {
-            s.setAttribute("role", "button");
-            s.tabIndex = 0;
-            s.setAttribute("aria-label", "Remove letter " + (i + 1));
-            s.onclick = () => {
-              if (intro || ended) return;
-              const [removed] = picked.splice(i, 1);
-              removed?.b.classList.remove("used");
-              ans();
-              saveProgress();
-            };
-            s.onkeydown = event => {
-              if (event.key === "Enter" || event.key === " ") { event.preventDefault(); s.click(); }
-            };
+          if (!/[A-Z]/i.test(character)) {
+            s.classList.add("answer-gap");
+            s.setAttribute("aria-hidden", "true");
+          } else {
+            const i = letterIndex++;
+            s.textContent = picked[i]?.l || "";
+            if (picked[i]) {
+              s.setAttribute("role", "button");
+              s.tabIndex = 0;
+              s.setAttribute("aria-label", "Remove letter " + (i + 1));
+              s.onclick = () => {
+                if (intro || ended) return;
+                const [removed] = picked.splice(i, 1);
+                removed?.b.classList.remove("used");
+                ans();
+                saveProgress();
+              };
+              s.onkeydown = event => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault(); s.click();
+                }
+              };
+            }
           }
           $("answer").appendChild(s);
-        });
+        }
       }
       function normalisePowerUps(value) {
         return {
@@ -1494,7 +1505,7 @@
         let rand = seededRandom(
             seedNumber(MATCH_SEED + "|" + qi + "|" + q().a),
           ),
-          a = [...q().a];
+          a = [...answerLetters()];
         while (a.length < 16)
           a.push(ALPHABET[Math.floor(rand() * ALPHABET.length)]);
         for (let i = a.length - 1; i > 0; i--) {
@@ -1536,7 +1547,7 @@
           intro ||
           ended ||
           b.classList.contains("used") ||
-          picked.length >= q().a.length
+          picked.length >= answerLetters().length
         )
           return;
         if (rev < 1) {
@@ -1552,9 +1563,9 @@
           picked.push({ l, b });
           ans();
           saveProgress();
-          if (picked.length === q().a.length) {
+          if (picked.length === answerLetters().length) {
             let g = picked.map((x) => x.l).join("");
-            if (g === q().a) {
+            if (g === answerLetters()) {
               let t = performance.now() - start,
                 revealBonus = revealBonusFor(rev - freeBombReveals, difficulty.reveals),
                 timeBonus = timeBonusFor(t),
@@ -2458,7 +2469,7 @@
       };
       document.querySelector("[data-power=reveal]").onclick = () => {
         if (powerUpNeedsShop("reveal")) return;
-        let need = [...q().a].find((ch, i) => !picked[i] || picked[i].l !== ch),
+        let need = [...answerLetters()].find((ch, i) => !picked[i] || picked[i].l !== ch),
           b = [...document.querySelectorAll(".letter")].find(
             (x) =>
               x.textContent === need &&
