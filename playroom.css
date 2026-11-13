@@ -643,3 +643,42 @@ button:focus-visible,a:focus-visible{outline:3px solid #b9f523;outline-offset:3p
  .matches-header{padding-left:13px;padding-right:13px}
  #game .category-chooser{padding-left:12px;padding-right:12px}
 }
+
+/* Always-visible, spectator-readable gameplay wordmark.
+   On the preview branch only; player names, score and controls remain live. */
+#game>.game-brand{
+  position:absolute;z-index:12;top:.35%;left:50%;transform:translateX(-50%);
+  display:flex;align-items:baseline;justify-content:center;gap:3px;
+  width:max-content;max-width:85%;padding:0 8px;
+  font:1000 clamp(22px,7.4vw,34px)/1 var(--round);
+  font-style:italic;letter-spacing:-1.4px;white-space:nowrap;
+  pointer-events:none;
+  -webkit-text-stroke:1px #edf8ff;
+  filter:drop-shadow(0 3px 1px #071127) drop-shadow(0 0 8px #285cff6b);
+}
+#game>.game-brand .game-brand-pic{
+  color:#fff;text-shadow:2px 2px 0 #166cdb,-1px -1px 0 #104cbd;
+}
+#game>.game-brand .game-brand-rivals{
+  color:#ffd32e;text-shadow:2px 2px 0 #ca6409,-1px -1px 0 #d17b00;
+}
+/* Reserve space for the brand without pushing the puzzle or keyboard down. */
+#game>.header{top:6.2%;height:59px}
+#game>.header .hl,#game>.header .hr{height:59px}
+#game>.header .pname{top:9px}
+#game>.header .score{top:27px}
+#game>.header .avatar{height:45px;top:7px}
+#game>.header .vs{top:5px}
+#game>.qtimers{top:17.5%}
+#game>.cat{top:23%}
+@media(max-height:650px){
+  #game>.game-brand{font-size:clamp(20px,6.7vw,28px)}
+  #game>.header{top:5.7%;height:55px}
+  #game>.header .hl,#game>.header .hr{height:55px}
+  #game>.header .avatar{top:5px;height:42px}
+  #game>.header .vs{top:4px}
+  #game>.header .pname{top:7px}
+  #game>.header .score{top:26px}
+  #game>.qtimers{top:17.5%}
+  #game>.cat{top:23%}
+}
