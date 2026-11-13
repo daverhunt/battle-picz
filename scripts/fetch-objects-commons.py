@@ -64,6 +64,7 @@ def commons_search(answer, limit=24):
 
 def score(page, answer):
     name = page.get("title","").replace("File:","").lower()
+    name = re.sub(r"[_-]+", " ", name)
     core = re.escape(answer.lower())
     if not re.search(rf"(?<![a-z]){core}(?![a-z])", name): return -1000
     if any(bad in name for bad in BANNED): return -1000
