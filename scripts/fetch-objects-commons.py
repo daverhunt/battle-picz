@@ -64,13 +64,19 @@ def commons_search(answer, limit=24):
 
 def wikidata_photos(answer):
     """Use a Wikidata concept's P18 photo before ambiguous filename matches."""
+    precise_terms={"mouse":"computer mouse","tablet":"tablet computer",
+      "iron":"clothes iron","peg":"clothes peg","stamp":"postage stamp",
+      "sponge":"cleaning sponge","razor":"safety razor","balloon":"toy balloon",
+      "jigsaw":"jigsaw puzzle","compass":"magnetic compass",
+      "rubber band":"rubber band","torch":"flashlight"}
+    concept=precise_terms.get(answer.lower(),answer)
     search=request("https://www.wikidata.org/w/api.php",{
         "action":"wbsearchentities","format":"json","language":"en",
-        "type":"item","search":answer,"limit":12,
+        "type":"item","search":concept,"limit":12,
     })
     ids=[]
     for item in search.get("search",[]):
-        if item.get("label","").strip().lower()!=answer.lower(): continue
+        if item.get("label","").strip().lower()!=concept.lower(): continue
         description=item.get("description","").lower()
         if any(term in description for term in (
             "film","album","song","surname","person","politician","writer",
