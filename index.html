@@ -1079,7 +1079,7 @@
         </div>
         <div class="grid" id="grid"></div>
       </div>
-      <div class="credit"><a id="pictureAttribution" target="_blank" rel="noopener noreferrer">Photo attribution</a></div>
+      
       <div class="answer" id="answer"></div>
       <div class="msg" id="msg">REVEAL TILES THEN SPELL THE ANSWER</div>
       <div class="letters" id="letters"></div>
@@ -2298,12 +2298,6 @@
         p.style.setProperty("--picture-y", y + "px");
         p.classList.remove("fallback");
         $("pictureSubject").textContent = q().pic;
-        const attribution = $("pictureAttribution");
-        if (attribution) {
-          attribution.textContent = q().generated ? "AI-generated image" : q().license ? "Photo: " + (q().artist || "See source") + " · " + q().license + (q().modifications ? " · resized" : "") : "Photo attribution · prototype";
-          if (/^https?:\/\//i.test(q().source || "")) attribution.href = q().source;
-          else attribution.removeAttribute("href");
-        }
         img.alt = "Hidden picture";
         const entry = roundPictures[qi];
         const version = pictureLoadVersion;
@@ -2339,7 +2333,7 @@
         start = performance.now() - Math.max(0, Number(saved?.elapsedMs) || 0);
         renderRevealAllowance();
         $("reveals").classList.remove("empty");
-        $("cat").textContent = q().cat + " · " + difficulty.label;
+        $("cat").textContent = "CATEGORY · " + String(q().cat).replaceAll("_", " ");
         const pictureReady = positionPicture();
         $("msg").textContent = saved
           ? "GAME RESTORED"
