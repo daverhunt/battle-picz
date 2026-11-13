@@ -18,6 +18,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "docs/objects-next-81.json"
 SOURCE_FILE = ROOT / "docs/objects-next-81-sources.json"
+OVERRIDE_FILE = ROOT / "docs/objects-photo-overrides.json"
 API = "https://commons.wikimedia.org/w/api.php"
 HEADERS = {"User-Agent": "PicRivalsCategoryArtwork/1.0 (educational picture quiz; https://github.com/daverhunt/battle-picz)", "Accept": "application/json,image/*"}
 BANNED = ("logo", "diagram", "drawing", "sketch", "illustration", "cartoon", "clipart", "collage", "advertis", "poster", "icon", "flag", "map", "painting", "sheet music", "historical", "vintage postcard", "museum sign", "illustrated")
@@ -61,6 +62,18 @@ def commons_search(answer, limit=24):
         if len(results) > 8: break
         time.sleep(.18)
     return results
+
+def curated_photo(filename):
+    """Retrieve Wikimedia Commons metadata for a hand-selected subject photograph."""
+    data=request(API,{
+        "action":"query","format":"json","titles":"File:"+filename,
+        "prop":"imageinfo","iiprop":"url|size|mime|extmetadata",
+        "iiurlwidth":640,
+        "iiextmetadatafilter":"LicenseShortName|LicenseUrl|Artist|Attribution|Credit"
+    })
+    result=list(data.get("query",{}).get("pages",{}).values())
+    for page in result: page["_curated"]=True
+    return result
 
 def wikidata_photos(answer):
     """Use a Wikidata concept's P18 photo before ambiguous filename matches."""
@@ -112,7 +125,7 @@ def score(page, answer):
     name = page.get("title","").replace("File:","").lower()
     name = re.sub(r"[_-]+", " ", name)
     core = re.escape(answer.lower())
-    trusted_depiction=bool(page.get("_wikidata"))
+    trusted_depiction=bool(page.get("_wikidata") or page.get("_curated"))
     if not trusted_depiction and not re.search(rf"(?<![a-z]){core}(?![a-z])", name): return -1000
     if any(bad in name for bad in BANNED): return -1000
     # Reject other meanings and places that match the word but not the item.
@@ -131,7 +144,7 @@ def score(page, answer):
     if not any(marker in lic for marker in LICENSES): return -1000
     if "NC" in lic or "ND" in lic: return -1000
     relevant = len(re.findall(r"[a-z]+", name))
-    result = 1000 if trusted_depiction else 120 - min(relevant,25)*2
+    result = 1300 if page.get("_curated") else (1000 if trusted_depiction else 120 - min(relevant,25)*2)
     if name.startswith(answer.lower()+" ") or name.startswith(answer.lower()+"."): result += 40
     if "white background" in name or "isolated" in name: result += 22
     if "photo" in name: result += 9
@@ -162,19 +175,21 @@ def main():
     items=json.loads(CATALOG.read_text())["items"]
     existing=json.loads(SOURCE_FILE.read_text()) if SOURCE_FILE.exists() else {}
     records=existing.get("items",{})
+    overrides=json.loads(OVERRIDE_FILE.read_text()).get("files",{}) if OVERRIDE_FILE.exists() else {}
     failures={}
     completed=0
     for item in items:
         slug=item["slug"]
         path=ROOT/item["image"]
-        if path.exists() and slug in records and records[slug].get("quality") == "wikidata-depicts":
+        quality=records.get(slug,{}).get("quality")
+        if path.exists() and quality in ("wikidata-depicts","curated-photo") and not (slug in overrides and quality!="curated-photo"):
             print(f"KEEP verified {slug}",flush=True)
             continue
         if args.limit and completed >= args.limit: break
         completed+=1
         print(f"FETCH {slug}",flush=True)
         try:
-            candidates=wikidata_photos(item["answer"])
+            candidates=curated_photo(overrides[slug]) if slug in overrides else wikidata_photos(item["answer"])
             if not any(score(p,item["answer"])>=30 for p in candidates):
                 candidates+=commons_search(item["answer"])
             candidates=sorted(candidates,key=lambda p:score(p,item["answer"]),reverse=True)
@@ -200,7 +215,7 @@ def main():
                     "original":info.get("url",""),
                     "modifications":"Resized and converted to WebP; letterboxed on cream background",
                     "reviewed":False,
-                    "quality":"wikidata-depicts" if page.get("_wikidata") else "title-match",
+                    "quality":"curated-photo" if page.get("_curated") else ("wikidata-depicts" if page.get("_wikidata") else "title-match"),
                     "wikidata":page.get("_wikidata"),
                 }
                 print(f"  saved {page.get('title')} ({len(picture)} bytes)",flush=True)
