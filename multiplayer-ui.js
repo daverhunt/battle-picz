@@ -28,7 +28,7 @@
   panel.innerHTML = `
     <header class="matches-header">
       <span class="playroom-mark" aria-hidden="true">▦</span>
-      <div class="matches-brand"><span class="playroom-kicker">PIC <span>RIVALS</span></span><h2>Your Battles</h2><p class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span></p></div>
+      <div class="matches-brand"><span class="playroom-kicker">PIC <span>RIVALS</span></span><h2>Your Battles</h2><div class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span><button class="matches-add-coins" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div></div>
       <div class="matches-header-actions">
         <button class="matches-shop" type="button" aria-label="Power-up shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
         <button class="matches-settings" aria-label="Settings">⚙</button>
@@ -328,6 +328,75 @@
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
   panel.querySelector('.matches-shop').onclick = () => window.openPicRivalsShop?.();
+  // Apple / Google native billing will be enabled only when an authenticated
+  // store bridge and server-verified fulfilment are available. No web checkout.
+  const coinPacks = [
+    {id:'picrivals_coins_100',coins:100},
+    {id:'picrivals_coins_500',coins:500},
+    {id:'picrivals_coins_1200',coins:1200}
+  ];
+  const coinDialog = document.createElement('dialog');
+  coinDialog.className = 'picrivals-coin-dialog';
+  coinDialog.setAttribute('aria-label','Buy coins');
+  coinDialog.innerHTML = '<h2>Buy Coins</h2><p class="coin-purchase-intro">Top up your coins to unlock more power-ups.</p><div class="coin-purchase-options"></div><p class="coin-purchase-message" role="status"></p><button class="coin-purchase-close" type="button">Close</button>';
+  document.getElementById('game').append(coinDialog);
+  coinDialog.querySelector('.coin-purchase-close').onclick = () => coinDialog.close();
+  panel.querySelector('.matches-add-coins').onclick = async () => {
+    const list = coinDialog.querySelector('.coin-purchase-options');
+    const status = coinDialog.querySelector('.coin-purchase-message');
+    const bridge = window.PicRivalsNativeIAP;
+    const available = Boolean(bridge && typeof bridge.purchase === 'function' && typeof bridge.getProducts === 'function');
+    list.replaceChildren();
+    status.textContent = available ? 'Checking App Store / Google Play pricing…' : 'Coin purchases will be available in the iOS and Android apps. No payments are being taken here.';
+    coinDialog.showModal();
+    if (!available) {
+      for (const pack of coinPacks) {
+        const row = document.createElement('div');
+        row.className = 'coin-purchase-pack';
+        row.textContent = pack.coins.toLocaleString() + ' coins';
+        const unavailable = document.createElement('span');
+        unavailable.textContent = 'Coming soon';
+        row.append(unavailable);
+        list.append(row);
+      }
+      return;
+    }
+    try {
+      const products = await bridge.getProducts(coinPacks.map(pack => pack.id));
+      if (!coinDialog.open) return;
+      const byId = new Map((Array.isArray(products) ? products : []).map(item=>[item.id,item]));
+      let listed = 0;
+      for (const pack of coinPacks) {
+        const product = byId.get(pack.id);
+        if (!product || !product.localizedPrice) continue;
+        listed++;
+        const button = document.createElement('button');
+        button.className = 'coin-purchase-pack';
+        button.textContent = pack.coins.toLocaleString() + ' coins · ' + product.localizedPrice;
+        button.onclick = async () => {
+          list.querySelectorAll('button').forEach(x=>x.disabled=true);
+          status.textContent = 'Complete your purchase in the store…';
+          try {
+            // Bridge must complete receipt validation and server-side crediting.
+            // This web UI never grants currency from a client purchase response.
+            await bridge.purchase(pack.id);
+            const profile = await backend.getProfile();
+            window.dispatchEvent(new CustomEvent('battle-picz:balance',{detail:profile.coins}));
+            status.textContent = 'Purchase processed. Check your updated balance.';
+          } catch(error) {
+            status.textContent = 'Purchase was cancelled or could not be verified. No coins were granted by this screen.';
+          } finally {
+            list.querySelectorAll('button').forEach(x=>x.disabled=false);
+          }
+        };
+        list.append(button);
+      }
+      status.textContent = listed ? 'Prices are supplied by your app store.' : 'Coin packs are not yet configured in your app store.';
+    } catch(error) {
+      status.textContent = 'Unable to load purchases. Please try again later.';
+    }
+  };
+
   const weeklyRecord = panel.querySelector('.weekly-record');
   const weeklyCountdown = panel.querySelector('.weekly-countdown');
   const weeklySummary = panel.querySelector('.weekly-summary');
