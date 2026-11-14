@@ -494,3 +494,38 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   flex:0 0 7px;min-width:7px;width:7px;
   padding:0;border:0;background:transparent;box-shadow:none;
 }
+
+/* Lobby: coin top-up action beside current balance */
+.matches-header .matches-balance{display:flex;align-items:center;gap:6px}
+.matches-header .matches-balance .matches-add-coins{
+  display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;
+  padding:0;margin-left:3px;border:1px solid #efffc1;border-radius:50%;
+  background:linear-gradient(#caff5d,#7bcf18);color:#214d0d;
+  box-shadow:inset 0 1px #fff9,0 2px 0 #4e9415;
+  font:bold 21px/1 Arial,sans-serif;text-shadow:0 1px #ffffff9c;
+}
+.matches-header .matches-balance .matches-add-coins:focus-visible{
+  outline:3px solid #238fee;outline-offset:3px
+}
+/* Native store sheet; never silently triggers a purchase. */
+#game .picrivals-coin-dialog{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  box-sizing:border-box;width:min(calc(100% - 30px),350px);max-height:85%;
+  overflow:auto;padding:23px 19px 19px;border:2px solid #9acdf3;
+  border-radius:20px;background:#fffaf0;color:#102650;
+  box-shadow:0 13px 36px #102e5480;font-family:var(--round)
+}
+#game .picrivals-coin-dialog::backdrop{background:#071a35aa}
+#game .picrivals-coin-dialog h2{margin:0 0 12px;font:bold 24px var(--round);color:#123f72}
+#game .picrivals-coin-dialog p{font:13px/1.45 Arial,sans-serif}
+#game .coin-purchase-options{display:grid;gap:10px;margin:16px 0}
+#game .coin-purchase-pack{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:13px 12px;border:1px solid #bfdcf2;border-radius:12px;
+  background:linear-gradient(#f7fcff,#dbeefa);color:#174f80;
+  font:700 14px var(--round)
+}
+#game button.coin-purchase-pack{cursor:pointer;text-align:left}
+#game .coin-purchase-pack span{color:#6b7f92;font:11px Arial}
+#game .coin-purchase-message{min-height:35px;color:#536b84}
+#game .coin-purchase-close{width:100%;padding:12px 8px;border:1px solid #b2dfff;border-radius:12px;background:linear-gradient(#56beff,#078de6);color:white;font:bold 15px var(--round)}
