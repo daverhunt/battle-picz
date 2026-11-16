@@ -1,23 +1,28 @@
 # Objects AI artwork replacement — current status
 
-Updated 2026-11-16. **This is a work-in-progress, not a completed release.**
+Updated 2026-11-16. **Work in progress: no candidate replacement assets have been committed or deployed.**
 
-- 100 active Objects entries and their existing question IDs remain intact in Supabase.
-- Exact composition assignments for all 100: `docs/objects-ai-compositions.json` (35 centered / 25 horizontal / 25 vertical / 15 diagonal).
-- Existing licensed-photo auto-import is disabled at `.github/workflows/fetch-objects.yml`.
-- A first 32 AI-generated replacement candidates have been created and visually reviewed in ChatGPT, with original subject names. They **are not committed into GitHub and are not live**. Their artwork PDF and ZIP are conversation artifacts.
-- An additional 36 provisional extracted candidate images require cleanup because the generated grids contain numbered labels, crop artefacts, or poor framing.
-- 32 Objects still lack exact-match, good-quality generated pictures: egg cup, funnel, glue stick, hairdryer, hammock, jug, keyboard, ladle, mirror, mop, nail clippers, peeler, pen, pillow, radio, razor, rolling pin, rubber band, rug, sharpener, sieve, sofa, spinning top, sponge, stool, teapot, tent, tongs, tweezers, vase, washing machine, yo-yo.
-- **Do not** declare the 100-image conversion finished or set `question.generated=true` until all 100 new binary WebP assets are committed at their existing paths and verified on Vercel.
-- Do not erase provenance fields of the still-live licensed images just to change appearances or metadata. Compliance changes should coincide with replacing the files.
-- Maintain the existing fixed picture-ID mappings for each game round; never rewrite active match snapshots to new IDs.
+## Verified game state
+- Supabase: 100 active Objects questions; none currently marked generated.
+- Existing picture IDs and paths unchanged. Player matches and round snapshots unchanged.
+- Source-photo importer disabled (`.github/workflows/fetch-objects.yml`).
+- Exact approved composition distribution for the 100 objects recorded in `docs/objects-ai-compositions.json`: 35 centered, 25 horizontal offsets, 25 vertical offsets, 15 diagonal/corner.
 
-## Acceptance checks before publication
+## Image production
+- **48 AI-generated candidate WebP illustrations** have been produced in the current ChatGPT task. This includes the original 32 cleaner candidates plus 16 new exact-answer candidates: Egg Cup, Funnel, Glue Stick, Hairdryer, Hammock, Jug, Keyboard, Ladle, Mirror, Mop, Nail Clippers, Peeler, Pen, Pillow, Radio and Razor.
+- The 48 candidates are in a conversation-attachment ZIP and 8-page phone-friendly review PDF, **not in this GitHub repository**. Do not mistake this metadata record for a deployment.
+- 52 Objects still require exact-match quality-assured images: Dustpan, Envelope, Fork, Grater, Hanger, Headphones, Iron, Jigsaw, Kettle, Kite, Lamp, Laptop, Microphone, Mouse, Mug, Paintbrush, Paperclip, Peg, Pencil, Picnic Basket, Plant Pot, Plate, Plunger, Rolling Pin, Rubber Band, Rug, Ruler, Sharpener, Sieve, Soap, Sofa, Spinning Top, Sponge, Stamp, Stapler, Stool, Tablet, Teapot, Teddy Bear, Tent, Toaster, Toilet Roll, Tongs, Toothbrush, Toothpaste, Torch, Towel, Tweezers, Vase, Washing Machine, Watering Can, Yo-Yo.
+- Some additional raw image sheets were excluded due to incorrect object matches, labels or cropping.
 
-1. All 100 exact-match image files must exist, decode, and be recognisable without printed words or numbered badges.
-2. Each composition must match the assignment and subject must remain inside frame; inspect actual geometry, not only assigned labels.
-3. All 100 paths and current question IDs must remain unchanged; completed active matches are not mutated.
-4. Verify both players receive identical assets, tiles and letters within the same round.
-5. Compare image URLs in production and confirm the actual bytes are the replacement images, not cached licensed copies.
-6. Perform a 2-player gameplay smoke test; confirm the Objects active count stays 100.
-7. Once all checks pass, update Supabase question provenance to `generated:true` and remove third-party credit fields for replaced entries, then confirm no attribution renders in gameplay.
+## Acceptance and release checklist
+
+1. Complete all 100 original, brand-free, watermark-free AI illustrations with clear distinctive objects.
+2. Visually check actual subject placement as well as preset quotas (35/25/25/15). A composition label is not proof of output.
+3. Verify every WebP decodes, correct file name/answer, and original ID/path remain unchanged.
+4. Replace binary assets on a staged GitHub branch, not by altering existing match snapshot data.
+5. Test a full two-player match and confirm both players see identical images, reveal-grid and seeded letters.
+6. Confirm deployment bytes match replacements, not cached old pictures.
+7. Only after production asset validation, change Supabase provenance to `generated: true` and remove third-party source/artist/licence fields. Do not remove lawful source metadata before the actual licensed artwork is gone.
+8. In gameplay, show the category label, not origin or attribution.
+
+**Publishing condition:** Until all checks pass, the live 100 Objects picture bank remains intact. Do not claim the AI conversion is complete.
