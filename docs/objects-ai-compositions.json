@@ -1,0 +1,713 @@
+{
+  "category": "OBJECTS",
+  "total": 100,
+  "compositionPolicy": {
+    "centered": 35,
+    "horizontal-offset": 25,
+    "vertical-offset": 25,
+    "diagonal-corner": 15
+  },
+  "notes": "This is a deterministic composition plan, NOT evidence that corresponding AI artwork has been generated, reviewed or deployed. Keep image paths and IDs unchanged. Do not set generated metadata until verified assets have replaced existing files.",
+  "assets": [
+    {
+      "id": "objects:balloon",
+      "answer": "Balloon",
+      "image": "assets/images/categories/objects/balloon.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:bed",
+      "answer": "Bed",
+      "image": "assets/images/categories/objects/bed.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:binoculars",
+      "answer": "Binoculars",
+      "image": "assets/images/categories/objects/binoculars.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:book",
+      "answer": "BOOK",
+      "image": "assets/images/categories/objects/book.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:bowl",
+      "answer": "Bowl",
+      "image": "assets/images/categories/objects/bowl.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:broom",
+      "answer": "Broom",
+      "image": "assets/images/categories/objects/broom.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:bucket",
+      "answer": "Bucket",
+      "image": "assets/images/categories/objects/bucket.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:calculator",
+      "answer": "Calculator",
+      "image": "assets/images/categories/objects/calculator.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:calendar",
+      "answer": "Calendar",
+      "image": "assets/images/categories/objects/calendar.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:camera",
+      "answer": "Camera",
+      "image": "assets/images/categories/objects/camera.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:candle",
+      "answer": "CANDLE",
+      "image": "assets/images/categories/objects/candle.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:chair",
+      "answer": "Chair",
+      "image": "assets/images/categories/objects/chair.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:clipboard",
+      "answer": "Clipboard",
+      "image": "assets/images/categories/objects/clipboard.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:clock",
+      "answer": "CLOCK",
+      "image": "assets/images/categories/objects/clock.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:colander",
+      "answer": "Colander",
+      "image": "assets/images/categories/objects/colander.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:comb",
+      "answer": "COMB",
+      "image": "assets/images/categories/objects/comb.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:compass",
+      "answer": "Compass",
+      "image": "assets/images/categories/objects/compass.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:corkscrew",
+      "answer": "Corkscrew",
+      "image": "assets/images/categories/objects/corkscrew.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:crayon",
+      "answer": "Crayon",
+      "image": "assets/images/categories/objects/crayon.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:curtain",
+      "answer": "Curtain",
+      "image": "assets/images/categories/objects/curtain.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:cushion",
+      "answer": "Cushion",
+      "image": "assets/images/categories/objects/cushion.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:dice",
+      "answer": "Dice",
+      "image": "assets/images/categories/objects/dice.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:domino",
+      "answer": "Domino",
+      "image": "assets/images/categories/objects/domino.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:doormat",
+      "answer": "Doormat",
+      "image": "assets/images/categories/objects/doormat.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:duster",
+      "answer": "Duster",
+      "image": "assets/images/categories/objects/duster.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:dustpan",
+      "answer": "Dustpan",
+      "image": "assets/images/categories/objects/dustpan.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:egg-cup",
+      "answer": "Egg cup",
+      "image": "assets/images/categories/objects/egg-cup.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:envelope",
+      "answer": "Envelope",
+      "image": "assets/images/categories/objects/envelope.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:fork",
+      "answer": "FORK",
+      "image": "assets/images/categories/objects/fork.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:funnel",
+      "answer": "Funnel",
+      "image": "assets/images/categories/objects/funnel.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:glue-stick",
+      "answer": "Glue stick",
+      "image": "assets/images/categories/objects/glue-stick.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:grater",
+      "answer": "Grater",
+      "image": "assets/images/categories/objects/grater.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:hairdryer",
+      "answer": "Hairdryer",
+      "image": "assets/images/categories/objects/hairdryer.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:hammock",
+      "answer": "Hammock",
+      "image": "assets/images/categories/objects/hammock.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:hanger",
+      "answer": "Hanger",
+      "image": "assets/images/categories/objects/hanger.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:headphones",
+      "answer": "Headphones",
+      "image": "assets/images/categories/objects/headphones.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:iron",
+      "answer": "Iron",
+      "image": "assets/images/categories/objects/iron.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:jigsaw",
+      "answer": "Jigsaw",
+      "image": "assets/images/categories/objects/jigsaw.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:jug",
+      "answer": "Jug",
+      "image": "assets/images/categories/objects/jug.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:kettle",
+      "answer": "KETTLE",
+      "image": "assets/images/categories/objects/kettle.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:key",
+      "answer": "KEY",
+      "image": "assets/images/categories/objects/key.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:keyboard",
+      "answer": "Keyboard",
+      "image": "assets/images/categories/objects/keyboard.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:kite",
+      "answer": "Kite",
+      "image": "assets/images/categories/objects/kite.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:ladle",
+      "answer": "Ladle",
+      "image": "assets/images/categories/objects/ladle.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:lamp",
+      "answer": "Lamp",
+      "image": "assets/images/categories/objects/lamp.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:laptop",
+      "answer": "Laptop",
+      "image": "assets/images/categories/objects/laptop.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:microphone",
+      "answer": "Microphone",
+      "image": "assets/images/categories/objects/microphone.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:mirror",
+      "answer": "Mirror",
+      "image": "assets/images/categories/objects/mirror.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:mop",
+      "answer": "Mop",
+      "image": "assets/images/categories/objects/mop.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:mouse",
+      "answer": "Mouse",
+      "image": "assets/images/categories/objects/mouse.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:mug",
+      "answer": "Mug",
+      "image": "assets/images/categories/objects/mug.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:nail-clippers",
+      "answer": "Nail clippers",
+      "image": "assets/images/categories/objects/nail-clippers.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:padlock",
+      "answer": "PADLOCK",
+      "image": "assets/images/categories/objects/padlock.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:paintbrush",
+      "answer": "Paintbrush",
+      "image": "assets/images/categories/objects/paintbrush.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:paperclip",
+      "answer": "PAPERCLIP",
+      "image": "assets/images/categories/objects/paperclip.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:peeler",
+      "answer": "Peeler",
+      "image": "assets/images/categories/objects/peeler.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:peg",
+      "answer": "Peg",
+      "image": "assets/images/categories/objects/peg.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:pen",
+      "answer": "Pen",
+      "image": "assets/images/categories/objects/pen.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:pencil",
+      "answer": "PENCIL",
+      "image": "assets/images/categories/objects/pencil.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:picnic-basket",
+      "answer": "Picnic basket",
+      "image": "assets/images/categories/objects/picnic-basket.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:pillow",
+      "answer": "Pillow",
+      "image": "assets/images/categories/objects/pillow.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:plant-pot",
+      "answer": "Plant pot",
+      "image": "assets/images/categories/objects/plant-pot.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:plate",
+      "answer": "Plate",
+      "image": "assets/images/categories/objects/plate.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:plunger",
+      "answer": "Plunger",
+      "image": "assets/images/categories/objects/plunger.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:radio",
+      "answer": "Radio",
+      "image": "assets/images/categories/objects/radio.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:razor",
+      "answer": "Razor",
+      "image": "assets/images/categories/objects/razor.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:rolling-pin",
+      "answer": "Rolling pin",
+      "image": "assets/images/categories/objects/rolling-pin.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:rubber-band",
+      "answer": "Rubber band",
+      "image": "assets/images/categories/objects/rubber-band.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:rug",
+      "answer": "Rug",
+      "image": "assets/images/categories/objects/rug.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:ruler",
+      "answer": "Ruler",
+      "image": "assets/images/categories/objects/ruler.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:scissors",
+      "answer": "SCISSORS",
+      "image": "assets/images/categories/objects/scissors.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:sharpener",
+      "answer": "Sharpener",
+      "image": "assets/images/categories/objects/sharpener.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:sieve",
+      "answer": "Sieve",
+      "image": "assets/images/categories/objects/sieve.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:soap",
+      "answer": "Soap",
+      "image": "assets/images/categories/objects/soap.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:sofa",
+      "answer": "Sofa",
+      "image": "assets/images/categories/objects/sofa.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:spinning-top",
+      "answer": "Spinning top",
+      "image": "assets/images/categories/objects/spinning-top.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:sponge",
+      "answer": "Sponge",
+      "image": "assets/images/categories/objects/sponge.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:spoon",
+      "answer": "SPOON",
+      "image": "assets/images/categories/objects/spoon.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:stamp",
+      "answer": "Stamp",
+      "image": "assets/images/categories/objects/stamp.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:stapler",
+      "answer": "STAPLER",
+      "image": "assets/images/categories/objects/stapler.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:stool",
+      "answer": "Stool",
+      "image": "assets/images/categories/objects/stool.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:tablet",
+      "answer": "Tablet",
+      "image": "assets/images/categories/objects/tablet.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:teapot",
+      "answer": "Teapot",
+      "image": "assets/images/categories/objects/teapot.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:teddy-bear",
+      "answer": "Teddy bear",
+      "image": "assets/images/categories/objects/teddy-bear.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:telephone",
+      "answer": "TELEPHONE",
+      "image": "assets/images/categories/objects/telephone.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:tent",
+      "answer": "Tent",
+      "image": "assets/images/categories/objects/tent.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:toaster",
+      "answer": "TOASTER",
+      "image": "assets/images/categories/objects/toaster.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:toilet-roll",
+      "answer": "Toilet roll",
+      "image": "assets/images/categories/objects/toilet-roll.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:tongs",
+      "answer": "Tongs",
+      "image": "assets/images/categories/objects/tongs.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:toothbrush",
+      "answer": "TOOTHBRUSH",
+      "image": "assets/images/categories/objects/toothbrush.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:toothpaste",
+      "answer": "Toothpaste",
+      "image": "assets/images/categories/objects/toothpaste.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:torch",
+      "answer": "TORCH",
+      "image": "assets/images/categories/objects/torch.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:towel",
+      "answer": "Towel",
+      "image": "assets/images/categories/objects/towel.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:tweezers",
+      "answer": "Tweezers",
+      "image": "assets/images/categories/objects/tweezers.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:umbrella",
+      "answer": "UMBRELLA",
+      "image": "assets/images/categories/objects/umbrella.webp",
+      "composition": "vertical-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:vase",
+      "answer": "Vase",
+      "image": "assets/images/categories/objects/vase.webp",
+      "composition": "diagonal-corner",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:washing-machine",
+      "answer": "Washing machine",
+      "image": "assets/images/categories/objects/washing-machine.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:watering-can",
+      "answer": "Watering can",
+      "image": "assets/images/categories/objects/watering-can.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:whisk",
+      "answer": "WHISK",
+      "image": "assets/images/categories/objects/whisk.webp",
+      "composition": "centered",
+      "aiAssetVerified": false
+    },
+    {
+      "id": "objects:yo-yo",
+      "answer": "Yo-yo",
+      "image": "assets/images/categories/objects/yo-yo.webp",
+      "composition": "horizontal-offset",
+      "aiAssetVerified": false
+    }
+  ]
+}
