@@ -1,28 +1,26 @@
-# Objects AI artwork replacement — current status
+# Objects AI artwork replacement — status
 
-Updated 2026-11-16. **Work in progress: no candidate replacement assets have been committed or deployed.**
+Last updated: 2026-11-16. **Image generation reached 100 candidates. Deployment is NOT complete.**
 
-## Verified game state
-- Supabase: 100 active Objects questions; none currently marked generated.
-- Existing picture IDs and paths unchanged. Player matches and round snapshots unchanged.
-- Source-photo importer disabled (`.github/workflows/fetch-objects.yml`).
-- Exact approved composition distribution for the 100 objects recorded in `docs/objects-ai-compositions.json`: 35 centered, 25 horizontal offsets, 25 vertical offsets, 15 diagonal/corner.
+## What exists
 
-## Image production
-- **48 AI-generated candidate WebP illustrations** have been produced in the current ChatGPT task. This includes the original 32 cleaner candidates plus 16 new exact-answer candidates: Egg Cup, Funnel, Glue Stick, Hairdryer, Hammock, Jug, Keyboard, Ladle, Mirror, Mop, Nail Clippers, Peeler, Pen, Pillow, Radio and Razor.
-- The 48 candidates are in a conversation-attachment ZIP and 8-page phone-friendly review PDF, **not in this GitHub repository**. Do not mistake this metadata record for a deployment.
-- 52 Objects still require exact-match quality-assured images: Dustpan, Envelope, Fork, Grater, Hanger, Headphones, Iron, Jigsaw, Kettle, Kite, Lamp, Laptop, Microphone, Mouse, Mug, Paintbrush, Paperclip, Peg, Pencil, Picnic Basket, Plant Pot, Plate, Plunger, Rolling Pin, Rubber Band, Rug, Ruler, Sharpener, Sieve, Soap, Sofa, Spinning Top, Sponge, Stamp, Stapler, Stool, Tablet, Teapot, Teddy Bear, Tent, Toaster, Toilet Roll, Tongs, Toothbrush, Toothpaste, Torch, Towel, Tweezers, Vase, Washing Machine, Watering Can, Yo-Yo.
-- Some additional raw image sheets were excluded due to incorrect object matches, labels or cropping.
+- 100 candidate AI-made object pictures have been assembled as WebP files (384×384) in the ChatGPT conversation's downloadable ZIP and phone-friendly 17-page PDF. These file binaries are **not committed to this repository**.
+- A reproducible composition allocation is committed in `docs/objects-ai-compositions.json`: 35 centred, 25 horizontal offsets, 25 vertical offsets, 15 diagonal/corner. The exported images are candidate compositions and must be checked against this allocation visually; automatic positioning metadata is not proof.
+- Several inaccurate / artefact-ridden generated sheets were rejected, and replacements were found for 100 answer IDs. A few images from number-labelled sheets still need manual polishing before shipment, especially Dustpan, Peg, Kite and Picnic Basket. No external photo provenance has been altered.
+- Source-backed Wikimedia photo import automation was disabled to prevent accidental introduction of new third-party photographs.
 
-## Acceptance and release checklist
+## Live state (unchanged)
 
-1. Complete all 100 original, brand-free, watermark-free AI illustrations with clear distinctive objects.
-2. Visually check actual subject placement as well as preset quotas (35/25/25/15). A composition label is not proof of output.
-3. Verify every WebP decodes, correct file name/answer, and original ID/path remain unchanged.
-4. Replace binary assets on a staged GitHub branch, not by altering existing match snapshot data.
-5. Test a full two-player match and confirm both players see identical images, reveal-grid and seeded letters.
-6. Confirm deployment bytes match replacements, not cached old pictures.
-7. Only after production asset validation, change Supabase provenance to `generated: true` and remove third-party source/artist/licence fields. Do not remove lawful source metadata before the actual licensed artwork is gone.
-8. In gameplay, show the category label, not origin or attribution.
+- Supabase: 100 active Objects questions, 0 marked as generated.
+- Production currently serves the legacy photos. This is **not yet** an AI-only Objects release.
+- Existing question IDs, answer strings, image paths and all active player matches remain intact.
 
-**Publishing condition:** Until all checks pass, the live 100 Objects picture bank remains intact. Do not claim the AI conversion is complete.
+## Required release sequence
+
+1. Finish the remaining visual QA and touch-ups, including no labels, badges or unintentionally cropped objects.
+2. Upload each replacement WebP **to its existing** `assets/images/categories/objects/<slug>.webp` path on a staging branch. No ID changes.
+3. Verify 100 uploaded images and matching hashes. Check that client picture loading, same-match image and seeded grid remain stable for both players.
+4. Only after the binary image assets are available, mark the Objects entries generated in Supabase and clear obsolete external-source credit metadata. Do not prematurely change metadata.
+5. Publish to the main Vercel deployment and verify actual game rendering.
+
+**Do not claim this image conversion is published until step 5 is complete.**
