@@ -1,29 +1,23 @@
-# Objects AI replacement — quality-control status
+# Objects AI replacement — strict visual QA
 
-Updated 2026-11-16. **Staged only: no AI artwork binary files have been published to GitHub or Vercel.**
+Updated 2026-11-16. **Unreleased:** none of the new AI candidate binary images have been committed to GitHub or deployed to Vercel.
 
-## Inventory
+## Current work completed in ChatGPT
 
-- All 100 active Objects questions retain their existing IDs, answers and image paths in Supabase. Zero remain marked AI-generated in the live database.
-- A 100-image draft candidate pack exists as a ChatGPT conversation artifact. It must not be treated as a published set.
-- A **new 100-image draft ZIP (v3)** replaced 10 faulty candidate assets:
-  `paintbrush`, `stamp`, `tablet`, `teddy-bear`, `telephone`, `peg`, `kite`, `picnic-basket`, `dustpan`, `paperclip`.
-- The user's wrong-picture report was confirmed: the previous `paintbrush.webp` showed **pliers**. The replacement now shows a paintbrush.
-- The old stamp had unwanted text and the teddy bear, peg, kite and picnic basket were poorly cropped; the updated images show the intended objects without the old visible border artifacts. A two-page phone-friendly correction PDF is available as a ChatGPT conversation artifact.
-- **Broom remains flagged**: existing candidate has a clipped handle. Other provisional images also require inspection for foreign objects, cut-off silhouettes or borders (particularly envelope, fork, hanger, lamp, microphone, mouse, ruler, toothpaste and towel).
-- The 35/25/25/15 composition plan remains in `docs/objects-ai-compositions.json`; a preset alone does not guarantee every actual image uses that composition.
-- The former Commons third-party-photo importer is disabled.
+- Audited the 100-image staged ZIP against the 100 Objects answer labels and visually inspected the five 20-image contact sheets.
+- Corrected **23 additional assets during the newest cleanup pass**, including the obvious panel-border artefacts for Envelope, Fork, Grater, Hanger, Headphones, Iron, Jigsaw, Kettle, Lamp, Laptop, Microphone, Mouse, Mug, Pencil, Plate and Plunger, plus full-length Broom, Egg Cup with an egg, Plant Pot, Stapler, Toilet Roll, Toaster and Torch.
+- These 23 are additional to 10 earlier corrected assets: Paintbrush (previously incorrectly showing pliers), Stamp, Tablet, Teddy Bear, Telephone, Peg, Kite, Picnic Basket, Dustpan and Paperclip.
+- Prepared a 100-file draft ZIP with these replacements. The ZIP was decoded and hash-checked: 100 unique 384×384 WebP files, all filenames and SHA-256 hashes matching its internal manifest.
+- **Six remaining visible rejects** after the update: Ruler, Soap, Toothbrush, Toothpaste, Towel, Watering Can. Cleanups were attempted without new image generation but visual checks still showed defects (stray characters, edges, insufficient image quality). Do **not** mark these approved or ship the draft ZIP.
+- The remaining objects are candidates, not certified game-ready until the final whole-category visual check is passed. The 35/25/25/15 compositions are assigned in `docs/objects-ai-compositions.json`; assignment is not evidence of actual composition.
+- No licensed photos were overwritten in the production repository; no Supabase generated flags or player-match data changed.
 
-## Multiword answers
+## Blockers before release
 
-The production `index.html` implementation contains `answerLetters()` which excludes spaces from selectable tiles and `answer-gap` for visible separation, supporting `EGG CUP`, `TOILET ROLL` and other multiword entries. This should still be tested on a real two-player round before release.
+1. Regenerate the six rejects as clean high-resolution AI illustrations without words, border lines or clipped silhouettes.
+2. Visually recheck the complete 100 at game viewport size and audit any remaining ambiguous subject-image mapping.
+3. Publish the exact 100 verified WebP files under their existing `assets/images/categories/objects/<slug>.webp` paths, preserving all IDs and answers.
+4. Verify staged hashes, two-player seeded grid agreement, and that Supabase continues to resolve 100 active Objects answers.
+5. Only then update Supabase `generated:true` and remove superseded owner/attribution fields. No attribution should appear in gameplay.
 
-## Publication gate
-
-1. Regenerate/correct all known rejected image candidates and visually inspect all 100 at full game size, including off-centre subjects.
-2. Ship the 100 verified WebP files to **existing** `assets/images/categories/objects/<slug>.webp` paths on a staging branch; check paths, counts and decoded image sizes.
-3. Verify a real two-player match with shared images/reveal layout; compare staged and production asset hashes.
-4. Publish the image assets to main only after QA; then update Supabase `question.generated=true` and remove superseded external source/artist/licence fields.
-5. Confirm the 100 live Objects questions all resolve to the replacement AI artwork, and the category name remains visible with **no image attribution**.
-
-**Do not claim completion until the new image files are in GitHub, live and verified.**
+**Don't report 100 AI images as live until all five steps have succeeded.**
