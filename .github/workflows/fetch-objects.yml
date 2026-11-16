@@ -1,58 +1,16 @@
-name: Fetch licensed Objects pictures
+# This historical third-party photo fetch workflow is deliberately disabled.
+# Pic Rivals category artwork must be original AI-generated imagery.
+name: Licensed photo import (disabled)
 on:
-  push:
-    paths:
-      - 'scripts/fetch-objects-commons.py'
-      - 'scripts/build-object-publish-sql.py'
-      - 'docs/objects-next-81.json'
-      - 'docs/objects-photo-overrides.json'
-      - '.github/workflows/fetch-objects.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: pic-rivals-object-images
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  fetch-pictures:
+  disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
     steps:
-      - name: Check out main
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: true
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install image tools
-        run: python -m pip install 'Pillow==11.1.0' 'requests==2.32.3'
-      - name: Download Commons pictures and preserve attribution
-        run: python scripts/fetch-objects-commons.py
-      - name: Verify photo files and record counts
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          manifest=json.loads(Path('docs/objects-next-81.json').read_text())
-          sources=json.loads(Path('docs/objects-next-81-sources.json').read_text())
-          complete=sum(bool(Path(item['image']).is_file()) for item in manifest['items'])
-          print(f"Created {complete}/{len(manifest['items'])} missing Objects pictures")
-          print("Picture metadata:",len(sources['items']))
-          print("Needs follow-up:",list(sources.get('failures',{})))
-          PY
-      - name: Prepare publish SQL for photo-backed entries
-        run: python scripts/build-object-publish-sql.py
-      - name: Commit new pictures and source credits
-        run: |
-          git config user.name 'pic-rivals-artwork-bot'
-          git config user.email 'pic-rivals-artwork-bot@users.noreply.github.com'
-          git add assets/images/categories/objects/ docs/objects-next-81-sources.json docs/objects-next-81-publish.sql
-          if ! git diff --cached --quiet; then
-            git commit -m "Add openly licensed Objects photos with source credits"
-            git push origin HEAD:main
-          fi
+      - run: |
+          echo "Disabled: licensed photo imports do not satisfy the Pic Rivals AI-only artwork policy."
+          exit 1
