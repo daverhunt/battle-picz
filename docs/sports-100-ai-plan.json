@@ -1,0 +1,719 @@
+{
+  "category": "SPORT",
+  "existingLive": 10,
+  "target": 100,
+  "designRules": {
+    "aiOnly": true,
+    "noAttribution": true,
+    "preserveExistingQuestionIds": true,
+    "compositionCounts": {
+      "centered": 35,
+      "horizontal-offset": 25,
+      "vertical-offset": 25,
+      "diagonal-corner": 15
+    }
+  },
+  "notes": "Planning catalogue only. First 16 AI candidate images are ChatGPT conversation artifacts, NOT published. Do not activate missing assets or change any existing matches. Some niche sporting activities may require further visual QA.",
+  "items": [
+    {
+      "id": "sport:badminton",
+      "answer": "BADMINTON",
+      "image": "assets/images/categories/sport/badminton.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:basketball",
+      "answer": "BASKETBALL",
+      "image": "assets/images/categories/sport/basketball.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:bowling",
+      "answer": "BOWLING",
+      "image": "assets/images/categories/sport/bowling.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:boxing",
+      "answer": "BOXING",
+      "image": "assets/images/categories/sport/boxing.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:cricket",
+      "answer": "CRICKET",
+      "image": "assets/images/categories/sport/cricket.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:football",
+      "answer": "FOOTBALL",
+      "image": "assets/images/categories/sport/football.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:golf",
+      "answer": "GOLF",
+      "image": "assets/images/categories/sport/golf.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:rugby",
+      "answer": "RUGBY",
+      "image": "assets/images/categories/sport/rugby.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:skateboard",
+      "answer": "SKATEBOARD",
+      "image": "assets/images/categories/sport/skateboard.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:tennis",
+      "answer": "TENNIS",
+      "image": "assets/images/categories/sport/tennis.webp",
+      "status": "existing-live-replace-with-ai",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:swimming",
+      "answer": "SWIMMING",
+      "image": "assets/images/categories/sport/swimming.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:cycling",
+      "answer": "CYCLING",
+      "image": "assets/images/categories/sport/cycling.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:archery",
+      "answer": "ARCHERY",
+      "image": "assets/images/categories/sport/archery.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:ice-hockey",
+      "answer": "ICE HOCKEY",
+      "image": "assets/images/categories/sport/ice-hockey.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:volleyball",
+      "answer": "VOLLEYBALL",
+      "image": "assets/images/categories/sport/volleyball.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:table-tennis",
+      "answer": "TABLE TENNIS",
+      "image": "assets/images/categories/sport/table-tennis.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:baseball",
+      "answer": "BASEBALL",
+      "image": "assets/images/categories/sport/baseball.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:american-football",
+      "answer": "AMERICAN FOOTBALL",
+      "image": "assets/images/categories/sport/american-football.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:athletics",
+      "answer": "ATHLETICS",
+      "image": "assets/images/categories/sport/athletics.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:gymnastics",
+      "answer": "GYMNASTICS",
+      "image": "assets/images/categories/sport/gymnastics.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:weightlifting",
+      "answer": "WEIGHTLIFTING",
+      "image": "assets/images/categories/sport/weightlifting.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:fencing",
+      "answer": "FENCING",
+      "image": "assets/images/categories/sport/fencing.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:judo",
+      "answer": "JUDO",
+      "image": "assets/images/categories/sport/judo.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:karate",
+      "answer": "KARATE",
+      "image": "assets/images/categories/sport/karate.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:taekwondo",
+      "answer": "TAEKWONDO",
+      "image": "assets/images/categories/sport/taekwondo.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:wrestling",
+      "answer": "WRESTLING",
+      "image": "assets/images/categories/sport/wrestling.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:surfing",
+      "answer": "SURFING",
+      "image": "assets/images/categories/sport/surfing.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:skiing",
+      "answer": "SKIING",
+      "image": "assets/images/categories/sport/skiing.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:snowboarding",
+      "answer": "SNOWBOARDING",
+      "image": "assets/images/categories/sport/snowboarding.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:ice-skating",
+      "answer": "ICE SKATING",
+      "image": "assets/images/categories/sport/ice-skating.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:figure-skating",
+      "answer": "FIGURE SKATING",
+      "image": "assets/images/categories/sport/figure-skating.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:speed-skating",
+      "answer": "SPEED SKATING",
+      "image": "assets/images/categories/sport/speed-skating.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:curling",
+      "answer": "CURLING",
+      "image": "assets/images/categories/sport/curling.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:rowing",
+      "answer": "ROWING",
+      "image": "assets/images/categories/sport/rowing.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:canoeing",
+      "answer": "CANOEING",
+      "image": "assets/images/categories/sport/canoeing.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:kayaking",
+      "answer": "KAYAKING",
+      "image": "assets/images/categories/sport/kayaking.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:sailing",
+      "answer": "SAILING",
+      "image": "assets/images/categories/sport/sailing.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:windsurfing",
+      "answer": "WINDSURFING",
+      "image": "assets/images/categories/sport/windsurfing.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:kitesurfing",
+      "answer": "KITESURFING",
+      "image": "assets/images/categories/sport/kitesurfing.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:diving",
+      "answer": "DIVING",
+      "image": "assets/images/categories/sport/diving.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:water-polo",
+      "answer": "WATER POLO",
+      "image": "assets/images/categories/sport/water-polo.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:handball",
+      "answer": "HANDBALL",
+      "image": "assets/images/categories/sport/handball.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:netball",
+      "answer": "NETBALL",
+      "image": "assets/images/categories/sport/netball.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:squash",
+      "answer": "SQUASH",
+      "image": "assets/images/categories/sport/squash.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:racquetball",
+      "answer": "RACQUETBALL",
+      "image": "assets/images/categories/sport/racquetball.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:pickleball",
+      "answer": "PICKLEBALL",
+      "image": "assets/images/categories/sport/pickleball.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:padel",
+      "answer": "PADEL",
+      "image": "assets/images/categories/sport/padel.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:lacrosse",
+      "answer": "LACROSSE",
+      "image": "assets/images/categories/sport/lacrosse.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:field-hockey",
+      "answer": "FIELD HOCKEY",
+      "image": "assets/images/categories/sport/field-hockey.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:polo",
+      "answer": "POLO",
+      "image": "assets/images/categories/sport/polo.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:horse-racing",
+      "answer": "HORSE RACING",
+      "image": "assets/images/categories/sport/horse-racing.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:show-jumping",
+      "answer": "SHOW JUMPING",
+      "image": "assets/images/categories/sport/show-jumping.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:dressage",
+      "answer": "DRESSAGE",
+      "image": "assets/images/categories/sport/dressage.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:triathlon",
+      "answer": "TRIATHLON",
+      "image": "assets/images/categories/sport/triathlon.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:marathon",
+      "answer": "MARATHON",
+      "image": "assets/images/categories/sport/marathon.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:sprinting",
+      "answer": "SPRINTING",
+      "image": "assets/images/categories/sport/sprinting.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:hurdles",
+      "answer": "HURDLES",
+      "image": "assets/images/categories/sport/hurdles.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:high-jump",
+      "answer": "HIGH JUMP",
+      "image": "assets/images/categories/sport/high-jump.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:long-jump",
+      "answer": "LONG JUMP",
+      "image": "assets/images/categories/sport/long-jump.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:triple-jump",
+      "answer": "TRIPLE JUMP",
+      "image": "assets/images/categories/sport/triple-jump.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:pole-vault",
+      "answer": "POLE VAULT",
+      "image": "assets/images/categories/sport/pole-vault.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:shot-put",
+      "answer": "SHOT PUT",
+      "image": "assets/images/categories/sport/shot-put.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:discus",
+      "answer": "DISCUS",
+      "image": "assets/images/categories/sport/discus.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:javelin",
+      "answer": "JAVELIN",
+      "image": "assets/images/categories/sport/javelin.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:hammer-throw",
+      "answer": "HAMMER THROW",
+      "image": "assets/images/categories/sport/hammer-throw.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:climbing",
+      "answer": "CLIMBING",
+      "image": "assets/images/categories/sport/climbing.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:bouldering",
+      "answer": "BOULDERING",
+      "image": "assets/images/categories/sport/bouldering.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:orienteering",
+      "answer": "ORIENTEERING",
+      "image": "assets/images/categories/sport/orienteering.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:parkour",
+      "answer": "PARKOUR",
+      "image": "assets/images/categories/sport/parkour.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:breakdancing",
+      "answer": "BREAKDANCING",
+      "image": "assets/images/categories/sport/breakdancing.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:cheerleading",
+      "answer": "CHEERLEADING",
+      "image": "assets/images/categories/sport/cheerleading.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:rhythmic-gymnastics",
+      "answer": "RHYTHMIC GYMNASTICS",
+      "image": "assets/images/categories/sport/rhythmic-gymnastics.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:trampoline",
+      "answer": "TRAMPOLINE",
+      "image": "assets/images/categories/sport/trampoline.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:darts",
+      "answer": "DARTS",
+      "image": "assets/images/categories/sport/darts.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:snooker",
+      "answer": "SNOOKER",
+      "image": "assets/images/categories/sport/snooker.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:billiards",
+      "answer": "BILLIARDS",
+      "image": "assets/images/categories/sport/billiards.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:pool",
+      "answer": "POOL",
+      "image": "assets/images/categories/sport/pool.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:dodgeball",
+      "answer": "DODGEBALL",
+      "image": "assets/images/categories/sport/dodgeball.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:ultimate-frisbee",
+      "answer": "ULTIMATE FRISBEE",
+      "image": "assets/images/categories/sport/ultimate-frisbee.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:disc-golf",
+      "answer": "DISC GOLF",
+      "image": "assets/images/categories/sport/disc-golf.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:tug-of-war",
+      "answer": "TUG OF WAR",
+      "image": "assets/images/categories/sport/tug-of-war.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:kabaddi",
+      "answer": "KABADDI",
+      "image": "assets/images/categories/sport/kabaddi.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:sepak-takraw",
+      "answer": "SEPAK TAKRAW",
+      "image": "assets/images/categories/sport/sepak-takraw.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:sumo",
+      "answer": "SUMO",
+      "image": "assets/images/categories/sport/sumo.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:kickboxing",
+      "answer": "KICKBOXING",
+      "image": "assets/images/categories/sport/kickboxing.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:muay-thai",
+      "answer": "MUAY THAI",
+      "image": "assets/images/categories/sport/muay-thai.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:mixed-martial-arts",
+      "answer": "MIXED MARTIAL ARTS",
+      "image": "assets/images/categories/sport/mixed-martial-arts.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:roller-derby",
+      "answer": "ROLLER DERBY",
+      "image": "assets/images/categories/sport/roller-derby.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:roller-skating",
+      "answer": "ROLLER SKATING",
+      "image": "assets/images/categories/sport/roller-skating.webp",
+      "status": "planned-ai-image",
+      "composition": "diagonal-corner"
+    },
+    {
+      "id": "sport:bmx",
+      "answer": "BMX",
+      "image": "assets/images/categories/sport/bmx.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:mountain-biking",
+      "answer": "MOUNTAIN BIKING",
+      "image": "assets/images/categories/sport/mountain-biking.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:track-cycling",
+      "answer": "TRACK CYCLING",
+      "image": "assets/images/categories/sport/track-cycling.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:motocross",
+      "answer": "MOTOCROSS",
+      "image": "assets/images/categories/sport/motocross.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:rally-racing",
+      "answer": "RALLY RACING",
+      "image": "assets/images/categories/sport/rally-racing.webp",
+      "status": "planned-ai-image",
+      "composition": "horizontal-offset"
+    },
+    {
+      "id": "sport:karting",
+      "answer": "KARTING",
+      "image": "assets/images/categories/sport/karting.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:formula-racing",
+      "answer": "FORMULA RACING",
+      "image": "assets/images/categories/sport/formula-racing.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:sport-fishing",
+      "answer": "SPORT FISHING",
+      "image": "assets/images/categories/sport/sport-fishing.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:biathlon",
+      "answer": "BIATHLON",
+      "image": "assets/images/categories/sport/biathlon.webp",
+      "status": "planned-ai-image",
+      "composition": "vertical-offset"
+    },
+    {
+      "id": "sport:ski-jumping",
+      "answer": "SKI JUMPING",
+      "image": "assets/images/categories/sport/ski-jumping.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    },
+    {
+      "id": "sport:artistic-swimming",
+      "answer": "ARTISTIC SWIMMING",
+      "image": "assets/images/categories/sport/artistic-swimming.webp",
+      "status": "planned-ai-image",
+      "composition": "centered"
+    }
+  ]
+}
