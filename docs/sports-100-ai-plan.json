@@ -13,132 +13,132 @@
       "diagonal-corner": 15
     }
   },
-  "notes": "Planning catalogue only. First 16 AI candidate images are ChatGPT conversation artifacts, NOT published. Do not activate missing assets or change any existing matches. Some niche sporting activities may require further visual QA.",
+  "notes": "User approved first 21 AI candidate illustrations on 2026-11-17. 79 more unique illustrations required. Approval does not imply GitHub upload or live publication; do not alter the ten existing question IDs or activate image-less entries.",
   "items": [
     {
       "id": "sport:badminton",
       "answer": "BADMINTON",
       "image": "assets/images/categories/sport/badminton.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "diagonal-corner"
     },
     {
       "id": "sport:basketball",
       "answer": "BASKETBALL",
       "image": "assets/images/categories/sport/basketball.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset"
     },
     {
       "id": "sport:bowling",
       "answer": "BOWLING",
       "image": "assets/images/categories/sport/bowling.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset"
     },
     {
       "id": "sport:boxing",
       "answer": "BOXING",
       "image": "assets/images/categories/sport/boxing.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:cricket",
       "answer": "CRICKET",
       "image": "assets/images/categories/sport/cricket.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:football",
       "answer": "FOOTBALL",
       "image": "assets/images/categories/sport/football.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:golf",
       "answer": "GOLF",
       "image": "assets/images/categories/sport/golf.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:rugby",
       "answer": "RUGBY",
       "image": "assets/images/categories/sport/rugby.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:skateboard",
       "answer": "SKATEBOARD",
       "image": "assets/images/categories/sport/skateboard.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:tennis",
       "answer": "TENNIS",
       "image": "assets/images/categories/sport/tennis.webp",
-      "status": "existing-live-replace-with-ai",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:swimming",
       "answer": "SWIMMING",
       "image": "assets/images/categories/sport/swimming.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:cycling",
       "answer": "CYCLING",
       "image": "assets/images/categories/sport/cycling.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:archery",
       "answer": "ARCHERY",
       "image": "assets/images/categories/sport/archery.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "diagonal-corner"
     },
     {
       "id": "sport:ice-hockey",
       "answer": "ICE HOCKEY",
       "image": "assets/images/categories/sport/ice-hockey.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:volleyball",
       "answer": "VOLLEYBALL",
       "image": "assets/images/categories/sport/volleyball.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:table-tennis",
       "answer": "TABLE TENNIS",
       "image": "assets/images/categories/sport/table-tennis.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset"
     },
     {
       "id": "sport:baseball",
       "answer": "BASEBALL",
       "image": "assets/images/categories/sport/baseball.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset"
     },
     {
       "id": "sport:american-football",
       "answer": "AMERICAN FOOTBALL",
       "image": "assets/images/categories/sport/american-football.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset"
     },
     {
@@ -152,14 +152,14 @@
       "id": "sport:gymnastics",
       "answer": "GYMNASTICS",
       "image": "assets/images/categories/sport/gymnastics.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:weightlifting",
       "answer": "WEIGHTLIFTING",
       "image": "assets/images/categories/sport/weightlifting.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "diagonal-corner"
     },
     {
@@ -404,7 +404,7 @@
       "id": "sport:sprinting",
       "answer": "SPRINTING",
       "image": "assets/images/categories/sport/sprinting.webp",
-      "status": "planned-ai-image",
+      "status": "user-approved-ai-candidate-not-published",
       "composition": "centered"
     },
     {
@@ -715,5 +715,7 @@
       "status": "planned-ai-image",
       "composition": "centered"
     }
-  ]
+  ],
+  "approvedCandidateCount": 21,
+  "approvedCandidatePack": "pic-rivals-sports-ai-first-21.zip"
 }
