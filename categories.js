@@ -19,6 +19,34 @@
       if (topCoins) topCoins.textContent=`${Number(data.coins).toLocaleString()} COINS`;
       // Keep this area for real errors only; the coin balance is already in the header.
       status.hidden=true;
+      // Random is a quick-play choice, not a category to buy or persist.
+      // Resolve to a real, owned, playable category before choosing difficulty,
+      // so the server stores the actual category and both opponents get the same images.
+      if (typeof onChoose === 'function') {
+        const eligible = data.categories.filter(category => category.owned && category.pictureCount >= 3);
+        if (eligible.length) {
+          const random = document.createElement('button');
+          random.type = 'button';
+          random.className = 'category-card category-random';
+          random.dataset.category = 'RANDOM';
+          random.setAttribute('aria-label', 'Play a random unlocked category');
+          const label = document.createElement('strong');
+          label.textContent = 'Random';
+          const badge = document.createElement('span');
+          badge.className = 'category-card-badge';
+          badge.setAttribute('aria-hidden', 'true');
+          badge.textContent = '🎲 PLAY';
+          random.append(label, badge);
+          random.onclick = () => {
+            const values = new Uint32Array(1);
+            const index = window.crypto?.getRandomValues
+              ? (window.crypto.getRandomValues(values), values[0] % eligible.length)
+              : Math.floor(Math.random() * eligible.length);
+            onChoose(eligible[index].id);
+          };
+          container.append(random);
+        }
+      }
       for (const category of [...data.categories].sort((a,b) => Number(b.owned) - Number(a.owned))) {
         const ready = category.pictureCount >= 3;
         const button = document.createElement('button');button.type='button';button.className='category-card' + (category.owned ? '' : ' is-locked');
