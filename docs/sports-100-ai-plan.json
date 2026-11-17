@@ -13,7 +13,7 @@
       "diagonal-corner": 15
     }
   },
-  "notes": "31 AI image candidates prepared locally (21 user-approved plus 10 newer candidates), QA for content still needed. No Sports assets have been published by this plan; live game remains on 10 entries. 69 images still to prepare.",
+  "notes": "Nine more distinct, usable AI image candidate tiles prepared on 2026-11-17 (384x384 WEBP) with external answer-key review. These are review-only, not shipped. Earlier 21 approved + later candidates staged; avoid counting overview-only concept grids as deployable images. Keep current live 10 unchanged.",
   "items": [
     {
       "id": "sport:badminton",
@@ -215,7 +215,7 @@
       "id": "sport:snowboarding",
       "answer": "SNOWBOARDING",
       "image": "assets/images/categories/sport/snowboarding.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset"
     },
     {
@@ -229,7 +229,7 @@
       "id": "sport:figure-skating",
       "answer": "FIGURE SKATING",
       "image": "assets/images/categories/sport/figure-skating.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset"
     },
     {
@@ -380,10 +380,10 @@
       "composition": "horizontal-offset"
     },
     {
-      "id": "sport:dressage",
-      "answer": "DRESSAGE",
-      "image": "assets/images/categories/sport/dressage.webp",
-      "status": "planned-ai-image",
+      "id": "sport:equestrian",
+      "answer": "EQUESTRIAN",
+      "image": "assets/images/categories/sport/equestrian.webp",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered"
     },
     {
@@ -397,7 +397,7 @@
       "id": "sport:marathon",
       "answer": "MARATHON",
       "image": "assets/images/categories/sport/marathon.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset"
     },
     {
@@ -418,7 +418,7 @@
       "id": "sport:high-jump",
       "answer": "HIGH JUMP",
       "image": "assets/images/categories/sport/high-jump.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset"
     },
     {
@@ -439,14 +439,14 @@
       "id": "sport:pole-vault",
       "answer": "POLE VAULT",
       "image": "assets/images/categories/sport/pole-vault.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:shot-put",
       "answer": "SHOT PUT",
       "image": "assets/images/categories/sport/shot-put.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset"
     },
     {
@@ -460,7 +460,7 @@
       "id": "sport:javelin",
       "answer": "JAVELIN",
       "image": "assets/images/categories/sport/javelin.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset"
     },
     {
@@ -649,7 +649,7 @@
       "id": "sport:mountain-biking",
       "answer": "MOUNTAIN BIKING",
       "image": "assets/images/categories/sport/mountain-biking.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered"
     },
     {
@@ -731,5 +731,18 @@
     "SKIING",
     "SAILING"
   ],
-  "stagedCandidatePack": "pic-rivals-sports-31-ai-candidates.zip"
+  "stagedCandidatePack": "pic-rivals-sports-31-ai-candidates.zip",
+  "latestReview": "pic-rivals-sports-9-new-review.png",
+  "latestCandidateZip": "pic-rivals-sports-9-new-candidates.zip",
+  "latestCandidateAnswers": [
+    "POLE VAULT",
+    "SHOT PUT",
+    "JAVELIN",
+    "HIGH JUMP",
+    "FIGURE SKATING",
+    "SNOWBOARDING",
+    "MOUNTAIN BIKING",
+    "EQUESTRIAN",
+    "MARATHON"
+  ]
 }
