@@ -13,7 +13,7 @@
       "diagonal-corner": 15
     }
   },
-  "notes": "User approved first 21 AI candidate illustrations on 2026-11-17. 79 more unique illustrations required. Approval does not imply GitHub upload or live publication; do not alter the ten existing question IDs or activate image-less entries.",
+  "notes": "31 AI image candidates prepared locally (21 user-approved plus 10 newer candidates), QA for content still needed. No Sports assets have been published by this plan; live game remains on 10 entries. 69 images still to prepare.",
   "items": [
     {
       "id": "sport:badminton",
@@ -173,14 +173,14 @@
       "id": "sport:judo",
       "answer": "JUDO",
       "image": "assets/images/categories/sport/judo.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "diagonal-corner"
     },
     {
       "id": "sport:karate",
       "answer": "KARATE",
       "image": "assets/images/categories/sport/karate.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "diagonal-corner"
     },
     {
@@ -201,14 +201,14 @@
       "id": "sport:surfing",
       "answer": "SURFING",
       "image": "assets/images/categories/sport/surfing.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:skiing",
       "answer": "SKIING",
       "image": "assets/images/categories/sport/skiing.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered"
     },
     {
@@ -250,7 +250,7 @@
       "id": "sport:rowing",
       "answer": "ROWING",
       "image": "assets/images/categories/sport/rowing.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset"
     },
     {
@@ -271,7 +271,7 @@
       "id": "sport:sailing",
       "answer": "SAILING",
       "image": "assets/images/categories/sport/sailing.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "diagonal-corner"
     },
     {
@@ -306,21 +306,21 @@
       "id": "sport:handball",
       "answer": "HANDBALL",
       "image": "assets/images/categories/sport/handball.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset"
     },
     {
       "id": "sport:netball",
       "answer": "NETBALL",
       "image": "assets/images/categories/sport/netball.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered"
     },
     {
       "id": "sport:squash",
       "answer": "SQUASH",
       "image": "assets/images/categories/sport/squash.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset"
     },
     {
@@ -355,7 +355,7 @@
       "id": "sport:field-hockey",
       "answer": "FIELD HOCKEY",
       "image": "assets/images/categories/sport/field-hockey.webp",
-      "status": "planned-ai-image",
+      "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset"
     },
     {
@@ -717,5 +717,19 @@
     }
   ],
   "approvedCandidateCount": 21,
-  "approvedCandidatePack": "pic-rivals-sports-ai-first-21.zip"
+  "approvedCandidatePack": "pic-rivals-sports-ai-first-21.zip",
+  "stagedCandidateCount": 31,
+  "newCandidateAnswers": [
+    "JUDO",
+    "KARATE",
+    "HANDBALL",
+    "NETBALL",
+    "FIELD HOCKEY",
+    "SQUASH",
+    "SURFING",
+    "ROWING",
+    "SKIING",
+    "SAILING"
+  ],
+  "stagedCandidatePack": "pic-rivals-sports-31-ai-candidates.zip"
 }
