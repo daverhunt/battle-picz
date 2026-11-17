@@ -269,7 +269,8 @@
       "image": "assets/images/categories/sport/speed-skating.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:curling",
@@ -326,7 +327,7 @@
       "status": "planned-ai-image",
       "composition": "centered",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Easily confused with windsurfing"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:diving",
@@ -375,7 +376,7 @@
       "status": "planned-ai-image",
       "composition": "centered",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Too visually similar to squash"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:pickleball",
@@ -416,7 +417,7 @@
       "status": "planned-ai-image",
       "composition": "vertical-offset",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Less familiar and image ambiguous"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:horse-racing",
@@ -432,7 +433,8 @@
       "image": "assets/images/categories/sport/show-jumping.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:equestrian",
@@ -465,7 +467,7 @@
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Overlaps running / athletics"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:hurdles",
@@ -497,7 +499,8 @@
       "image": "assets/images/categories/sport/triple-jump.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:pole-vault",
@@ -537,7 +540,8 @@
       "image": "assets/images/categories/sport/hammer-throw.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:climbing",
@@ -554,7 +558,7 @@
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Overlaps climbing"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:orienteering",
@@ -563,7 +567,7 @@
       "status": "planned-ai-image",
       "composition": "centered",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Hard to distinguish visually"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:parkour",
@@ -595,7 +599,8 @@
       "image": "assets/images/categories/sport/rhythmic-gymnastics.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:trampoline",
@@ -628,7 +633,7 @@
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Overlaps pool and snooker"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:pool",
@@ -677,7 +682,7 @@
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Obscure for broad UK audience"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:sepak-takraw",
@@ -685,7 +690,8 @@
       "image": "assets/images/categories/sport/sepak-takraw.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:sumo",
@@ -709,7 +715,8 @@
       "image": "assets/images/categories/sport/muay-thai.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:mixed-martial-arts",
@@ -717,7 +724,8 @@
       "image": "assets/images/categories/sport/mixed-martial-arts.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:roller-derby",
@@ -725,7 +733,8 @@
       "image": "assets/images/categories/sport/roller-derby.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:roller-skating",
@@ -757,7 +766,8 @@
       "image": "assets/images/categories/sport/track-cycling.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:motocross",
@@ -789,7 +799,8 @@
       "image": "assets/images/categories/sport/formula-racing.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:sport-fishing",
@@ -806,7 +817,7 @@
       "status": "planned-ai-image",
       "composition": "vertical-offset",
       "reviewDecision": "exclude-from-final-selection",
-      "reviewReason": "Specialist winter sport"
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:ski-jumping",
@@ -814,7 +825,8 @@
       "image": "assets/images/categories/sport/ski-jumping.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     },
     {
       "id": "sport:artistic-swimming",
@@ -822,7 +834,8 @@
       "image": "assets/images/categories/sport/artistic-swimming.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "exclude-from-final-selection",
+      "reviewReason": "Overly specialist, unclear image or overlapping answer"
     }
   ],
   "approvedCandidateCount": 21,
@@ -855,6 +868,6 @@
     "MARATHON"
   ],
   "selectionTarget": "recognisable unique answers, no forced 100",
-  "reviewExcludedCount": 9,
-  "reviewRetainedCount": 91
+  "reviewExcludedCount": 22,
+  "reviewRetainedCount": 78
 }
