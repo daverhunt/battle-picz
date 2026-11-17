@@ -352,9 +352,9 @@
       "composition": "centered"
     },
     {
-      "id": "sport:field-hockey",
-      "answer": "FIELD HOCKEY",
-      "image": "assets/images/categories/sport/field-hockey.webp",
+      "id": "sport:hockey",
+      "answer": "HOCKEY",
+      "image": "assets/images/categories/sport/hockey.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset"
     },
@@ -724,7 +724,7 @@
     "KARATE",
     "HANDBALL",
     "NETBALL",
-    "FIELD HOCKEY",
+    "HOCKEY",
     "SQUASH",
     "SURFING",
     "ROWING",
