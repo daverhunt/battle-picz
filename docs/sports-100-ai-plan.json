@@ -21,7 +21,8 @@
       "image": "assets/images/categories/sport/badminton.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:basketball",
@@ -29,7 +30,8 @@
       "image": "assets/images/categories/sport/basketball.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:bowling",
@@ -37,7 +39,8 @@
       "image": "assets/images/categories/sport/bowling.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:boxing",
@@ -45,7 +48,8 @@
       "image": "assets/images/categories/sport/boxing.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:cricket",
@@ -53,7 +57,8 @@
       "image": "assets/images/categories/sport/cricket.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:football",
@@ -61,7 +66,8 @@
       "image": "assets/images/categories/sport/football.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:golf",
@@ -69,7 +75,8 @@
       "image": "assets/images/categories/sport/golf.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:rugby",
@@ -77,7 +84,8 @@
       "image": "assets/images/categories/sport/rugby.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:skateboard",
@@ -85,7 +93,8 @@
       "image": "assets/images/categories/sport/skateboard.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:tennis",
@@ -93,7 +102,8 @@
       "image": "assets/images/categories/sport/tennis.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:swimming",
@@ -101,7 +111,8 @@
       "image": "assets/images/categories/sport/swimming.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:cycling",
@@ -109,7 +120,8 @@
       "image": "assets/images/categories/sport/cycling.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:archery",
@@ -117,7 +129,8 @@
       "image": "assets/images/categories/sport/archery.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:ice-hockey",
@@ -125,7 +138,8 @@
       "image": "assets/images/categories/sport/ice-hockey.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:volleyball",
@@ -133,7 +147,8 @@
       "image": "assets/images/categories/sport/volleyball.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:table-tennis",
@@ -141,7 +156,8 @@
       "image": "assets/images/categories/sport/table-tennis.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:baseball",
@@ -149,7 +165,8 @@
       "image": "assets/images/categories/sport/baseball.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:american-football",
@@ -157,7 +174,8 @@
       "image": "assets/images/categories/sport/american-football.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:athletics",
@@ -165,7 +183,8 @@
       "image": "assets/images/categories/sport/athletics.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:gymnastics",
@@ -173,7 +192,8 @@
       "image": "assets/images/categories/sport/gymnastics.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:weightlifting",
@@ -181,7 +201,8 @@
       "image": "assets/images/categories/sport/weightlifting.webp",
       "status": "user-approved-ai-candidate-not-published",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:fencing",
@@ -189,7 +210,8 @@
       "image": "assets/images/categories/sport/fencing.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:judo",
@@ -197,7 +219,8 @@
       "image": "assets/images/categories/sport/judo.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:karate",
@@ -205,7 +228,8 @@
       "image": "assets/images/categories/sport/karate.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:taekwondo",
@@ -213,7 +237,8 @@
       "image": "assets/images/categories/sport/taekwondo.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:wrestling",
@@ -221,7 +246,8 @@
       "image": "assets/images/categories/sport/wrestling.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:surfing",
@@ -229,7 +255,8 @@
       "image": "assets/images/categories/sport/surfing.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:skiing",
@@ -237,7 +264,8 @@
       "image": "assets/images/categories/sport/skiing.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:snowboarding",
@@ -245,7 +273,8 @@
       "image": "assets/images/categories/sport/snowboarding.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:ice-skating",
@@ -253,7 +282,8 @@
       "image": "assets/images/categories/sport/ice-skating.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:figure-skating",
@@ -261,7 +291,8 @@
       "image": "assets/images/categories/sport/figure-skating.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:speed-skating",
@@ -278,7 +309,8 @@
       "image": "assets/images/categories/sport/curling.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:rowing",
@@ -286,7 +318,8 @@
       "image": "assets/images/categories/sport/rowing.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:canoeing",
@@ -294,7 +327,8 @@
       "image": "assets/images/categories/sport/canoeing.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:kayaking",
@@ -302,7 +336,8 @@
       "image": "assets/images/categories/sport/kayaking.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:sailing",
@@ -310,7 +345,8 @@
       "image": "assets/images/categories/sport/sailing.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:windsurfing",
@@ -318,7 +354,8 @@
       "image": "assets/images/categories/sport/windsurfing.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:kitesurfing",
@@ -335,7 +372,8 @@
       "image": "assets/images/categories/sport/diving.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:water-polo",
@@ -343,7 +381,8 @@
       "image": "assets/images/categories/sport/water-polo.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:handball",
@@ -351,7 +390,8 @@
       "image": "assets/images/categories/sport/handball.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:netball",
@@ -359,7 +399,8 @@
       "image": "assets/images/categories/sport/netball.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:squash",
@@ -367,7 +408,8 @@
       "image": "assets/images/categories/sport/squash.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:racquetball",
@@ -384,7 +426,8 @@
       "image": "assets/images/categories/sport/pickleball.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:padel",
@@ -392,7 +435,8 @@
       "image": "assets/images/categories/sport/padel.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:lacrosse",
@@ -400,7 +444,8 @@
       "image": "assets/images/categories/sport/lacrosse.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:hockey",
@@ -408,7 +453,8 @@
       "image": "assets/images/categories/sport/hockey.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:polo",
@@ -425,7 +471,8 @@
       "image": "assets/images/categories/sport/horse-racing.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:show-jumping",
@@ -442,7 +489,8 @@
       "image": "assets/images/categories/sport/equestrian.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:triathlon",
@@ -450,7 +498,8 @@
       "image": "assets/images/categories/sport/triathlon.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:marathon",
@@ -458,7 +507,8 @@
       "image": "assets/images/categories/sport/marathon.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:sprinting",
@@ -475,7 +525,8 @@
       "image": "assets/images/categories/sport/hurdles.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:high-jump",
@@ -483,7 +534,8 @@
       "image": "assets/images/categories/sport/high-jump.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:long-jump",
@@ -491,7 +543,8 @@
       "image": "assets/images/categories/sport/long-jump.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:triple-jump",
@@ -508,7 +561,8 @@
       "image": "assets/images/categories/sport/pole-vault.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:shot-put",
@@ -516,7 +570,8 @@
       "image": "assets/images/categories/sport/shot-put.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:discus",
@@ -524,7 +579,8 @@
       "image": "assets/images/categories/sport/discus.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:javelin",
@@ -532,7 +588,8 @@
       "image": "assets/images/categories/sport/javelin.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:hammer-throw",
@@ -549,7 +606,8 @@
       "image": "assets/images/categories/sport/climbing.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:bouldering",
@@ -575,7 +633,8 @@
       "image": "assets/images/categories/sport/parkour.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:breakdancing",
@@ -583,7 +642,8 @@
       "image": "assets/images/categories/sport/breakdancing.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:cheerleading",
@@ -591,7 +651,8 @@
       "image": "assets/images/categories/sport/cheerleading.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:rhythmic-gymnastics",
@@ -608,7 +669,8 @@
       "image": "assets/images/categories/sport/trampoline.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:darts",
@@ -616,7 +678,8 @@
       "image": "assets/images/categories/sport/darts.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:snooker",
@@ -624,7 +687,8 @@
       "image": "assets/images/categories/sport/snooker.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:billiards",
@@ -641,7 +705,8 @@
       "image": "assets/images/categories/sport/pool.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:dodgeball",
@@ -649,7 +714,8 @@
       "image": "assets/images/categories/sport/dodgeball.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:ultimate-frisbee",
@@ -657,7 +723,8 @@
       "image": "assets/images/categories/sport/ultimate-frisbee.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:disc-golf",
@@ -665,7 +732,8 @@
       "image": "assets/images/categories/sport/disc-golf.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:tug-of-war",
@@ -673,7 +741,8 @@
       "image": "assets/images/categories/sport/tug-of-war.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:kabaddi",
@@ -699,7 +768,8 @@
       "image": "assets/images/categories/sport/sumo.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:kickboxing",
@@ -707,7 +777,8 @@
       "image": "assets/images/categories/sport/kickboxing.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:muay-thai",
@@ -742,7 +813,8 @@
       "image": "assets/images/categories/sport/roller-skating.webp",
       "status": "planned-ai-image",
       "composition": "diagonal-corner",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:bmx",
@@ -750,7 +822,8 @@
       "image": "assets/images/categories/sport/bmx.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:mountain-biking",
@@ -758,7 +831,8 @@
       "image": "assets/images/categories/sport/mountain-biking.webp",
       "status": "new-ai-candidate-for-review-not-published",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "equipment-first"
     },
     {
       "id": "sport:track-cycling",
@@ -775,7 +849,8 @@
       "image": "assets/images/categories/sport/motocross.webp",
       "status": "planned-ai-image",
       "composition": "centered",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:rally-racing",
@@ -783,7 +858,8 @@
       "image": "assets/images/categories/sport/rally-racing.webp",
       "status": "planned-ai-image",
       "composition": "horizontal-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:karting",
@@ -791,7 +867,8 @@
       "image": "assets/images/categories/sport/karting.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "athlete-action"
     },
     {
       "id": "sport:formula-racing",
@@ -808,7 +885,8 @@
       "image": "assets/images/categories/sport/sport-fishing.webp",
       "status": "planned-ai-image",
       "composition": "vertical-offset",
-      "reviewDecision": "retain-for-review"
+      "reviewDecision": "retain-for-review",
+      "artDirection": "recognisable-scene"
     },
     {
       "id": "sport:biathlon",
@@ -869,5 +947,25 @@
   ],
   "selectionTarget": "recognisable unique answers, no forced 100",
   "reviewExcludedCount": 22,
-  "reviewRetainedCount": 78
+  "reviewRetainedCount": 78,
+  "artworkDirection": {
+    "priority": "equipment first when instantly recognisable under partial tile reveals",
+    "targetMix": "approximately 65% equipment / 25% action / 10% venue, subject to sport-specific clarity",
+    "rules": [
+      "no answer text on actual picture",
+      "avoid ambiguous equipment and near-identical images",
+      "vary subject positioning for tile reveal puzzle",
+      "diverse ages, skin tones and genders whenever athletes appear",
+      "retain only 78 shortlisted sports",
+      "no DB activation until individual images pass QA and upload is verified"
+    ],
+    "conceptSheet": "78-sport equipment-first composite preview in conversation on 2026-11-18",
+    "reviewFlags": [
+      "Netball requires a netball-specific ball/goal, not basketball",
+      "Horse Racing should show a horse or jockey, not only a horseshoe",
+      "Marathon should show recognisable distance running scene, not only a medal",
+      "Parkour requires an athlete negotiating an urban obstacle",
+      "Sumo should show sumo wrestlers, not only a ring"
+    ]
+  }
 }
