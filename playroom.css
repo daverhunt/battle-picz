@@ -529,3 +529,51 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 #game .coin-purchase-pack span{color:#6b7f92;font:11px Arial}
 #game .coin-purchase-message{min-height:35px;color:#536b84}
 #game .coin-purchase-close{width:100%;padding:12px 8px;border:1px solid #b2dfff;border-radius:12px;background:linear-gradient(#56beff,#078de6);color:white;font:bold 15px var(--round)}
+
+/* Pic Rivals wordmark: matches approved white/ice-blue PIC and golden RIVALS
+   app-icon lettering. Shared by lobby, category chooser and game screen. */
+.pic-brand-wordmark{
+  display:inline-flex;align-items:baseline;gap:.18em;
+  font-family:var(--round);font-weight:900;line-height:1;
+  letter-spacing:-.045em;white-space:nowrap;
+  transform:rotate(-3deg);isolation:isolate;
+  filter:drop-shadow(0 3px 1px #07275966);
+}
+.pic-brand-wordmark .pic-brand-pic{
+  color:#f8fcff;
+  background:linear-gradient(180deg,#fff 4%,#f4fbff 40%,#c4e5ff 76%,#7bbdf7 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-text-stroke:1px #063b8d;
+  text-shadow:2px 3px 0 #10346e;
+}
+.pic-brand-wordmark .pic-brand-rivals{
+  color:#ffd539;
+  background:linear-gradient(180deg,#fff696 0%,#ffdc3a 28%,#ffb51a 62%,#f3790b 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-text-stroke:1px #744000;
+  text-shadow:2px 3px 0 #70310e;
+}
+.playroom-kicker.pic-brand-wordmark{
+  font-size:25px;letter-spacing:-.04em;transform:rotate(-3deg);
+}
+.playroom-kicker.pic-brand-wordmark span{display:inline}
+#game .category-logo.pic-brand-wordmark{
+  display:inline-flex;flex-direction:column;align-items:flex-start;
+  gap:0;font-size:29px;line-height:.88;letter-spacing:-.04em;
+}
+#game .category-logo.pic-brand-wordmark .pic-brand-pic,
+#game .category-logo.pic-brand-wordmark .pic-brand-rivals{
+  color:inherit;
+}
+#game>.header .game-brand-wordmark{
+  position:absolute;z-index:3;left:50%;top:72px;
+  transform:translateX(-50%) rotate(-3deg);
+  font-size:12px;pointer-events:none;
+}
+@media(max-height:650px){
+  #game>.header .game-brand-wordmark{top:64px;font-size:11px}
+}
+@media(max-width:350px){
+  .playroom-kicker.pic-brand-wordmark{font-size:21px}
+  #game>.header .game-brand-wordmark{font-size:10px}
+}
