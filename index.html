@@ -2222,6 +2222,13 @@
         };
       }
       window.showBattlePiczMatchResult = (context) => {
+        // Historical completed matches may have missing/archived per-turn details.
+        // Never dereference a missing opponentTurn (or invent zero scores).
+        if (!context?.roundConfig || !context?.ownTurn || !context?.opponentTurn) {
+          window.alert("Detailed round results are unavailable for this completed match. Your match record is still saved.");
+          returnToLobby();
+          return;
+        }
         onlineContext = context;
         roundNo = context.roundNo || context.currentRound;
         clearProgress();

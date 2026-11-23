@@ -370,6 +370,31 @@ test('sorts dashboard matches into my turn, their turn, and completed', () => {
   assert.equal(complete.result, 'lost');
 });
 
+test('completed matches reopen the latest fully paired round when the final round is incomplete', () => {
+  const backend = Object.create(BattlePiczBackend.prototype);
+  const context = {
+    match: {id:'archived-final-round', status:'complete', winner_id:'me', game_config:{rounds:{
+      '1':{category:'FOOD',difficulty:'easy'},
+      '2':{category:'SPORT',difficulty:'easy'},
+      '3':{category:'ANIMALS',difficulty:'easy'}
+    }}},
+    me: {user_id:'me',player_no:1},
+    opponent:{user_id:'them',player_no:2},
+    turns:[
+      {user_id:'me',round_no:1,score:100,answers:[]},
+      {user_id:'them',round_no:1,score:80,answers:[]},
+      {user_id:'me',round_no:2,score:130,answers:[]},
+      {user_id:'them',round_no:2,score:120,answers:[]},
+      {user_id:'me',round_no:3,score:90,answers:[]}
+    ]
+  };
+  const view = backend.contextForRound(context);
+  assert.equal(view.roundNo,2);
+  assert.equal(view.roundConfig.category,'SPORT');
+  assert.equal(view.opponentTurn.round_no,2);
+  assert.equal(view.ownTurn.round_no,2);
+});
+
 test('only shows a round comparison after both players finish the three pictures', () => {
   const ownTurn = { user_id: 'me', round_no: 1, answers: [{}, {}, {}] };
   const opponentTurn = { user_id: 'them', round_no: 1, answers: [{}, {}, {}] };
