@@ -577,3 +577,28 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   .playroom-kicker.pic-brand-wordmark{font-size:21px}
   #game>.header .game-brand-wordmark{font-size:10px}
 }
+
+/* Make lobby/game wordmark visibly match the approved ice-blue + golden 3D icon.
+   Avoid background-clip + transparent fill in iOS, which darkened the lettering. */
+.pic-brand-wordmark{gap:.05em;filter:none;letter-spacing:-.065em;transform:rotate(-2deg);}
+.pic-brand-wordmark .pic-brand-pic,
+.pic-brand-wordmark .pic-brand-rivals{
+  display:inline-block;
+  background:none;
+  -webkit-background-clip:border-box;background-clip:border-box;
+  -webkit-text-fill-color:currentColor;
+  paint-order:stroke fill;
+}
+.pic-brand-wordmark .pic-brand-pic{
+  color:#d9f0ff;-webkit-text-stroke:1.5px #08478e;
+  text-shadow:0 -1px 0 #fff,0 2px 0 #277bc3,1px 3px 0 #153b80,2px 5px 2px #0b286b88;
+}
+.pic-brand-wordmark .pic-brand-rivals{
+  color:#ffc32e;-webkit-text-stroke:1.5px #8c4800;
+  text-shadow:0 -1px 0 #fff4ab,0 2px 0 #e98c04,1px 3px 0 #93500b,2px 5px 2px #63340888;
+}
+.playroom-kicker.pic-brand-wordmark{
+  font-size:clamp(20px,5vw,27px);line-height:1.05;white-space:nowrap;
+  transform:rotate(-2deg);
+}
+.matches-brand .playroom-kicker.pic-brand-wordmark span{display:inline-block;}
