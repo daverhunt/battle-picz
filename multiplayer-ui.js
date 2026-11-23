@@ -482,6 +482,7 @@
   }
 
   function primaryLabel(item) {
+    if (item.bucket === 'completed') return 'REMATCH';
     if (item.action === 'accept') return 'ACCEPT';
     if (item.action === 'choose') return 'CHOOSE';
     if (item.action === 'play') return 'PLAY';
@@ -496,8 +497,7 @@
     const resultClass = item.bucket === 'completed' && !item.resultRound ? ` result-${item.result}` : '';
     const inviteAction = !item.opponent && item.match.invite_code
       ? `<button class="match-card-link" data-action="share" data-id="${item.id}">SHARE INVITE</button>` : '';
-    const rematchAction = item.bucket === 'completed'
-      ? `<button class="match-card-link" data-action="rematch" data-id="${item.id}">REMATCH</button>` : '';
+    // Completed matches have one clear primary action: REMATCH.
     const nudgeAction = item.bucket === 'waiting' && item.canNudge
       ? `<button class="match-card-link nudge-link" data-action="nudge" data-id="${item.id}">🔔 NUDGE</button>` : '';
     return `<article class="match-card${resultClass}">
@@ -507,9 +507,9 @@
         <div class="match-card-meta">Round ${item.currentRound} · ${escapeHtml(category)}${difficulty ? ` · ${escapeHtml(difficulty)}` : ''}</div>
         <div class="match-card-status">${cardStatus(item)}</div>
         ${item.resultRound ? '<div class="match-card-score">Open Results to see the score</div>' : `<div class="match-card-score"><span>You <b>${item.myRoundsWon}</b></span><span class="match-card-score-separator" aria-hidden="true">–</span><span>Them <b>${item.theirRoundsWon}</b></span></div>`}
-        <div class="match-card-links">${inviteAction}${rematchAction}${nudgeAction}</div>
+        <div class="match-card-links">${inviteAction}${nudgeAction}</div>
       </div>
-      <button class="match-card-primary" data-action="${item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
+      <button class="match-card-primary" data-action="${item.bucket === 'completed' ? 'rematch' : item.action}" data-id="${item.id}" ${item.action === 'waiting' ? 'disabled' : ''}>${primaryLabel(item)}</button>
     </article>`;
   }
 
@@ -911,7 +911,7 @@
     if (!item) return;
     const action = button.dataset.action;
     if (action === 'share') return shareChallenge(shareUrl(item));
-    if (action === 'play' || action === 'choose' || action === 'result') return location.assign(matchUrl(item));
+    if (action === 'play' || action === 'choose' || (action === 'result' && item.bucket !== 'completed')) return location.assign(matchUrl(item));
     setBusy(true, action === 'rematch' ? 'Creating rematch…' : 'Accepting challenge…');
     try {
       if (action === 'accept') {
