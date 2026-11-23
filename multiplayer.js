@@ -385,7 +385,13 @@
     contextForRound({match, me, opponent, turns}, roundNo) {
       const userId = me.user_id;
       const currentRound = BattlePiczBackend.currentRound(match, turns);
-      const viewedRound = Number(roundNo) || currentRound;
+      // Completed matches may have a final, partially recorded round or archived turns.
+      // Open the latest round where BOTH players submitted results.
+      const pairedRounds = match.status === 'complete' && roundNo == null
+        ? BattlePiczBackend.roundResults(turns, userId)
+        : [];
+      const lastPairedRound = pairedRounds.length ? pairedRounds[pairedRounds.length - 1].roundNo : 0;
+      const viewedRound = Number(roundNo) || lastPairedRound || currentRound;
       const ownTurn = turns.find(turn =>
         turn.user_id === userId && Number(turn.round_no) === viewedRound
       ) || null;
