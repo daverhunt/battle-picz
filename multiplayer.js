@@ -689,6 +689,33 @@
       return results;
     }
 
+    // Select answers first, then one image variant per answer. The RNG is supplied
+    // by the match seed, so both players can reproduce legacy/local deals.
+    static answerKey(value) {
+      return String(value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    }
+
+    static selectDistinctQuestions(bank = [], count = 3, random = Math.random) {
+      const groups = new Map();
+      for (const question of bank) {
+        const key = BattlePiczBackend.answerKey(question?.a);
+        if (!key) continue;
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(question);
+      }
+      if (groups.size < count) throw new Error('This category needs more distinct answers');
+      const shuffle = items => {
+        const result = [...items];
+        for (let i = result.length - 1; i > 0; i--) {
+          const j = Math.floor(random() * (i + 1));
+          [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+      };
+      const keys = shuffle([...groups.keys()]).slice(0, count);
+      return keys.map(key => shuffle(groups.get(key))[0]);
+    }
+
     static isRoundComparisonReady(context) {
       return Boolean(context?.ownTurn && context?.opponentTurn);
     }
