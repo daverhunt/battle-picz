@@ -2,7 +2,7 @@
   const catalogue = [
     ['ANIMALS','Animals',0],['FOOD','Food & Drink',0],['OBJECTS','Everyday Objects',0],['TRANSPORT','Transport',0],
     ['SPORT','Sport',20],['LANDMARKS','Famous Landmarks',30],['MUSIC','Musical Instruments',20],['PLANTS','Plants & Flowers',20],
-    ['TOOLS','Tools & DIY',20],['JOBS','Jobs & Professions',25],['SPACE','Space',30],['CLOTHING','Clothing & Accessories',20]
+    ['TOOLS','Tools & DIY',20],['JOBS','Jobs & Professions',25],['SPACE','Space',30],['CLOTHING','Clothing & Accessories',20],['NATURE','Nature',20]
   ];
   let rendering = 0;
   async function render(container, onChoose) {
