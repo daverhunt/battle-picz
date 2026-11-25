@@ -1887,15 +1887,21 @@
                 key,
             ),
           );
-        for (let i = bank.length - 1; i > 0; i--) {
-          let j = Math.floor(rand() * (i + 1));
-          [bank[i], bank[j]] = [bank[j], bank[i]];
-        }
-        // New rounds carry an immutable server-selected deal. Old rounds retain
-        // their original seeded ordering so ongoing battles are not changed.
+        // Server-dealt rounds are immutable: changing catalogue contents must not
+        // change the three pictures already assigned to an existing match.
+        // Local/new fallback rounds choose distinct answers before image variants.
+        // Unmigrated historical online rounds retain their old seeded deal.
         qs = onlineContext?.roundConfig?.questions?.length === 3
           ? onlineContext.roundConfig.questions.map(item => ({...item, cat: roundCategory}))
-          : bank.slice(0, 3);
+          : MATCH_ID
+            ? (() => {
+                for (let i = bank.length - 1; i > 0; i--) {
+                  const j = Math.floor(rand() * (i + 1));
+                  [bank[i], bank[j]] = [bank[j], bank[i]];
+                }
+                return bank.slice(0, 3);
+              })()
+            : window.BattlePiczBackend.selectDistinctQuestions(bank, 3, rand);
         if (qs.length !== 3) throw new Error("This category is not ready yet");
         if (MATCH_ID) {
           let answers = onlineContext?.opponentTurn?.answers || [];
