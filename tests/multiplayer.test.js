@@ -395,6 +395,43 @@ test('completed matches reopen the latest fully paired round when the final roun
   assert.equal(view.ownTurn.round_no,2);
 });
 
+test('answer normalisation groups punctuation and spaces together', () => {
+  assert.equal(BattlePiczBackend.answerKey(' Ice cream '), 'ICECREAM');
+  assert.equal(BattlePiczBackend.answerKey('ICE-CREAM'), 'ICECREAM');
+});
+
+test('duplicate image answers remain in the pool but cannot repeat within a round', () => {
+  const pool = [
+    {id:'tree-a', a:'TREE',image:'tree-a.webp'},
+    {id:'tree-b', a:'Tree',image:'tree-b.webp'},
+    {id:'ice-a', a:'ICE CREAM',image:'ice-a.webp'},
+    {id:'ice-b', a:'ICE-CREAM',image:'ice-b.webp'},
+    {id:'leaf', a:'LEAF',image:'leaf.webp'},
+    {id:'waterfall', a:'WATERFALL',image:'waterfall.webp'}
+  ];
+  for (let seed=0;seed<40;seed++){
+    let state=seed+1;
+    const rand=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
+    const deal=BattlePiczBackend.selectDistinctQuestions(pool,3,rand);
+    assert.equal(deal.length,3);
+    assert.equal(new Set(deal.map(x=>BattlePiczBackend.answerKey(x.a))).size,3);
+  }
+  const variants=new Set();
+  for(let seed=0;seed<50;seed++){
+    let state=seed+1;const rand=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
+    const deal=BattlePiczBackend.selectDistinctQuestions(pool,3,rand);
+    deal.filter(x=>x.a.toUpperCase()==='TREE').forEach(x=>variants.add(x.id));
+  }
+  assert.deepEqual([...variants].sort(),['tree-a','tree-b']);
+});
+
+test('insufficient unique answers fail rather than showing duplicates',()=>{
+  assert.throws(()=>BattlePiczBackend.selectDistinctQuestions([
+    {a:'TREE',image:'a.webp'},{a:'TREE',image:'b.webp'},
+    {a:'LEAF',image:'c.webp'}
+  ],3,()=>0.5),/distinct answers/);
+});
+
 test('only shows a round comparison after both players finish the three pictures', () => {
   const ownTurn = { user_id: 'me', round_no: 1, answers: [{}, {}, {}] };
   const opponentTurn = { user_id: 'them', round_no: 1, answers: [{}, {}, {}] };
