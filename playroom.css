@@ -602,3 +602,31 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   transform:rotate(-2deg);
 }
 .matches-brand .playroom-kicker.pic-brand-wordmark span{display:inline-block;}
+
+/* Use the exact wordmark extracted from the user's approved app icon instead
+   of platform-dependent CSS gradients and substitute lettering. */
+.pic-brand-wordmark,
+.playroom-kicker.pic-brand-wordmark,
+#game .category-logo.pic-brand-wordmark {
+  transform:none;filter:none;letter-spacing:normal;
+  display:inline-flex;align-items:center;justify-content:flex-start;
+  line-height:1;gap:0;white-space:nowrap;
+}
+.pic-brand-wordmark .pic-brand-image{
+  display:block;width:100%;height:auto;object-fit:contain;
+  vertical-align:middle;max-width:100%;
+}
+.matches-brand .playroom-kicker.pic-brand-wordmark{
+  width:clamp(152px,46vw,230px);max-width:100%;
+}
+#game .category-logo.pic-brand-wordmark{
+  width:clamp(117px,37vw,171px);max-width:48%;
+}
+.welcome-hero .welcome-brand{
+  transform:none!important;text-shadow:none!important;
+  line-height:1!important;margin:0 auto!important;
+  width:min(82vw,310px);max-width:100%;
+}
+.welcome-hero .welcome-brand img{
+  width:100%;height:auto;display:block;
+}
