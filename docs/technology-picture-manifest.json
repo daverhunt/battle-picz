@@ -88,6 +88,13 @@
       "image": "assets/images/categories/technology/camera.webp"
     },
     {
+      "name": "ACTION CAMERA",
+      "slug": "action-camera",
+      "id": "technology:action-camera",
+      "a": "ACTIONCAMERA",
+      "image": "assets/images/categories/technology/action-camera.webp"
+    },
+    {
       "name": "DRONE",
       "slug": "drone",
       "id": "technology:drone",
@@ -186,11 +193,11 @@
       "image": "assets/images/categories/technology/memory-card.webp"
     },
     {
-      "name": "HARD DRIVE",
-      "slug": "hard-drive",
-      "id": "technology:hard-drive",
-      "a": "HARDDRIVE",
-      "image": "assets/images/categories/technology/hard-drive.webp"
+      "name": "EXTERNAL HARD DRIVE",
+      "slug": "external-hard-drive",
+      "id": "technology:external-hard-drive",
+      "a": "EXTERNALHARDDRIVE",
+      "image": "assets/images/categories/technology/external-hard-drive.webp"
     },
     {
       "name": "SSD",
@@ -198,6 +205,20 @@
       "id": "technology:ssd",
       "a": "SSD",
       "image": "assets/images/categories/technology/ssd.webp"
+    },
+    {
+      "name": "MOTHERBOARD",
+      "slug": "motherboard",
+      "id": "technology:motherboard",
+      "a": "MOTHERBOARD",
+      "image": "assets/images/categories/technology/motherboard.webp"
+    },
+    {
+      "name": "GRAPHICS CARD",
+      "slug": "graphics-card",
+      "id": "technology:graphics-card",
+      "a": "GRAPHICSCARD",
+      "image": "assets/images/categories/technology/graphics-card.webp"
     },
     {
       "name": "MICROCHIP",
@@ -284,158 +305,200 @@
       "image": "assets/images/categories/technology/traffic-light.webp"
     },
     {
-      "name": "HANDHELD CONSOLE",
-      "slug": "handheld-console",
-      "id": "technology:handheld-console",
-      "a": "HANDHELDCONSOLE",
-      "image": "assets/images/categories/technology/handheld-console.webp"
+      "name": "WALKIE-TALKIE",
+      "slug": "walkie-talkie",
+      "id": "technology:walkie-talkie",
+      "a": "WALKIETALKIE",
+      "image": "assets/images/categories/technology/walkie-talkie.webp"
     },
     {
-      "name": "AR GLASSES",
-      "slug": "ar-glasses",
-      "id": "technology:ar-glasses",
-      "a": "ARGLASSES",
-      "image": "assets/images/categories/technology/ar-glasses.webp"
+      "name": "DIGITAL CLOCK",
+      "slug": "digital-clock",
+      "id": "technology:digital-clock",
+      "a": "DIGITALCLOCK",
+      "image": "assets/images/categories/technology/digital-clock.webp"
     },
     {
-      "name": "ACTION CAMERA",
-      "slug": "action-camera",
-      "id": "technology:action-camera",
-      "a": "ACTIONCAMERA",
-      "image": "assets/images/categories/technology/action-camera.webp"
+      "name": "ALARM CLOCK",
+      "slug": "alarm-clock",
+      "id": "technology:alarm-clock",
+      "a": "ALARMCLOCK",
+      "image": "assets/images/categories/technology/alarm-clock.webp"
     },
     {
-      "name": "WIFI",
-      "slug": "wifi",
-      "id": "technology:wifi",
-      "a": "WIFI",
-      "image": "assets/images/categories/technology/wifi.webp"
+      "name": "DIGITAL THERMOMETER",
+      "slug": "digital-thermometer",
+      "id": "technology:digital-thermometer",
+      "a": "DIGITALTHERMOMETER",
+      "image": "assets/images/categories/technology/digital-thermometer.webp"
     },
     {
-      "name": "SERVER",
-      "slug": "server",
-      "id": "technology:server",
-      "a": "SERVER",
-      "image": "assets/images/categories/technology/server.webp"
+      "name": "ELECTRIC TOOTHBRUSH",
+      "slug": "electric-toothbrush",
+      "id": "technology:electric-toothbrush",
+      "a": "ELECTRICTOOTHBRUSH",
+      "image": "assets/images/categories/technology/electric-toothbrush.webp"
     },
     {
-      "name": "SMART HOME",
-      "slug": "smart-home",
-      "id": "technology:smart-home",
-      "a": "SMARTHOME",
-      "image": "assets/images/categories/technology/smart-home.webp"
+      "name": "ELECTRIC SHAVER",
+      "slug": "electric-shaver",
+      "id": "technology:electric-shaver",
+      "a": "ELECTRICSHAVER",
+      "image": "assets/images/categories/technology/electric-shaver.webp"
     },
     {
-      "name": "SMART LIGHT",
-      "slug": "smart-light",
-      "id": "technology:smart-light",
-      "a": "SMARTLIGHT",
-      "image": "assets/images/categories/technology/smart-light.webp"
+      "name": "HAIR DRYER",
+      "slug": "hair-dryer",
+      "id": "technology:hair-dryer",
+      "a": "HAIRDRYER",
+      "image": "assets/images/categories/technology/hair-dryer.webp"
     },
     {
-      "name": "SMART PLUG",
-      "slug": "smart-plug",
-      "id": "technology:smart-plug",
-      "a": "SMARTPLUG",
-      "image": "assets/images/categories/technology/smart-plug.webp"
+      "name": "ELECTRIC KETTLE",
+      "slug": "electric-kettle",
+      "id": "technology:electric-kettle",
+      "a": "ELECTRICKETTLE",
+      "image": "assets/images/categories/technology/electric-kettle.webp"
     },
     {
-      "name": "VIDEO CALL",
-      "slug": "video-call",
-      "id": "technology:video-call",
-      "a": "VIDEOCALL",
-      "image": "assets/images/categories/technology/video-call.webp"
+      "name": "TOASTER",
+      "slug": "toaster",
+      "id": "technology:toaster",
+      "a": "TOASTER",
+      "image": "assets/images/categories/technology/toaster.webp"
     },
     {
-      "name": "E READER",
-      "slug": "e-reader",
-      "id": "technology:e-reader",
-      "a": "EREADER",
-      "image": "assets/images/categories/technology/e-reader.webp"
+      "name": "MICROWAVE",
+      "slug": "microwave",
+      "id": "technology:microwave",
+      "a": "MICROWAVE",
+      "image": "assets/images/categories/technology/microwave.webp"
     },
     {
-      "name": "BATTERY",
-      "slug": "battery",
-      "id": "technology:battery",
-      "a": "BATTERY",
-      "image": "assets/images/categories/technology/battery.webp"
+      "name": "AIR FRYER",
+      "slug": "air-fryer",
+      "id": "technology:air-fryer",
+      "a": "AIRFRYER",
+      "image": "assets/images/categories/technology/air-fryer.webp"
     },
     {
-      "name": "CHARGER",
-      "slug": "charger",
-      "id": "technology:charger",
-      "a": "CHARGER",
-      "image": "assets/images/categories/technology/charger.webp"
+      "name": "DISHWASHER",
+      "slug": "dishwasher",
+      "id": "technology:dishwasher",
+      "a": "DISHWASHER",
+      "image": "assets/images/categories/technology/dishwasher.webp"
     },
     {
-      "name": "POWER BANK",
-      "slug": "power-bank",
-      "id": "technology:power-bank",
-      "a": "POWERBANK",
-      "image": "assets/images/categories/technology/power-bank.webp"
+      "name": "WASHING MACHINE",
+      "slug": "washing-machine",
+      "id": "technology:washing-machine",
+      "a": "WASHINGMACHINE",
+      "image": "assets/images/categories/technology/washing-machine.webp"
     },
     {
-      "name": "CABLE",
-      "slug": "cable",
-      "id": "technology:cable",
-      "a": "CABLE",
-      "image": "assets/images/categories/technology/cable.webp"
+      "name": "FRIDGE",
+      "slug": "fridge",
+      "id": "technology:fridge",
+      "a": "FRIDGE",
+      "image": "assets/images/categories/technology/fridge.webp"
     },
     {
-      "name": "HDMI",
-      "slug": "hdmi",
-      "id": "technology:hdmi",
-      "a": "HDMI",
-      "image": "assets/images/categories/technology/hdmi.webp"
+      "name": "SMART DOORBELL",
+      "slug": "smart-doorbell",
+      "id": "technology:smart-doorbell",
+      "a": "SMARTDOORBELL",
+      "image": "assets/images/categories/technology/smart-doorbell.webp"
     },
     {
-      "name": "BLUETOOTH",
-      "slug": "bluetooth",
-      "id": "technology:bluetooth",
-      "a": "BLUETOOTH",
-      "image": "assets/images/categories/technology/bluetooth.webp"
+      "name": "DASH CAM",
+      "slug": "dash-cam",
+      "id": "technology:dash-cam",
+      "a": "DASHCAM",
+      "image": "assets/images/categories/technology/dash-cam.webp"
     },
     {
-      "name": "CONTACTLESS",
-      "slug": "contactless",
-      "id": "technology:contactless",
-      "a": "CONTACTLESS",
-      "image": "assets/images/categories/technology/contactless.webp"
+      "name": "SAT NAV",
+      "slug": "sat-nav",
+      "id": "technology:sat-nav",
+      "a": "SATNAV",
+      "image": "assets/images/categories/technology/sat-nav.webp"
     },
     {
-      "name": "QR CODE",
-      "slug": "qr-code",
-      "id": "technology:qr-code",
-      "a": "QRCODE",
-      "image": "assets/images/categories/technology/qr-code.webp"
+      "name": "TYPEWRITER",
+      "slug": "typewriter",
+      "id": "technology:typewriter",
+      "a": "TYPEWRITER",
+      "image": "assets/images/categories/technology/typewriter.webp"
     },
     {
-      "name": "BARCODE",
-      "slug": "barcode",
-      "id": "technology:barcode",
-      "a": "BARCODE",
-      "image": "assets/images/categories/technology/barcode.webp"
+      "name": "FAX MACHINE",
+      "slug": "fax-machine",
+      "id": "technology:fax-machine",
+      "a": "FAXMACHINE",
+      "image": "assets/images/categories/technology/fax-machine.webp"
     },
     {
-      "name": "GPS",
-      "slug": "gps",
-      "id": "technology:gps",
-      "a": "GPS",
-      "image": "assets/images/categories/technology/gps.webp"
+      "name": "VHS PLAYER",
+      "slug": "vhs-player",
+      "id": "technology:vhs-player",
+      "a": "VHSPLAYER",
+      "image": "assets/images/categories/technology/vhs-player.webp"
     },
     {
-      "name": "SPACE STATION",
-      "slug": "space-station",
-      "id": "technology:space-station",
-      "a": "SPACESTATION",
-      "image": "assets/images/categories/technology/space-station.webp"
+      "name": "CD PLAYER",
+      "slug": "cd-player",
+      "id": "technology:cd-player",
+      "a": "CDPLAYER",
+      "image": "assets/images/categories/technology/cd-player.webp"
     },
     {
-      "name": "ASTRONAUT",
-      "slug": "astronaut",
-      "id": "technology:astronaut",
-      "a": "ASTRONAUT",
-      "image": "assets/images/categories/technology/astronaut.webp"
+      "name": "CASSETTE PLAYER",
+      "slug": "cassette-player",
+      "id": "technology:cassette-player",
+      "a": "CASSETTEPLAYER",
+      "image": "assets/images/categories/technology/cassette-player.webp"
+    },
+    {
+      "name": "FLOPPY DISK",
+      "slug": "floppy-disk",
+      "id": "technology:floppy-disk",
+      "a": "FLOPPYDISK",
+      "image": "assets/images/categories/technology/floppy-disk.webp"
+    },
+    {
+      "name": "PAGER",
+      "slug": "pager",
+      "id": "technology:pager",
+      "a": "PAGER",
+      "image": "assets/images/categories/technology/pager.webp"
+    },
+    {
+      "name": "FILM CAMERA",
+      "slug": "film-camera",
+      "id": "technology:film-camera",
+      "a": "FILMCAMERA",
+      "image": "assets/images/categories/technology/film-camera.webp"
+    },
+    {
+      "name": "POLAROID CAMERA",
+      "slug": "polaroid-camera",
+      "id": "technology:polaroid-camera",
+      "a": "POLAROIDCAMERA",
+      "image": "assets/images/categories/technology/polaroid-camera.webp"
+    },
+    {
+      "name": "CALCULATOR",
+      "slug": "calculator",
+      "id": "technology:calculator",
+      "a": "CALCULATOR",
+      "image": "assets/images/categories/technology/calculator.webp"
+    },
+    {
+      "name": "BINOCULARS",
+      "slug": "binoculars",
+      "id": "technology:binoculars",
+      "a": "BINOCULARS",
+      "image": "assets/images/categories/technology/binoculars.webp"
     },
     {
       "name": "TELESCOPE",
@@ -445,123 +508,60 @@
       "image": "assets/images/categories/technology/telescope.webp"
     },
     {
-      "name": "RADAR",
-      "slug": "radar",
-      "id": "technology:radar",
-      "a": "RADAR",
-      "image": "assets/images/categories/technology/radar.webp"
+      "name": "FITNESS TRACKER",
+      "slug": "fitness-tracker",
+      "id": "technology:fitness-tracker",
+      "a": "FITNESSTRACKER",
+      "image": "assets/images/categories/technology/fitness-tracker.webp"
     },
     {
-      "name": "ELECTRIC BIKE",
-      "slug": "electric-bike",
-      "id": "technology:electric-bike",
-      "a": "ELECTRICBIKE",
-      "image": "assets/images/categories/technology/electric-bike.webp"
+      "name": "E-READER",
+      "slug": "e-reader",
+      "id": "technology:e-reader",
+      "a": "EREADER",
+      "image": "assets/images/categories/technology/e-reader.webp"
     },
     {
-      "name": "ELECTRIC SCOOTER",
-      "slug": "electric-scooter",
-      "id": "technology:electric-scooter",
-      "a": "ELECTRICSCOOTER",
-      "image": "assets/images/categories/technology/electric-scooter.webp"
+      "name": "HEADSET",
+      "slug": "headset",
+      "id": "technology:headset",
+      "a": "HEADSET",
+      "image": "assets/images/categories/technology/headset.webp"
     },
     {
-      "name": "TRAIN",
-      "slug": "train",
-      "id": "technology:train",
-      "a": "TRAIN",
-      "image": "assets/images/categories/technology/train.webp"
+      "name": "DIGITAL RADIO",
+      "slug": "digital-radio",
+      "id": "technology:digital-radio",
+      "a": "DIGITALRADIO",
+      "image": "assets/images/categories/technology/digital-radio.webp"
     },
     {
-      "name": "PLANE",
-      "slug": "plane",
-      "id": "technology:plane",
-      "a": "PLANE",
-      "image": "assets/images/categories/technology/plane.webp"
+      "name": "BLU-RAY PLAYER",
+      "slug": "blu-ray-player",
+      "id": "technology:blu-ray-player",
+      "a": "BLURAYPLAYER",
+      "image": "assets/images/categories/technology/blu-ray-player.webp"
     },
     {
-      "name": "HELICOPTER",
-      "slug": "helicopter",
-      "id": "technology:helicopter",
-      "a": "HELICOPTER",
-      "image": "assets/images/categories/technology/helicopter.webp"
+      "name": "MP3 PLAYER",
+      "slug": "mp3-player",
+      "id": "technology:mp3-player",
+      "a": "MP3PLAYER",
+      "image": "assets/images/categories/technology/mp3-player.webp"
     },
     {
-      "name": "SHIP",
-      "slug": "ship",
-      "id": "technology:ship",
-      "a": "SHIP",
-      "image": "assets/images/categories/technology/ship.webp"
+      "name": "SMART LIGHT BULB",
+      "slug": "smart-light-bulb",
+      "id": "technology:smart-light-bulb",
+      "a": "SMARTLIGHTBULB",
+      "image": "assets/images/categories/technology/smart-light-bulb.webp"
     },
     {
-      "name": "SUBMARINE",
-      "slug": "submarine",
-      "id": "technology:submarine",
-      "a": "SUBMARINE",
-      "image": "assets/images/categories/technology/submarine.webp"
-    },
-    {
-      "name": "SELF DRIVING CAR",
-      "slug": "self-driving-car",
-      "id": "technology:self-driving-car",
-      "a": "SELFDRIVINGCAR",
-      "image": "assets/images/categories/technology/self-driving-car.webp"
-    },
-    {
-      "name": "CCTV",
-      "slug": "cctv",
-      "id": "technology:cctv",
-      "a": "CCTV",
-      "image": "assets/images/categories/technology/cctv.webp"
-    },
-    {
-      "name": "SECURITY ALARM",
-      "slug": "security-alarm",
-      "id": "technology:security-alarm",
-      "a": "SECURITYALARM",
-      "image": "assets/images/categories/technology/security-alarm.webp"
-    },
-    {
-      "name": "DATA CENTRE",
-      "slug": "data-centre",
-      "id": "technology:data-centre",
-      "a": "DATACENTRE",
-      "image": "assets/images/categories/technology/data-centre.webp"
-    },
-    {
-      "name": "ARTIFICIAL INTELLIGENCE",
-      "slug": "artificial-intelligence",
-      "id": "technology:artificial-intelligence",
-      "a": "ARTIFICIALINTELLIGENCE",
-      "image": "assets/images/categories/technology/artificial-intelligence.webp"
-    },
-    {
-      "name": "AUGMENTED REALITY",
-      "slug": "augmented-reality",
-      "id": "technology:augmented-reality",
-      "a": "AUGMENTEDREALITY",
-      "image": "assets/images/categories/technology/augmented-reality.webp"
-    },
-    {
-      "name": "CODING",
-      "slug": "coding",
-      "id": "technology:coding",
-      "a": "CODING",
-      "image": "assets/images/categories/technology/coding.webp"
-    },
-    {
-      "name": "APP",
-      "slug": "app",
-      "id": "technology:app",
-      "a": "APP",
-      "image": "assets/images/categories/technology/app.webp"
-    },
-    {
-      "name": "WEBSITE",
-      "slug": "website",
-      "id": "technology:website",
-      "a": "WEBSITE",
-      "image": "assets/images/categories/technology/website.webp"
+      "name": "NETWORK SWITCH",
+      "slug": "network-switch",
+      "id": "technology:network-switch",
+      "a": "NETWORKSWITCH",
+      "image": "assets/images/categories/technology/network-switch.webp"
     }
   ]
 }
