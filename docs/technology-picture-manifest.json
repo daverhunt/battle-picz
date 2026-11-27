@@ -1,0 +1,567 @@
+{
+  "category": "TECHNOLOGY",
+  "price": 20,
+  "sort_order": 14,
+  "pictures": [
+    {
+      "name": "SMARTPHONE",
+      "slug": "smartphone",
+      "id": "technology:smartphone",
+      "a": "SMARTPHONE",
+      "image": "assets/images/categories/technology/smartphone.webp"
+    },
+    {
+      "name": "LAPTOP",
+      "slug": "laptop",
+      "id": "technology:laptop",
+      "a": "LAPTOP",
+      "image": "assets/images/categories/technology/laptop.webp"
+    },
+    {
+      "name": "TABLET",
+      "slug": "tablet",
+      "id": "technology:tablet",
+      "a": "TABLET",
+      "image": "assets/images/categories/technology/tablet.webp"
+    },
+    {
+      "name": "DESKTOP COMPUTER",
+      "slug": "desktop-computer",
+      "id": "technology:desktop-computer",
+      "a": "DESKTOPCOMPUTER",
+      "image": "assets/images/categories/technology/desktop-computer.webp"
+    },
+    {
+      "name": "MONITOR",
+      "slug": "monitor",
+      "id": "technology:monitor",
+      "a": "MONITOR",
+      "image": "assets/images/categories/technology/monitor.webp"
+    },
+    {
+      "name": "KEYBOARD",
+      "slug": "keyboard",
+      "id": "technology:keyboard",
+      "a": "KEYBOARD",
+      "image": "assets/images/categories/technology/keyboard.webp"
+    },
+    {
+      "name": "MOUSE",
+      "slug": "mouse",
+      "id": "technology:mouse",
+      "a": "MOUSE",
+      "image": "assets/images/categories/technology/mouse.webp"
+    },
+    {
+      "name": "HEADPHONES",
+      "slug": "headphones",
+      "id": "technology:headphones",
+      "a": "HEADPHONES",
+      "image": "assets/images/categories/technology/headphones.webp"
+    },
+    {
+      "name": "EARBUDS",
+      "slug": "earbuds",
+      "id": "technology:earbuds",
+      "a": "EARBUDS",
+      "image": "assets/images/categories/technology/earbuds.webp"
+    },
+    {
+      "name": "SPEAKER",
+      "slug": "speaker",
+      "id": "technology:speaker",
+      "a": "SPEAKER",
+      "image": "assets/images/categories/technology/speaker.webp"
+    },
+    {
+      "name": "SMARTWATCH",
+      "slug": "smartwatch",
+      "id": "technology:smartwatch",
+      "a": "SMARTWATCH",
+      "image": "assets/images/categories/technology/smartwatch.webp"
+    },
+    {
+      "name": "CAMERA",
+      "slug": "camera",
+      "id": "technology:camera",
+      "a": "CAMERA",
+      "image": "assets/images/categories/technology/camera.webp"
+    },
+    {
+      "name": "ACTION CAMERA",
+      "slug": "action-camera",
+      "id": "technology:action-camera",
+      "a": "ACTIONCAMERA",
+      "image": "assets/images/categories/technology/action-camera.webp"
+    },
+    {
+      "name": "DRONE",
+      "slug": "drone",
+      "id": "technology:drone",
+      "a": "DRONE",
+      "image": "assets/images/categories/technology/drone.webp"
+    },
+    {
+      "name": "PRINTER",
+      "slug": "printer",
+      "id": "technology:printer",
+      "a": "PRINTER",
+      "image": "assets/images/categories/technology/printer.webp"
+    },
+    {
+      "name": "SCANNER",
+      "slug": "scanner",
+      "id": "technology:scanner",
+      "a": "SCANNER",
+      "image": "assets/images/categories/technology/scanner.webp"
+    },
+    {
+      "name": "TELEVISION",
+      "slug": "television",
+      "id": "technology:television",
+      "a": "TELEVISION",
+      "image": "assets/images/categories/technology/television.webp"
+    },
+    {
+      "name": "REMOTE CONTROL",
+      "slug": "remote-control",
+      "id": "technology:remote-control",
+      "a": "REMOTECONTROL",
+      "image": "assets/images/categories/technology/remote-control.webp"
+    },
+    {
+      "name": "GAMES CONSOLE",
+      "slug": "games-console",
+      "id": "technology:games-console",
+      "a": "GAMESCONSOLE",
+      "image": "assets/images/categories/technology/games-console.webp"
+    },
+    {
+      "name": "GAME CONTROLLER",
+      "slug": "game-controller",
+      "id": "technology:game-controller",
+      "a": "GAMECONTROLLER",
+      "image": "assets/images/categories/technology/game-controller.webp"
+    },
+    {
+      "name": "VR HEADSET",
+      "slug": "vr-headset",
+      "id": "technology:vr-headset",
+      "a": "VRHEADSET",
+      "image": "assets/images/categories/technology/vr-headset.webp"
+    },
+    {
+      "name": "MICROPHONE",
+      "slug": "microphone",
+      "id": "technology:microphone",
+      "a": "MICROPHONE",
+      "image": "assets/images/categories/technology/microphone.webp"
+    },
+    {
+      "name": "WEBCAM",
+      "slug": "webcam",
+      "id": "technology:webcam",
+      "a": "WEBCAM",
+      "image": "assets/images/categories/technology/webcam.webp"
+    },
+    {
+      "name": "PROJECTOR",
+      "slug": "projector",
+      "id": "technology:projector",
+      "a": "PROJECTOR",
+      "image": "assets/images/categories/technology/projector.webp"
+    },
+    {
+      "name": "ROUTER",
+      "slug": "router",
+      "id": "technology:router",
+      "a": "ROUTER",
+      "image": "assets/images/categories/technology/router.webp"
+    },
+    {
+      "name": "USB STICK",
+      "slug": "usb-stick",
+      "id": "technology:usb-stick",
+      "a": "USBSTICK",
+      "image": "assets/images/categories/technology/usb-stick.webp"
+    },
+    {
+      "name": "MEMORY CARD",
+      "slug": "memory-card",
+      "id": "technology:memory-card",
+      "a": "MEMORYCARD",
+      "image": "assets/images/categories/technology/memory-card.webp"
+    },
+    {
+      "name": "EXTERNAL HARD DRIVE",
+      "slug": "external-hard-drive",
+      "id": "technology:external-hard-drive",
+      "a": "EXTERNALHARDDRIVE",
+      "image": "assets/images/categories/technology/external-hard-drive.webp"
+    },
+    {
+      "name": "SSD",
+      "slug": "ssd",
+      "id": "technology:ssd",
+      "a": "SSD",
+      "image": "assets/images/categories/technology/ssd.webp"
+    },
+    {
+      "name": "MOTHERBOARD",
+      "slug": "motherboard",
+      "id": "technology:motherboard",
+      "a": "MOTHERBOARD",
+      "image": "assets/images/categories/technology/motherboard.webp"
+    },
+    {
+      "name": "GRAPHICS CARD",
+      "slug": "graphics-card",
+      "id": "technology:graphics-card",
+      "a": "GRAPHICSCARD",
+      "image": "assets/images/categories/technology/graphics-card.webp"
+    },
+    {
+      "name": "MICROCHIP",
+      "slug": "microchip",
+      "id": "technology:microchip",
+      "a": "MICROCHIP",
+      "image": "assets/images/categories/technology/microchip.webp"
+    },
+    {
+      "name": "CIRCUIT BOARD",
+      "slug": "circuit-board",
+      "id": "technology:circuit-board",
+      "a": "CIRCUITBOARD",
+      "image": "assets/images/categories/technology/circuit-board.webp"
+    },
+    {
+      "name": "ROBOT",
+      "slug": "robot",
+      "id": "technology:robot",
+      "a": "ROBOT",
+      "image": "assets/images/categories/technology/robot.webp"
+    },
+    {
+      "name": "ROBOT VACUUM",
+      "slug": "robot-vacuum",
+      "id": "technology:robot-vacuum",
+      "a": "ROBOTVACUUM",
+      "image": "assets/images/categories/technology/robot-vacuum.webp"
+    },
+    {
+      "name": "3D PRINTER",
+      "slug": "3d-printer",
+      "id": "technology:3d-printer",
+      "a": "3DPRINTER",
+      "image": "assets/images/categories/technology/3d-printer.webp"
+    },
+    {
+      "name": "SATELLITE",
+      "slug": "satellite",
+      "id": "technology:satellite",
+      "a": "SATELLITE",
+      "image": "assets/images/categories/technology/satellite.webp"
+    },
+    {
+      "name": "ROCKET",
+      "slug": "rocket",
+      "id": "technology:rocket",
+      "a": "ROCKET",
+      "image": "assets/images/categories/technology/rocket.webp"
+    },
+    {
+      "name": "SOLAR PANEL",
+      "slug": "solar-panel",
+      "id": "technology:solar-panel",
+      "a": "SOLARPANEL",
+      "image": "assets/images/categories/technology/solar-panel.webp"
+    },
+    {
+      "name": "WIND TURBINE",
+      "slug": "wind-turbine",
+      "id": "technology:wind-turbine",
+      "a": "WINDTURBINE",
+      "image": "assets/images/categories/technology/wind-turbine.webp"
+    },
+    {
+      "name": "ELECTRIC CAR",
+      "slug": "electric-car",
+      "id": "technology:electric-car",
+      "a": "ELECTRICCAR",
+      "image": "assets/images/categories/technology/electric-car.webp"
+    },
+    {
+      "name": "CHARGING STATION",
+      "slug": "charging-station",
+      "id": "technology:charging-station",
+      "a": "CHARGINGSTATION",
+      "image": "assets/images/categories/technology/charging-station.webp"
+    },
+    {
+      "name": "TRAFFIC LIGHT",
+      "slug": "traffic-light",
+      "id": "technology:traffic-light",
+      "a": "TRAFFICLIGHT",
+      "image": "assets/images/categories/technology/traffic-light.webp"
+    },
+    {
+      "name": "WALKIE-TALKIE",
+      "slug": "walkie-talkie",
+      "id": "technology:walkie-talkie",
+      "a": "WALKIETALKIE",
+      "image": "assets/images/categories/technology/walkie-talkie.webp"
+    },
+    {
+      "name": "DIGITAL CLOCK",
+      "slug": "digital-clock",
+      "id": "technology:digital-clock",
+      "a": "DIGITALCLOCK",
+      "image": "assets/images/categories/technology/digital-clock.webp"
+    },
+    {
+      "name": "ALARM CLOCK",
+      "slug": "alarm-clock",
+      "id": "technology:alarm-clock",
+      "a": "ALARMCLOCK",
+      "image": "assets/images/categories/technology/alarm-clock.webp"
+    },
+    {
+      "name": "DIGITAL THERMOMETER",
+      "slug": "digital-thermometer",
+      "id": "technology:digital-thermometer",
+      "a": "DIGITALTHERMOMETER",
+      "image": "assets/images/categories/technology/digital-thermometer.webp"
+    },
+    {
+      "name": "ELECTRIC TOOTHBRUSH",
+      "slug": "electric-toothbrush",
+      "id": "technology:electric-toothbrush",
+      "a": "ELECTRICTOOTHBRUSH",
+      "image": "assets/images/categories/technology/electric-toothbrush.webp"
+    },
+    {
+      "name": "ELECTRIC SHAVER",
+      "slug": "electric-shaver",
+      "id": "technology:electric-shaver",
+      "a": "ELECTRICSHAVER",
+      "image": "assets/images/categories/technology/electric-shaver.webp"
+    },
+    {
+      "name": "HAIR DRYER",
+      "slug": "hair-dryer",
+      "id": "technology:hair-dryer",
+      "a": "HAIRDRYER",
+      "image": "assets/images/categories/technology/hair-dryer.webp"
+    },
+    {
+      "name": "ELECTRIC KETTLE",
+      "slug": "electric-kettle",
+      "id": "technology:electric-kettle",
+      "a": "ELECTRICKETTLE",
+      "image": "assets/images/categories/technology/electric-kettle.webp"
+    },
+    {
+      "name": "TOASTER",
+      "slug": "toaster",
+      "id": "technology:toaster",
+      "a": "TOASTER",
+      "image": "assets/images/categories/technology/toaster.webp"
+    },
+    {
+      "name": "MICROWAVE",
+      "slug": "microwave",
+      "id": "technology:microwave",
+      "a": "MICROWAVE",
+      "image": "assets/images/categories/technology/microwave.webp"
+    },
+    {
+      "name": "AIR FRYER",
+      "slug": "air-fryer",
+      "id": "technology:air-fryer",
+      "a": "AIRFRYER",
+      "image": "assets/images/categories/technology/air-fryer.webp"
+    },
+    {
+      "name": "DISHWASHER",
+      "slug": "dishwasher",
+      "id": "technology:dishwasher",
+      "a": "DISHWASHER",
+      "image": "assets/images/categories/technology/dishwasher.webp"
+    },
+    {
+      "name": "WASHING MACHINE",
+      "slug": "washing-machine",
+      "id": "technology:washing-machine",
+      "a": "WASHINGMACHINE",
+      "image": "assets/images/categories/technology/washing-machine.webp"
+    },
+    {
+      "name": "FRIDGE",
+      "slug": "fridge",
+      "id": "technology:fridge",
+      "a": "FRIDGE",
+      "image": "assets/images/categories/technology/fridge.webp"
+    },
+    {
+      "name": "SMART DOORBELL",
+      "slug": "smart-doorbell",
+      "id": "technology:smart-doorbell",
+      "a": "SMARTDOORBELL",
+      "image": "assets/images/categories/technology/smart-doorbell.webp"
+    },
+    {
+      "name": "DASH CAM",
+      "slug": "dash-cam",
+      "id": "technology:dash-cam",
+      "a": "DASHCAM",
+      "image": "assets/images/categories/technology/dash-cam.webp"
+    },
+    {
+      "name": "SAT NAV",
+      "slug": "sat-nav",
+      "id": "technology:sat-nav",
+      "a": "SATNAV",
+      "image": "assets/images/categories/technology/sat-nav.webp"
+    },
+    {
+      "name": "TYPEWRITER",
+      "slug": "typewriter",
+      "id": "technology:typewriter",
+      "a": "TYPEWRITER",
+      "image": "assets/images/categories/technology/typewriter.webp"
+    },
+    {
+      "name": "FAX MACHINE",
+      "slug": "fax-machine",
+      "id": "technology:fax-machine",
+      "a": "FAXMACHINE",
+      "image": "assets/images/categories/technology/fax-machine.webp"
+    },
+    {
+      "name": "VHS PLAYER",
+      "slug": "vhs-player",
+      "id": "technology:vhs-player",
+      "a": "VHSPLAYER",
+      "image": "assets/images/categories/technology/vhs-player.webp"
+    },
+    {
+      "name": "CD PLAYER",
+      "slug": "cd-player",
+      "id": "technology:cd-player",
+      "a": "CDPLAYER",
+      "image": "assets/images/categories/technology/cd-player.webp"
+    },
+    {
+      "name": "CASSETTE PLAYER",
+      "slug": "cassette-player",
+      "id": "technology:cassette-player",
+      "a": "CASSETTEPLAYER",
+      "image": "assets/images/categories/technology/cassette-player.webp"
+    },
+    {
+      "name": "FLOPPY DISK",
+      "slug": "floppy-disk",
+      "id": "technology:floppy-disk",
+      "a": "FLOPPYDISK",
+      "image": "assets/images/categories/technology/floppy-disk.webp"
+    },
+    {
+      "name": "PAGER",
+      "slug": "pager",
+      "id": "technology:pager",
+      "a": "PAGER",
+      "image": "assets/images/categories/technology/pager.webp"
+    },
+    {
+      "name": "FILM CAMERA",
+      "slug": "film-camera",
+      "id": "technology:film-camera",
+      "a": "FILMCAMERA",
+      "image": "assets/images/categories/technology/film-camera.webp"
+    },
+    {
+      "name": "POLAROID CAMERA",
+      "slug": "polaroid-camera",
+      "id": "technology:polaroid-camera",
+      "a": "POLAROIDCAMERA",
+      "image": "assets/images/categories/technology/polaroid-camera.webp"
+    },
+    {
+      "name": "CALCULATOR",
+      "slug": "calculator",
+      "id": "technology:calculator",
+      "a": "CALCULATOR",
+      "image": "assets/images/categories/technology/calculator.webp"
+    },
+    {
+      "name": "BINOCULARS",
+      "slug": "binoculars",
+      "id": "technology:binoculars",
+      "a": "BINOCULARS",
+      "image": "assets/images/categories/technology/binoculars.webp"
+    },
+    {
+      "name": "TELESCOPE",
+      "slug": "telescope",
+      "id": "technology:telescope",
+      "a": "TELESCOPE",
+      "image": "assets/images/categories/technology/telescope.webp"
+    },
+    {
+      "name": "FITNESS TRACKER",
+      "slug": "fitness-tracker",
+      "id": "technology:fitness-tracker",
+      "a": "FITNESSTRACKER",
+      "image": "assets/images/categories/technology/fitness-tracker.webp"
+    },
+    {
+      "name": "E-READER",
+      "slug": "e-reader",
+      "id": "technology:e-reader",
+      "a": "EREADER",
+      "image": "assets/images/categories/technology/e-reader.webp"
+    },
+    {
+      "name": "HEADSET",
+      "slug": "headset",
+      "id": "technology:headset",
+      "a": "HEADSET",
+      "image": "assets/images/categories/technology/headset.webp"
+    },
+    {
+      "name": "DIGITAL RADIO",
+      "slug": "digital-radio",
+      "id": "technology:digital-radio",
+      "a": "DIGITALRADIO",
+      "image": "assets/images/categories/technology/digital-radio.webp"
+    },
+    {
+      "name": "BLU-RAY PLAYER",
+      "slug": "blu-ray-player",
+      "id": "technology:blu-ray-player",
+      "a": "BLURAYPLAYER",
+      "image": "assets/images/categories/technology/blu-ray-player.webp"
+    },
+    {
+      "name": "MP3 PLAYER",
+      "slug": "mp3-player",
+      "id": "technology:mp3-player",
+      "a": "MP3PLAYER",
+      "image": "assets/images/categories/technology/mp3-player.webp"
+    },
+    {
+      "name": "SMART LIGHT BULB",
+      "slug": "smart-light-bulb",
+      "id": "technology:smart-light-bulb",
+      "a": "SMARTLIGHTBULB",
+      "image": "assets/images/categories/technology/smart-light-bulb.webp"
+    },
+    {
+      "name": "NETWORK SWITCH",
+      "slug": "network-switch",
+      "id": "technology:network-switch",
+      "a": "NETWORKSWITCH",
+      "image": "assets/images/categories/technology/network-switch.webp"
+    }
+  ]
+}
