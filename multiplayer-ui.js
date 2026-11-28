@@ -28,7 +28,7 @@
   panel.innerHTML = `
     <header class="matches-header">
       <span class="playroom-mark" aria-hidden="true">▦</span>
-      <div class="matches-brand"><span class="playroom-kicker pic-brand-wordmark" aria-label="Pic Rivals"><img class="pic-brand-icon" src="/assets/app-icon-192.png?v=lockup-3" alt="" aria-hidden="true" /><span class="pic-brand-type"><span class="pic-brand-pic">Pic</span><span class="pic-brand-rivals">Rivals</span></span></span><h2>Your Battles</h2><div class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span><button class="matches-add-coins" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div></div>
+      <div class="matches-brand"><span class="playroom-kicker pic-brand-wordmark" aria-label="Pic Rivals"><span class="pic-brand-type"><span class="pic-brand-pic">Pic</span><span class="pic-brand-rivals">Rivals</span></span></span><h2>Your Battles</h2><div class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span><button class="matches-add-coins" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div></div>
       <div class="matches-header-actions">
         <button class="matches-shop" type="button" aria-label="Power-up shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
         <button class="matches-settings" aria-label="Settings">⚙</button>
@@ -115,7 +115,7 @@
     welcome.setAttribute('aria-label', 'Choose how to play Pic Rivals');
     welcome.innerHTML = `
       <header class="welcome-hero">
-        <h1 class="welcome-brand pic-brand-wordmark" aria-label="Pic Rivals"><img class="pic-brand-icon" src="/assets/app-icon-192.png?v=lockup-3" alt="" aria-hidden="true" /><span class="pic-brand-type"><span class="pic-brand-pic">Pic</span><span class="pic-brand-rivals">Rivals</span></span></h1>
+        <h1 class="welcome-brand pic-brand-wordmark" aria-label="Pic Rivals"><span class="pic-brand-type"><span class="pic-brand-pic">Pic</span><span class="pic-brand-rivals">Rivals</span></span></h1>
         <p>Reveal it. Name it. Beat your friends.</p>
         <div class="welcome-picture-mark" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
