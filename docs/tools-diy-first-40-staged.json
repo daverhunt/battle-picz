@@ -1,0 +1,247 @@
+{
+  "status": "draft - artwork not committed or published",
+  "targetCategory": "TOOLS",
+  "existingActive": 6,
+  "candidates": [
+    {
+      "id": "tools:hammer",
+      "a": "HAMMER",
+      "label": "HAMMER",
+      "image": "assets/images/categories/tools/hammer.webp"
+    },
+    {
+      "id": "tools:cordless-drill",
+      "a": "CORDLESSDRILL",
+      "label": "CORDLESS DRILL",
+      "image": "assets/images/categories/tools/cordless-drill.webp"
+    },
+    {
+      "id": "tools:electric-screwdriver",
+      "a": "ELECTRICSCREWDRIVER",
+      "label": "ELECTRIC SCREWDRIVER",
+      "image": "assets/images/categories/tools/electric-screwdriver.webp"
+    },
+    {
+      "id": "tools:pliers",
+      "a": "PLIERS",
+      "label": "PLIERS",
+      "image": "assets/images/categories/tools/pliers.webp"
+    },
+    {
+      "id": "tools:adjustable-wrench",
+      "a": "ADJUSTABLEWRENCH",
+      "label": "ADJUSTABLE WRENCH",
+      "image": "assets/images/categories/tools/adjustable-wrench.webp"
+    },
+    {
+      "id": "tools:spirit-level",
+      "a": "SPIRITLEVEL",
+      "label": "SPIRIT LEVEL",
+      "image": "assets/images/categories/tools/spirit-level.webp"
+    },
+    {
+      "id": "tools:tape-measure",
+      "a": "TAPEMEASURE",
+      "label": "TAPE MEASURE",
+      "image": "assets/images/categories/tools/tape-measure.webp"
+    },
+    {
+      "id": "tools:utility-knife",
+      "a": "UTILITYKNIFE",
+      "label": "UTILITY KNIFE",
+      "image": "assets/images/categories/tools/utility-knife.webp"
+    },
+    {
+      "id": "tools:paintbrush",
+      "a": "PAINTBRUSH",
+      "label": "PAINTBRUSH",
+      "image": "assets/images/categories/tools/paintbrush.webp"
+    },
+    {
+      "id": "tools:paint-roller",
+      "a": "PAINTROLLER",
+      "label": "PAINT ROLLER",
+      "image": "assets/images/categories/tools/paint-roller.webp"
+    },
+    {
+      "id": "tools:paint-tray",
+      "a": "PAINTTRAY",
+      "label": "PAINT TRAY",
+      "image": "assets/images/categories/tools/paint-tray.webp"
+    },
+    {
+      "id": "tools:bucket",
+      "a": "BUCKET",
+      "label": "BUCKET",
+      "image": "assets/images/categories/tools/bucket.webp"
+    },
+    {
+      "id": "tools:toolbox",
+      "a": "TOOLBOX",
+      "label": "TOOLBOX",
+      "image": "assets/images/categories/tools/toolbox.webp"
+    },
+    {
+      "id": "tools:tool-belt",
+      "a": "TOOLBELT",
+      "label": "TOOL BELT",
+      "image": "assets/images/categories/tools/tool-belt.webp"
+    },
+    {
+      "id": "tools:work-gloves",
+      "a": "WORKGLOVES",
+      "label": "WORK GLOVES",
+      "image": "assets/images/categories/tools/work-gloves.webp"
+    },
+    {
+      "id": "tools:safety-glasses",
+      "a": "SAFETYGLASSES",
+      "label": "SAFETY GLASSES",
+      "image": "assets/images/categories/tools/safety-glasses.webp"
+    },
+    {
+      "id": "tools:hard-hat",
+      "a": "HARDHAT",
+      "label": "HARD HAT",
+      "image": "assets/images/categories/tools/hard-hat.webp"
+    },
+    {
+      "id": "tools:dust-mask",
+      "a": "DUSTMASK",
+      "label": "DUST MASK",
+      "image": "assets/images/categories/tools/dust-mask.webp"
+    },
+    {
+      "id": "tools:ear-defenders",
+      "a": "EARDEFENDERS",
+      "label": "EAR DEFENDERS",
+      "image": "assets/images/categories/tools/ear-defenders.webp"
+    },
+    {
+      "id": "tools:orbital-sander",
+      "a": "ORBITALSANDER",
+      "label": "ORBITAL SANDER",
+      "image": "assets/images/categories/tools/orbital-sander.webp"
+    },
+    {
+      "id": "tools:jigsaw",
+      "a": "JIGSAW",
+      "label": "JIGSAW",
+      "image": "assets/images/categories/tools/jigsaw.webp"
+    },
+    {
+      "id": "tools:circular-saw",
+      "a": "CIRCULARSAW",
+      "label": "CIRCULAR SAW",
+      "image": "assets/images/categories/tools/circular-saw.webp"
+    },
+    {
+      "id": "tools:angle-grinder",
+      "a": "ANGLEGRINDER",
+      "label": "ANGLE GRINDER",
+      "image": "assets/images/categories/tools/angle-grinder.webp"
+    },
+    {
+      "id": "tools:heat-gun",
+      "a": "HEATGUN",
+      "label": "HEAT GUN",
+      "image": "assets/images/categories/tools/heat-gun.webp"
+    },
+    {
+      "id": "tools:nail-gun",
+      "a": "NAILGUN",
+      "label": "NAIL GUN",
+      "image": "assets/images/categories/tools/nail-gun.webp"
+    },
+    {
+      "id": "tools:g-clamp",
+      "a": "GCLAMP",
+      "label": "G CLAMP",
+      "image": "assets/images/categories/tools/g-clamp.webp"
+    },
+    {
+      "id": "tools:bench-vice",
+      "a": "BENCHVICE",
+      "label": "BENCH VICE",
+      "image": "assets/images/categories/tools/bench-vice.webp"
+    },
+    {
+      "id": "tools:socket-set",
+      "a": "SOCKETSET",
+      "label": "SOCKET SET",
+      "image": "assets/images/categories/tools/socket-set.webp"
+    },
+    {
+      "id": "tools:allen-keys",
+      "a": "ALLENKEYS",
+      "label": "ALLEN KEYS",
+      "image": "assets/images/categories/tools/allen-keys.webp"
+    },
+    {
+      "id": "tools:drill-bits",
+      "a": "DRILLBITS",
+      "label": "DRILL BITS",
+      "image": "assets/images/categories/tools/drill-bits.webp"
+    },
+    {
+      "id": "tools:screws",
+      "a": "SCREWS",
+      "label": "SCREWS",
+      "image": "assets/images/categories/tools/screws.webp"
+    },
+    {
+      "id": "tools:nails",
+      "a": "NAILS",
+      "label": "NAILS",
+      "image": "assets/images/categories/tools/nails.webp"
+    },
+    {
+      "id": "tools:sandpaper",
+      "a": "SANDPAPER",
+      "label": "SANDPAPER",
+      "image": "assets/images/categories/tools/sandpaper.webp"
+    },
+    {
+      "id": "tools:chisel",
+      "a": "CHISEL",
+      "label": "CHISEL",
+      "image": "assets/images/categories/tools/chisel.webp"
+    },
+    {
+      "id": "tools:rubber-mallet",
+      "a": "RUBBERMALLET",
+      "label": "RUBBER MALLET",
+      "image": "assets/images/categories/tools/rubber-mallet.webp"
+    },
+    {
+      "id": "tools:crowbar",
+      "a": "CROWBAR",
+      "label": "CROWBAR",
+      "image": "assets/images/categories/tools/crowbar.webp"
+    },
+    {
+      "id": "tools:bolt-cutters",
+      "a": "BOLTCUTTERS",
+      "label": "BOLT CUTTERS",
+      "image": "assets/images/categories/tools/bolt-cutters.webp"
+    },
+    {
+      "id": "tools:staple-gun",
+      "a": "STAPLEGUN",
+      "label": "STAPLE GUN",
+      "image": "assets/images/categories/tools/staple-gun.webp"
+    },
+    {
+      "id": "tools:glue-gun",
+      "a": "GLUEGUN",
+      "label": "GLUE GUN",
+      "image": "assets/images/categories/tools/glue-gun.webp"
+    },
+    {
+      "id": "tools:caulking-gun",
+      "a": "CAULKINGGUN",
+      "label": "CAULKING GUN",
+      "image": "assets/images/categories/tools/caulking-gun.webp"
+    }
+  ]
+}
