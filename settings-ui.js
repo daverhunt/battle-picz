@@ -188,6 +188,7 @@
   };
 
   settingsButton.onclick = openSettings;
+  document.querySelector('.category-settings')?.addEventListener('click', openSettings);
   screen.querySelector('.settings-back').onclick = () => { screen.hidden = true; };
   soundSwitch.onclick = () => {
     prefs.soundEnabled = !prefs.soundEnabled;
