@@ -684,3 +684,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   .matches-brand .pic-brand-wordmark .pic-brand-icon{width:36px;height:36px;min-width:36px}
   .matches-brand .pic-brand-wordmark .pic-brand-type{font-size:21px!important}
 }
+
+/* Welcome card has a cream background; keep its title high-contrast. */
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-pic{color:#163c75!important;text-shadow:none!important}
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-rivals{color:#b97407!important;text-shadow:none!important}
