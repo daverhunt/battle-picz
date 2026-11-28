@@ -764,3 +764,40 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 @media(max-height:650px){
   #game>.header .game-brand-wordmark{top:64px!important}
 }
+
+/* Approved artwork only: real transparent logo image, not simulated type,
+   no app icon or surrounding pictures in any in-game header. */
+.pic-brand-wordmark,
+.playroom-kicker.pic-brand-wordmark,
+#game .category-logo.pic-brand-wordmark,
+.welcome-hero .welcome-brand.pic-brand-wordmark {
+  display:inline-flex!important;align-items:center!important;
+  justify-content:flex-start!important;max-width:100%!important;
+  transform:none!important;filter:none!important;
+  padding:0!important;margin-top:0!important;line-height:1!important;
+}
+.pic-brand-wordmark .pic-brand-final-image{
+  display:block!important;width:100%!important;height:auto!important;
+  object-fit:contain!important;
+}
+.matches-brand .playroom-kicker.pic-brand-wordmark{
+  width:clamp(168px,49vw,250px)!important;
+  min-width:0!important;max-width:100%!important;
+}
+#game .category-logo.pic-brand-wordmark{
+  width:clamp(140px,42vw,196px)!important;
+  max-width:55%!important;
+}
+.welcome-hero .welcome-brand.pic-brand-wordmark{
+  width:min(78vw,330px)!important;margin:0 auto!important;
+  justify-content:center!important;
+}
+#game>.header .game-brand-wordmark{
+  position:absolute!important;z-index:3!important;
+  left:50%!important;top:72px!important;
+  width:110px!important;max-width:28vw!important;
+  transform:translateX(-50%)!important;pointer-events:none!important;
+}
+@media(max-height:650px){
+  #game>.header .game-brand-wordmark{top:64px!important}
+}
