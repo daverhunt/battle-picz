@@ -331,7 +331,6 @@
   panel.querySelector('.matches-shop').onclick = () => window.openPicRivalsShop?.();
   // Category chooser uses the exact same controls/behaviour as the lobby.
   // Keep one shared shop implementation and one native-IAP modal.
-  document.querySelector('.category-shop')?.addEventListener('click', () => panel.querySelector('.matches-shop')?.click());
   document.querySelector('.category-add-coins')?.addEventListener('click', () => panel.querySelector('.matches-add-coins')?.click());
   // Apple / Google native billing will be enabled only when an authenticated
   // store bridge and server-verified fulfilment are available. No web checkout.
