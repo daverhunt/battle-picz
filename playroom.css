@@ -801,3 +801,92 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 @media(max-height:650px){
   #game>.header .game-brand-wordmark{top:64px!important}
 }
+
+/* Shared mobile header used by lobby and round category selection.
+   Row one exclusively holds the approved wordmark; controls never compete
+   for horizontal space with it. Both screens use exactly the same geometry. */
+#game .pic-screen-header {
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:54px 44px!important;
+  gap:4px!important;
+  align-content:start!important;
+  height:116px!important;
+  min-height:116px!important;
+  padding:6px 16px 8px!important;
+  margin:0!important;
+  background:var(--cream)!important;
+  border-bottom:1px solid var(--line)!important;
+  box-shadow:none!important;
+  flex:none!important;
+}
+#game .pic-screen-header .pic-header-brand{
+  display:flex;align-items:center;justify-content:center;
+  min-width:0;width:100%;height:54px;overflow:visible;
+}
+#game .pic-screen-header .pic-brand-wordmark{
+  box-sizing:border-box!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:min(224px,65vw)!important;max-width:224px!important;
+  min-width:0!important;height:auto!important;
+  flex:none!important;margin:0!important;padding:0!important;
+}
+#game .pic-screen-header .pic-brand-final-image{
+  display:block!important;width:100%!important;height:auto!important;
+  object-fit:contain!important;max-height:54px!important;
+}
+#game .pic-screen-header .pic-header-bottom{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  min-width:0;width:100%;height:44px;
+}
+#game .pic-screen-header .matches-balance,
+#game .pic-screen-header .category-topbalance{
+  box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+  gap:6px;min-width:0;height:38px!important;min-height:38px!important;
+  padding:5px 10px!important;margin:0!important;
+  border:1px solid #e6dccb;border-radius:13px;
+  background:#fffdf7;box-shadow:0 2px 3px #554a3120;
+  font:800 11px var(--round);color:var(--ink);white-space:nowrap;
+}
+#game .pic-screen-header .matches-header-actions{
+  display:flex;align-items:center;justify-content:flex-end;
+  flex:none;gap:7px;margin:0;min-width:0;
+}
+#game .pic-screen-header .matches-header-actions button{
+  width:36px!important;height:36px!important;min-height:36px!important;
+  flex:none!important;margin:0!important;
+}
+#game .pic-screen-header .pic-header-context{
+  color:var(--muted);font:800 10px var(--round);
+  letter-spacing:.08em;white-space:nowrap;
+}
+#game .pic-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important}
+/* Category selector keeps the same screen-edge spacing and header sizing. */
+#game .category-chooser{padding:0 16px 20px!important}
+#game .category-chooser>.pic-screen-header{margin:0 -16px 12px!important;width:calc(100% + 32px)!important}
+#game .category-chooser #chooserTitle{margin-top:4px}
+/* Keep gameplay branding in its OWN strip, not over player scores/VS.
+   Header sits just below it; three picture timers keep their own lane. */
+#game>.game-brand-wordmark{
+  position:absolute!important;
+  left:50%!important;top:0.5%!important;z-index:10!important;
+  width:clamp(94px,33vw,148px)!important;max-width:40%!important;
+  height:auto!important;margin:0!important;padding:0!important;
+  transform:translateX(-50%)!important;pointer-events:none!important;
+}
+#game>.game-brand-wordmark .pic-brand-final-image{
+  display:block!important;width:100%!important;height:auto!important;
+  max-height:34px!important;object-fit:contain!important;
+}
+#game>.header{top:5.8%!important}
+#game>.qtimers{top:18%!important}
+@media(max-width:350px){
+  #game .pic-screen-header{padding-inline:11px!important}
+  #game .pic-screen-header .pic-brand-wordmark{width:min(188px,61vw)!important}
+  #game .pic-screen-header .matches-header-actions{gap:4px!important}
+  #game .pic-screen-header .matches-header-actions button{width:32px!important;height:32px!important;min-height:32px!important}
+  #game .category-chooser{padding-inline:11px!important}
+  #game .category-chooser>.pic-screen-header{margin-inline:-11px!important;width:calc(100% + 22px)!important}
+}
