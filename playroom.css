@@ -630,3 +630,61 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 .welcome-hero .welcome-brand img{
   width:100%;height:auto;display:block;
 }
+
+/* Clean brand lockup: use the approved artwork intact, not a jagged crop of it.
+   White/blue and gold echo the icon lettering without fragile text masking. */
+.pic-brand-wordmark,
+.playroom-kicker.pic-brand-wordmark,
+#game .category-logo.pic-brand-wordmark,
+.welcome-hero .welcome-brand.pic-brand-wordmark{
+  display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;
+  flex-direction:row!important;gap:8px!important;transform:none!important;
+  width:auto!important;max-width:100%!important;white-space:nowrap!important;
+  letter-spacing:normal!important;line-height:1!important;filter:none!important;
+  text-shadow:none!important;
+}
+.pic-brand-wordmark .pic-brand-icon{
+  display:block;width:42px;height:42px;min-width:42px;object-fit:cover;
+  border-radius:10px;box-shadow:0 2px 7px #071e4a22;
+}
+.pic-brand-wordmark .pic-brand-type{
+  display:inline-flex!important;flex-direction:row!important;align-items:baseline!important;
+  gap:.16em!important;font-family:var(--round),Arial,sans-serif!important;
+  font-size:26px!important;font-weight:900!important;letter-spacing:-.065em!important;
+  line-height:1!important;transform:none!important;
+}
+.pic-brand-wordmark .pic-brand-pic,
+.pic-brand-wordmark .pic-brand-rivals,
+#game .category-logo.pic-brand-wordmark .pic-brand-pic,
+#game .category-logo.pic-brand-wordmark .pic-brand-rivals,
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-pic,
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-rivals {
+  display:inline!important;background:none!important;background-image:none!important;
+  -webkit-background-clip:border-box!important;background-clip:border-box!important;
+  -webkit-text-fill-color:currentColor!important;-webkit-text-stroke:0!important;
+  text-shadow:none!important;letter-spacing:inherit!important;transform:none!important;
+}
+.pic-brand-wordmark .pic-brand-pic{color:#ffffff!important;text-shadow:0 1px 2px #16224b88!important}
+.pic-brand-wordmark .pic-brand-rivals{color:#ffcf3d!important;text-shadow:0 1px 2px #6b450e88!important}
+.matches-brand .pic-brand-wordmark .pic-brand-pic,
+#game .category-logo.pic-brand-wordmark .pic-brand-pic{color:#163c75!important;text-shadow:none!important}
+.matches-brand .pic-brand-wordmark .pic-brand-rivals,
+#game .category-logo.pic-brand-wordmark .pic-brand-rivals{color:#d58308!important;text-shadow:none!important}
+.matches-brand .playroom-kicker.pic-brand-wordmark .pic-brand-type{font-size:clamp(21px,5.2vw,26px)!important}
+#game .category-logo.pic-brand-wordmark .pic-brand-type{font-size:clamp(18px,4.5vw,24px)!important}
+#game .category-logo.pic-brand-wordmark .pic-brand-icon{width:36px;height:36px;min-width:36px;border-radius:8px}
+.welcome-hero .welcome-brand.pic-brand-wordmark{margin:0 auto!important;justify-content:center!important}
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-icon{
+  width:64px;height:64px;min-width:64px;border-radius:15px;
+  box-shadow:0 5px 12px #0b225857;
+}
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-type{font-size:clamp(27px,7vw,35px)!important}
+@media(max-width:365px){
+  .pic-brand-wordmark{gap:5px!important}
+  .matches-brand .pic-brand-wordmark .pic-brand-icon{width:36px;height:36px;min-width:36px}
+  .matches-brand .pic-brand-wordmark .pic-brand-type{font-size:21px!important}
+}
+
+/* Welcome card has a cream background; keep its title high-contrast. */
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-pic{color:#163c75!important;text-shadow:none!important}
+.welcome-hero .welcome-brand.pic-brand-wordmark .pic-brand-rivals{color:#b97407!important;text-shadow:none!important}
