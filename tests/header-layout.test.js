@@ -35,3 +35,23 @@ test('game wordmark remains outside the scoreboard',()=>{
   assert.match(game,/game-brand-wordmark[^\n]*\n\s*<div class="header">/);
   assert.match(css,/#game>\.header\{top:5\.8%!important\}/);
 });
+
+test('category title, options, and difficulty stay inside the category chooser DOM',()=>{
+  // HTML nesting regression: count elements between chooser open and its title.
+  // A stray closing div previously closed the chooser before this heading.
+  const section=game.slice(game.indexOf('<div class="category-chooser"'),game.indexOf('<div class="result-actions"'));
+  assert.ok(section.startsWith('<div class="category-chooser"'));
+  let depth=0;
+  for(const tag of section.match(/<\/?div\b[^>]*>|<h2\b[^>]*>/g)||[]){
+    if(tag.startsWith('<h2')) {
+      assert.equal(depth,1,'chooserTitle must have categoryChooser as its open parent');
+      break;
+    }
+    depth+=tag.startsWith('</')?-1:1;
+    assert.ok(depth>=1,'categoryChooser must not close before the heading');
+  }
+  assert.match(section, /id="categoryOptions"/);
+  assert.match(section, /id="difficultyOptions"/);
+  const beforeOptions=section.split('id="categoryOptions"')[0];
+  assert.match(beforeOptions, /id="chooserTitle"/);
+});
