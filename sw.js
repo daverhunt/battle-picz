@@ -6,7 +6,7 @@ self.addEventListener('push', event => {
   try { data = event.data?.json() || {}; } catch {}
   event.waitUntil(self.registration.showNotification((data.title || 'Pic Rivals').replace(/battle[\s_-]*picz/gi, 'Pic Rivals'), {
     body: (data.body || 'Open Pic Rivals to see your latest battles.').replace(/battle[\s_-]*picz/gi, 'Pic Rivals'),
-    icon: '/assets/app-icon-192.png', badge: '/assets/app-icon-192.png',
+    icon: '/assets/app-icon-512.png?v=push-brand-3', badge: '/assets/app-icon-192.png?v=push-brand-3',
     tag: data.tag || 'pic-rivals', data: { url: data.url || '/' }
   }));
 });

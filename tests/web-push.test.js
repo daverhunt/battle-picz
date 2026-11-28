@@ -82,3 +82,23 @@ for (const warm of [false,true]) {
   assert.equal(entries.has('/__notification-target'),false);
  });
 }
+
+test('push notification copy and icons use Pic Rivals branding', async () => {
+ const edge = fs.readFileSync('supabase/functions/send-web-push/index.ts','utf8');
+ const sw = fs.readFileSync('sw.js','utf8');
+ const manifest = JSON.parse(fs.readFileSync('manifest.webmanifest','utf8'));
+ assert.doesNotMatch(edge,/Battle Picz|battle-picz-game\.vercel\.app/);
+ assert.match(edge,/Pic Rivals test alert/);
+ assert.match(sw,/app-icon-512\.png\?v=push-brand-3/);
+ assert.match(sw,/app-icon-192\.png\?v=push-brand-3/);
+ assert.ok(manifest.icons.every(icon=>icon.src.includes('push-brand-3')));
+ const handlers = {}, shown = [];
+ const self = {location:{origin:'https://game.test'}, addEventListener:(n,f)=>handlers[n]=f,
+   registration:{showNotification:async (...args)=>shown.push(args)}};
+ vm.runInNewContext(sw,{self,URL});
+ let task; handlers.push({data:{json:()=>({title:'Battle Picz test alert',body:'Open Battle Picz'})},waitUntil:p=>task=p});
+ await task;
+ assert.equal(shown[0][0], 'Pic Rivals test alert');
+ assert.equal(shown[0][1].body,'Open Pic Rivals');
+ assert.match(shown[0][1].icon,/app-icon-512.png/);
+});

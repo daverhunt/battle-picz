@@ -22,7 +22,7 @@ Deno.serve(async req => {
     const config = await db('rpc/web_push_sender_config', 'POST', {});
     if (!config?.cron_secret || req.headers.get('x-push-secret') !== config.cron_secret)
       return new Response('Unauthorized', { status: 401 });
-    webpush.setVapidDetails('https://battle-picz-game.vercel.app', config.public_key, config.private_key);
+    webpush.setVapidDetails('https://pic-rivals.vercel.app', config.public_key, config.private_key);
     const events = await db('rpc/claim_web_push_events', 'POST', {});
     let sent = 0, skipped = 0, failed = 0;
     for (const event of events) {
@@ -47,14 +47,14 @@ Deno.serve(async req => {
         const name = actor[0]?.display_name || 'Your opponent';
         const copy: Record<string, string[]> = {
           turn_ready: ['Your turn!', `${name} has played. Your next round is ready.`],
-          results_ready: ['Results ready', `${name} has finished. Open Battle Picz to reveal the result.`],
+          results_ready: ['Results ready', `${name} has finished. Open Pic Rivals to reveal the result.`],
           nudge: ['Ready to play?', `${name} gave you a nudge. It’s your turn.`],
-          challenge_received: ['New challenge', `${name} challenged you to Battle Picz.`],
+          challenge_received: ['New challenge', `${name} challenged you to Pic Rivals.`],
           challenge_accepted: ['Challenge accepted', `${name} joined your battle.`],
           match_found: ['Opponent found', 'Your new battle is ready.'],
-          weekly_summary: ['Weekly results', 'Your weekly Battle Picz results are ready.']
+          weekly_summary: ['Weekly results', 'Your weekly Pic Rivals results are ready.']
         };
-        const [title, body] = event.payload?.test ? ['Battle Picz test alert', 'Notifications are working on this device.'] : event.payload?.reminder ? ['Your turn is waiting', 'It’s been over 48 hours. Jump back into Pic Rivals and take your turn!'] : copy[event.event_type];
+        const [title, body] = event.payload?.test ? ['Pic Rivals test alert', 'Notifications are working on this device.'] : event.payload?.reminder ? ['Your turn is waiting', 'It’s been over 48 hours. Jump back into Pic Rivals and take your turn!'] : copy[event.event_type];
         let url = '/';
         if (event.match_id) {
           const match = await db(`matches?id=eq.${event.match_id}&select=seed`);
