@@ -26,14 +26,12 @@
   panel.setAttribute('aria-modal', 'true');
   panel.setAttribute('aria-label', 'Your matches');
   panel.innerHTML = `
-    <header class="matches-header pic-screen-header">
-      <div class="pic-header-brand"><span class="playroom-kicker pic-brand-wordmark" aria-label="Pic Rivals"><img class="pic-brand-final-image" src="/assets/images/pic-rivals-wordmark-final.webp" alt="" aria-hidden="true" /></span></div>
-      <div class="pic-header-bottom">
-        <div class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span><button class="matches-add-coins" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div>
-        <div class="matches-header-actions">
-        <button class="matches-shop" type="button" aria-label="Power-up shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
-        <button class="matches-settings" aria-label="Settings">⚙</button>
-      </div>
+    <header class="matches-header pic-screen-header" aria-label="Pic Rivals">
+      <div class="pic-header-brand"><span class="pic-brand-wordmark" aria-label="Pic Rivals"><img class="pic-brand-final-image" src="/assets/images/pic-rivals-wordmark-final.webp" alt="" aria-hidden="true" /></span></div>
+      <div class="pic-header-actions">
+        <div class="matches-balance pic-header-wallet"><span class="gold-coin" aria-hidden="true"></span><span class="matches-coins-value">0 COINS</span><button class="matches-add-coins pic-header-add" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div>
+        <button class="matches-shop pic-header-button" type="button" aria-label="Power-up shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
+        <button class="matches-settings pic-header-button" type="button" aria-label="Settings" title="Settings">⚙</button>
       </div>
       <h2 class="pic-visually-hidden">Your Battles</h2>
     </header>
@@ -331,6 +329,10 @@
   const inviteCodeLabel = panel.querySelector('.invite-banner-code');
   const joinButton = panel.querySelector('.invite-join');
   panel.querySelector('.matches-shop').onclick = () => window.openPicRivalsShop?.();
+  // Category chooser uses the exact same controls/behaviour as the lobby.
+  // Keep one shared shop implementation and one native-IAP modal.
+  document.querySelector('.category-shop')?.addEventListener('click', () => panel.querySelector('.matches-shop')?.click());
+  document.querySelector('.category-add-coins')?.addEventListener('click', () => panel.querySelector('.matches-add-coins')?.click());
   // Apple / Google native billing will be enabled only when an authenticated
   // store bridge and server-verified fulfilment are available. No web checkout.
   const coinPacks = [
