@@ -18,7 +18,6 @@ test('design A uses matching one-row lobby and category headers',()=>{
     assert.match(h,/pic-header-actions/);
     assert.match(h,/pic-header-wallet/);
     assert.match(h,/pic-header-add/);
-    assert.match(h,/pic-header-button/);
     assert.match(h,/pic-rivals-wordmark-final\.webp/);
     assert.ok(h.indexOf('pic-header-brand')<h.indexOf('pic-header-actions'));
   }
@@ -26,10 +25,15 @@ test('design A uses matching one-row lobby and category headers',()=>{
   assert.match(css,/height:70px!important/);
   assert.match(css,/@media\(max-width:340px\)/);
 });
-test('category controls reuse working lobby shop, coin and settings actions',()=>{
-  assert.match(lobby,/category-shop.*addEventListener\('click'/);
-  assert.match(lobby,/category-add-coins.*addEventListener\('click'/);
-  assert.match(settings,/category-settings.*addEventListener\('click', openSettings\)/);
+test('category header keeps coins and logo but omits shop and settings',()=>{
+  const category=game.split('<div class="category-topbar pic-screen-header"')[1].split('<h2 id="chooserTitle"')[0];
+  const lobbyHeader=lobby.split('<header class="matches-header pic-screen-header"')[1].split('</header>')[0];
+  assert.match(category,/id="categoryTopCoins"/);
+  assert.match(category,/category-add-coins/);
+  assert.doesNotMatch(category,/category-shop|category-settings/);
+  assert.match(lobbyHeader,/matches-shop/);
+  assert.match(lobbyHeader,/matches-settings/);
+  assert.ok(lobby.includes(".category-add-coins')?.addEventListener('click'"));
 });
 test('game wordmark remains outside the scoreboard',()=>{
   assert.match(game,/game-brand-wordmark[^\n]*\n\s*<div class="header">/);
