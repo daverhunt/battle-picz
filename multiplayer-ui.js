@@ -26,13 +26,16 @@
   panel.setAttribute('aria-modal', 'true');
   panel.setAttribute('aria-label', 'Your matches');
   panel.innerHTML = `
-    <header class="matches-header">
-      <span class="playroom-mark" aria-hidden="true">▦</span>
-      <div class="matches-brand"><span class="playroom-kicker pic-brand-wordmark" aria-label="Pic Rivals"><img class="pic-brand-final-image" src="/assets/images/pic-rivals-wordmark-final.webp" alt="" aria-hidden="true" /></span><h2>Your Battles</h2><div class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span><button class="matches-add-coins" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div></div>
-      <div class="matches-header-actions">
+    <header class="matches-header pic-screen-header">
+      <div class="pic-header-brand"><span class="playroom-kicker pic-brand-wordmark" aria-label="Pic Rivals"><img class="pic-brand-final-image" src="/assets/images/pic-rivals-wordmark-final.webp" alt="" aria-hidden="true" /></span></div>
+      <div class="pic-header-bottom">
+        <div class="matches-balance"><span class="gold-coin" aria-hidden="true"></span> <span class="matches-coins-value">0 COINS</span><button class="matches-add-coins" type="button" aria-label="Buy more coins" title="Buy coins">+</button></div>
+        <div class="matches-header-actions">
         <button class="matches-shop" type="button" aria-label="Power-up shop" title="Shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
         <button class="matches-settings" aria-label="Settings">⚙</button>
       </div>
+      </div>
+      <h2 class="pic-visually-hidden">Your Battles</h2>
     </header>
     <section class="weekly-strip" aria-label="This week's tournament record">
       <div><span>THIS WEEK</span><strong class="weekly-record">0 WINS · 0 LOSSES</strong></div>
