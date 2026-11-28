@@ -33,7 +33,7 @@ test('category header keeps coins and logo but omits shop and settings',()=>{
   assert.doesNotMatch(category,/category-shop|category-settings/);
   assert.match(lobbyHeader,/matches-shop/);
   assert.match(lobbyHeader,/matches-settings/);
-  assert.match(lobby,/category-add-coins.*addEventListener\\('click'/);
+  assert.ok(lobby.includes(".category-add-coins')?.addEventListener('click'"));
 });
 test('game wordmark remains outside the scoreboard',()=>{
   assert.match(game,/game-brand-wordmark[^\n]*\n\s*<div class="header">/);
