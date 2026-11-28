@@ -802,71 +802,144 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
   #game>.header .game-brand-wordmark{top:64px!important}
 }
 
-/* Shared mobile header used by lobby and round category selection.
-   Row one exclusively holds the approved wordmark; controls never compete
-   for horizontal space with it. Both screens use exactly the same geometry. */
-#game .pic-screen-header {
+/* Design A: one identical compact header row on lobby and category selection.
+   The approved wordmark stays at the left, controls at the right. Widths use
+   flex shrink so even narrow iPhones do not overflow. */
+#game .pic-screen-header{
   box-sizing:border-box!important;
   position:relative!important;
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr)!important;
-  grid-template-rows:54px 44px!important;
-  gap:4px!important;
-  align-content:start!important;
-  height:116px!important;
-  min-height:116px!important;
-  padding:6px 16px 8px!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:6px!important;
+  width:100%!important;
+  height:70px!important;
+  min-height:70px!important;
+  max-height:70px!important;
+  padding:9px 12px!important;
   margin:0!important;
-  background:var(--cream)!important;
-  border-bottom:1px solid var(--line)!important;
-  box-shadow:none!important;
+  background:linear-gradient(180deg,#0b377d,#09275b)!important;
+  border:1px solid #2d71b6!important;
+  border-radius:0!important;
+  box-shadow:inset 0 1px #80caff55,0 3px 7px #0d26531f!important;
+  color:#fff!important;
   flex:none!important;
+  overflow:hidden!important;
 }
 #game .pic-screen-header .pic-header-brand{
-  display:flex;align-items:center;justify-content:center;
-  min-width:0;width:100%;height:54px;overflow:visible;
+  flex:1 1 auto!important;
+  display:flex!important;
+  justify-content:flex-start!important;
+  align-items:center!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:100%!important;
+  overflow:hidden!important;
 }
 #game .pic-screen-header .pic-brand-wordmark{
-  box-sizing:border-box!important;
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  width:min(224px,65vw)!important;max-width:224px!important;
-  min-width:0!important;height:auto!important;
-  flex:none!important;margin:0!important;padding:0!important;
+  display:block!important;
+  width:100%!important;
+  max-width:174px!important;
+  min-width:0!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0!important;
+  flex:0 1 174px!important;
 }
 #game .pic-screen-header .pic-brand-final-image{
-  display:block!important;width:100%!important;height:auto!important;
-  object-fit:contain!important;max-height:54px!important;
+  display:block!important;
+  width:100%!important;
+  max-height:49px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  object-position:left center!important;
 }
-#game .pic-screen-header .pic-header-bottom{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  min-width:0;width:100%;height:44px;
+#game .pic-screen-header .pic-header-actions{
+  display:flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  min-width:0!important;
+  gap:5px!important;
+  height:100%!important;
 }
-#game .pic-screen-header .matches-balance,
-#game .pic-screen-header .category-topbalance{
-  box-sizing:border-box;display:flex;align-items:center;justify-content:center;
-  gap:6px;min-width:0;height:38px!important;min-height:38px!important;
-  padding:5px 10px!important;margin:0!important;
-  border:1px solid #e6dccb;border-radius:13px;
-  background:#fffdf7;box-shadow:0 2px 3px #554a3120;
-  font:800 11px var(--round);color:var(--ink);white-space:nowrap;
+#game .pic-screen-header .pic-header-wallet{
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:0!important;
+  height:37px!important;
+  min-height:37px!important;
+  padding:3px 4px 3px 7px!important;
+  margin:0!important;
+  border:1px solid #386db5!important;
+  border-radius:21px!important;
+  background:#092051!important;
+  color:#fff!important;
+  box-shadow:inset 0 1px #ffffff30!important;
+  font:800 11px var(--round)!important;
+  gap:4px!important;
+  white-space:nowrap!important;
 }
-#game .pic-screen-header .matches-header-actions{
-  display:flex;align-items:center;justify-content:flex-end;
-  flex:none;gap:7px;margin:0;min-width:0;
+#game .pic-screen-header .pic-header-wallet .gold-coin{
+  display:block!important;width:16px!important;height:16px!important;flex:none!important;
 }
-#game .pic-screen-header .matches-header-actions button{
-  width:36px!important;height:36px!important;min-height:36px!important;
-  flex:none!important;margin:0!important;
+#game .pic-screen-header .pic-header-wallet .matches-coins-value,
+#game .pic-screen-header .pic-header-wallet #categoryTopCoins{
+  white-space:nowrap!important;max-width:58px!important;overflow:hidden!important;text-overflow:ellipsis!important;
 }
-#game .pic-screen-header .pic-header-context{
-  color:var(--muted);font:800 10px var(--round);
-  letter-spacing:.08em;white-space:nowrap;
+#game .pic-screen-header .pic-header-add{
+  flex:none!important;display:inline-grid!important;place-items:center!important;
+  width:22px!important;height:22px!important;min-height:22px!important;
+  padding:0!important;margin:0!important;
+  border:1px solid #a2e989!important;border-radius:50%!important;
+  background:linear-gradient(#62df44,#19a827)!important;
+  color:white!important;font:900 19px/1 Arial,sans-serif!important;
+  box-shadow:0 1px 2px #0005!important;
 }
-#game .pic-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important}
-/* Category selector keeps the same screen-edge spacing and header sizing. */
+#game .pic-screen-header .pic-header-button{
+  flex:none!important;display:grid!important;place-items:center!important;
+  box-sizing:border-box!important;
+  width:35px!important;height:37px!important;min-height:37px!important;
+  padding:7px!important;margin:0!important;
+  border:1px solid #3878bc!important;border-radius:12px!important;
+  background:linear-gradient(#1164b1,#0b428d)!important;
+  color:#fff!important;font:800 22px/1 Arial,sans-serif!important;
+  box-shadow:inset 0 1px #b1e8ff55,0 2px 2px #00184270!important;
+}
+#game .pic-screen-header .pic-header-button svg{
+  width:22px!important;height:22px!important;
+  stroke:white!important;fill:none!important;
+}
+#game .pic-visually-hidden{
+  position:absolute!important;width:1px!important;height:1px!important;
+  overflow:hidden!important;clip-path:inset(50%)!important;
+}
 #game .category-chooser{padding:0 16px 20px!important}
-#game .category-chooser>.pic-screen-header{margin:0 -16px 12px!important;width:calc(100% + 32px)!important}
+#game .category-chooser>.pic-screen-header{
+  margin:0 -16px 12px!important;
+  width:calc(100% + 32px)!important;
+}
 #game .category-chooser #chooserTitle{margin-top:4px}
+@media(max-width:385px){
+  #game .pic-screen-header{height:64px!important;min-height:64px!important;max-height:64px!important;padding:8px 9px!important;gap:4px!important}
+  #game .pic-screen-header .pic-header-actions{gap:3px!important}
+  #game .pic-screen-header .pic-header-wallet{height:34px!important;min-height:34px!important;padding:3px!important;font-size:10px!important;gap:2px!important}
+  #game .pic-screen-header .pic-header-wallet .gold-coin{width:13px!important;height:13px!important}
+  #game .pic-screen-header .pic-header-add{width:19px!important;height:19px!important;min-height:19px!important;font-size:17px!important}
+  #game .pic-screen-header .pic-header-button{width:31px!important;height:34px!important;min-height:34px!important;padding:5px!important}
+  #game .pic-screen-header .pic-brand-wordmark{max-width:140px!important}
+}
+@media(max-width:340px){
+  #game .pic-screen-header{padding-inline:6px!important}
+  #game .pic-screen-header .pic-header-actions{gap:2px!important}
+  #game .pic-screen-header .pic-header-button{width:29px!important}
+  #game .pic-screen-header .pic-header-wallet{font-size:9px!important}
+  #game .pic-screen-header .pic-header-wallet .gold-coin{display:none!important}
+}
 /* Keep gameplay branding in its OWN strip, not over player scores/VS.
    Header sits just below it; three picture timers keep their own lane. */
 #game>.game-brand-wordmark{
@@ -882,11 +955,3 @@ button:focus-visible,a:focus-visible{outline:3px solid #167fce;outline-offset:3p
 }
 #game>.header{top:5.8%!important}
 #game>.qtimers{top:18%!important}
-@media(max-width:350px){
-  #game .pic-screen-header{padding-inline:11px!important}
-  #game .pic-screen-header .pic-brand-wordmark{width:min(188px,61vw)!important}
-  #game .pic-screen-header .matches-header-actions{gap:4px!important}
-  #game .pic-screen-header .matches-header-actions button{width:32px!important;height:32px!important;min-height:32px!important}
-  #game .category-chooser{padding-inline:11px!important}
-  #game .category-chooser>.pic-screen-header{margin-inline:-11px!important;width:calc(100% + 22px)!important}
-}
